@@ -1,33 +1,35 @@
+<!DOCTYPE html>
 <HTML>
 <HEAD>
+   <meta charset="UTF-8">
    <TITLE>Raspberry Pi GPIO control to the 8x8 LED Matrix(2)</TITLE>
 </HEAD>
 <BODY BACKGROUND="img/bcg_280.gif">
 <A NAME="TOP_TOP"></A>
 <BR>
 <P>
-<CENTER><BLINK><FONT SIZE=+1 COLOR="#3366FF">�� Raspberry Pi��8x8 LED�}�g���b�N�X�𐧌�(2)�^�����\�� ��</FONT></BLINK></CENTER>
+<CENTER><BLINK><FONT SIZE=+1 COLOR="#3366FF">★ Raspberry Piで8x8 LEDマトリックスを制御(2)／漢字表示 ★</FONT></BLINK></CENTER>
 <HR>
 <CENTER>
 <iframe width="560" height="315" src="https://www.youtube.com/embed/ul84SO0gX5Q" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
 <BR>
-���s��i�u���x�́A�����\�����ł���悤�ɂȂ�܂����v�ƃX�N���[���\���j<BR>
+実行例（「今度は、漢字表示ができるようになりました」とスクロール表示）<BR>
 </CENTER>
 <HR>
-<H3>�y�P�z�͂��߂�</H3>
-�O��A�������X�N���[���\������V���v���Ȏ��v�̂悤�Ȃ��̂��쐬���܂������A�����������܂���ł����B<BR>
-���񓯂���H�ŁA�����ɑΉ������T���v���v���O�������쐬���܂����̂ŏЉ�܂��B<BR>
-��̓I�ɂ́A�������܂ޑS�p�̃e�L�X�g�t�@�C����ǂݍ���ŁA���̓��e��LED�}�g���b�N�X�ɕ\������v���O�����ɂȂ�܂��B<BR>
+<H3>【１】はじめに</H3>
+前回、日時をスクロール表示するシンプルな時計のようなものを作成しましたが、漢字が扱えませんでした。<BR>
+今回同じ回路で、漢字に対応したサンプルプログラムを作成しましたので紹介します。<BR>
+具体的には、漢字を含む全角のテキストファイルを読み込んで、その内容をLEDマトリックスに表示するプログラムになります。<BR>
 <BR>
 
-<H3>�y�Q�z�t�H���g�`��</H3>
-�O��Ɉ�������<A HREF="http://www.geocities.jp/littlimi/misaki.htm">����t�H���g</A>���g�p���܂��B��ʓI�Ȋ����t�H���g�͖{��16x16�ȏ�̃h�b�g�����K�v�ł����A�g�p���Ă���LED�}�g���b�N�X�́A8x8�h�b�g�ł���g�p�ł��܂���B
-����t�H���g�́A���Ƃ��ƃ|�P�b�g�R���s���[�^�i�|�P�R���j�p�ɍ쐬����A8x8�h�b�g�ɑΉ����Ă��܂��B<BR>
-����t�H���g�́A�����̃t�H���g�`��������A�O���PC-E500 �p���g�p���Ă��܂������A(���ɂ�)�`�����킩��Ȃ��Ƃ�����肪����܂����B<BR>
-�l�b�g�Ō����������ʁAFONTX�`���̔���t�H���g�ɂ��āA�������Ă���HP������܂����i���L�̎Q�l�Ƀ����N����L�ڂ��Ă��܂��j�B<BR>
-<FONT COLOR="RED">���̂��߁A����́AFONTX�`�����g�p���܂��B</FONT><BR>
-FONTX�́A���L�̌`���̃w�b�_�����{����FONT�i�o�C�i���f�[�^�j�`���ƂȂ�܂��B<BR>
-�w�b�_������C����\���̂ŕ\������Ɖ��L�̂悤�ɂȂ�܂��B
+<H3>【２】フォント形式</H3>
+前回に引き続き<A HREF="http://www.geocities.jp/littlimi/misaki.htm">美咲フォント</A>を使用します。一般的な漢字フォントは本来16x16以上のドット数が必要ですが、使用しているLEDマトリックスは、8x8ドットであり使用できません。
+美咲フォントは、もともとポケットコンピュータ（ポケコン）用に作成され、8x8ドットに対応しています。<BR>
+美咲フォントは、複数のフォント形式があり、前回はPC-E500 用を使用していましたが、(私には)形式がわからないという問題がありました。<BR>
+ネットで検索した結果、FONTX形式の美咲フォントについて、調査しているHPがありました（下記の参考にリンク先を記載しています）。<BR>
+<FONT COLOR="RED">このため、今回は、FONTX形式を使用します。</FONT><BR>
+FONTXは、下記の形式のヘッダ部分＋漢字FONT（バイナリデータ）形式となります。<BR>
+ヘッダ部分をC言語構造体で表現すると下記のようになります。
 <TABLE  BORDER=1 WIDTH=500 cellspacing="0" bgcolor="#C0C0E0" >
 <TR><TD>
 <PRE>
@@ -48,17 +50,17 @@ typedef struct {
 </TABLE>
 <BR>
 
-��L��Tnum���S�����R�[�h���ł���ABlock[x].Start�`Block[x].End�ɕ����R�[�h�̃��X�g������܂��B���̃��X�g�ʂ�Ƀw�b�_�ɑ��������t�H���g�f�[�^���i�[����Ă��܂��B<BR>
-�����̏�񂩂�A�e�����R�[�h�ɑ΂���A�����R�[�h�ɊY������I�t�Z�b�g�i�擪����̃o�C�g���j���v�Z���邱�Ƃ��ł��܂��B<BR>
-����쐬�����v���O�����ł́A���L�������I�t�Z�b�g�v�Z�����ɂȂ�܂��B<BR>
+上記のTnumが全文字コード数であり、Block[x].Start～Block[x].Endに文字コードのリストがあります。このリスト通りにヘッダに続く漢字フォントデータが格納されています。<BR>
+これらの情報から、各文字コードに対する、文字コードに該当するオフセット（先頭からのバイト数）を計算することができます。<BR>
+今回作成したプログラムでは、下記部分がオフセット計算部分になります。<BR>
 <TABLE  BORDER=1 WIDTH=500 cellspacing="0" bgcolor="#C0C0E0" >
 <TR><TD>
 <PRE>
 font_head *pFH;
-�E�E�E
+・・・
 int SjisToImg(char *sjis, char *binary)
 {
-�E�E�E
+・・・
                 /* KANJI code offset Serch */
                 offset = font_base;
                 for(j=0; j&lt; pFH-&gt;Tnum; j++){
@@ -70,33 +72,33 @@ int SjisToImg(char *sjis, char *binary)
                         offset += (pFH->Block[j].End - pFH->Block[j].Start + 1) * 8;
                 }
 
-�E�E�E
+・・・
 </PRE>
 </TD></TR>
 </TABLE>
 <BR>
 <FONT SIZE=-1>
-�ϐ���code�������R�[�h(����)�ŁAoffset��code�ɑΉ�����I�t�Z�b�g(�o��)�ƂȂ�܂��B<BR>
-�ϐ���pFH�́A����t�H���g�̃f�[�^�S�����������ɓW�J�������̃������̐擪���w���Ă��܂��B<BR>
-�ϐ���font_base �́A�w�b�_�����̃T�C�Y�ŁA�ufont_base = 18+4*pFH->Tnum�v�ɂȂ�܂��B<BR>
+変数のcodeが文字コード(入力)で、offsetがcodeに対応するオフセット(出力)となります。<BR>
+変数のpFHは、美咲フォントのデータ全部をメモリに展開したそのメモリの先頭を指しています。<BR>
+変数のfont_base は、ヘッダ部分のサイズで、「font_base = 18+4*pFH->Tnum」になります。<BR>
 </FONT><BR>
-<H3>�y�R�z�����R�[�h</H3>
-FONTX�`���̔���t�H���g�ň��������R�[�h�́ASJIS(�V�t�gJIS)�`���ł��B<BR>
-SJIS�́A�]��Windows�Ŏg�p����Ă��܂������A���݂͍��ۋK�i��UNICODE���嗬�ƂȂ��Ă��܂��B<BR>
-Raspberry Pi��OS���AUNICODE�ł���UTF-8���W���I�Ɏg�p����Ă��܂��B<BR>
-����쐬�����v���O�����́A�e�L�X�g�t�@�C����ǂݍ���ŁALED�}�g���b�N�X�ɕ\�����܂����A�ǂݍ��ރe�L�X�g�t�@�C���̌`����SJIS�łȂ���΂Ȃ�܂���B<BR>
-����̓���ł́A�ȉ��̃e�L�X�g�t�@�C��(kanji.utf-8)���쐬���܂����B
+<H3>【３】文字コード</H3>
+FONTX形式の美咲フォントで扱う文字コードは、SJIS(シフトJIS)形式です。<BR>
+SJISは、従来Windowsで使用されていましたが、現在は国際規格のUNICODEが主流となっています。<BR>
+Raspberry PiのOSも、UNICODEであるUTF-8が標準的に使用されています。<BR>
+今回作成したプログラムは、テキストファイルを読み込んで、LEDマトリックスに表示しますが、読み込むテキストファイルの形式はSJISでなければなりません。<BR>
+今回の動画では、以下のテキストファイル(kanji.utf-8)を作成しました。
 <TABLE  BORDER=1 WIDTH=500 cellspacing="0" bgcolor="#C0C0E0" >
 <TR><TD>
 <PRE>
-���x�́A�����\���ł���悤�ɂȂ�܂���
+今度は、漢字表示できるようになりました
 </PRE>
 </TD></TR>
 </TABLE>
 <BR>
-���ʂɃe�L�X�g�G�f�B�^�ō쐬����ƁAUTF-8�`���ɂȂ��Ă��܂��B<BR>
-���̂܂܂ł́A����쐬�����c�[���ł́ALED�}�g���b�N�X�ɕ\���ł��Ȃ��̂ŁAiconv�Ƃ��������R�[�h�ϊ��c�[�����g�p���܂��B<BR>
-���L�̗�ł́AUTF-8�`���̃e�L�X�g�t�@�C��kanji.utf-8����ASJIS�`���̃e�L�X�g�t�@�C��kanji.sjis���쐬���܂��B<BR>
+普通にテキストエディタで作成すると、UTF-8形式になっています。<BR>
+このままでは、今回作成したツールでは、LEDマトリックスに表示できないので、iconvという文字コード変換ツールを使用します。<BR>
+下記の例では、UTF-8形式のテキストファイルkanji.utf-8から、SJIS形式のテキストファイルkanji.sjisを作成します。<BR>
 <TABLE  BORDER=1 WIDTH=500 cellspacing="0" bgcolor="#C0C0E0" >
 <TR><TD>
 <PRE>
@@ -105,15 +107,15 @@ iconv -f utf-8 -t sjis kanji.utf-8 -o kanji.sjis
 </TD></TR>
 </TABLE>
 <BR>
-kanji.utf-8��kanji.sjis�A���ꂼ��̃t�@�C����cat�R�}���h�ŕ\������ƁAkanji.sjis�͕����������N�����܂��i������ŗǂ��ł��j�B<BR>
+kanji.utf-8とkanji.sjis、それぞれのファイルをcatコマンドで表示すると、kanji.sjisは文字化けを起こします（がこれで良いです）。<BR>
 <TABLE  BORDER=1 WIDTH=500 cellspacing="0" bgcolor="#C0C0E0" >
 <TR><TD>
 <PRE>
 $ cat kanji.utf-8
-���x�́A�����\���ł���悤�ɂȂ�܂���
+今度は、漢字表示できるようになりました
 $ cat kanji.sjis
-��?A
-    ?�{?�ÁE???�ڋ\
+§?A
+    ?須?ε・???蒂欺
 $
 </PRE>
 </TD></TR>
@@ -121,57 +123,57 @@ $
 
 <BR>
 
-<H3>�y�S�z�v���O����</H3>
-�\�[�X�R�[�h�́A<A HREF="obj/LedKanji.zip">�����炩��A</A>�_�E�����[�h���Ă��������iLedKanji.zip�j�B<BR>
-<H4>�y�S�|�P�z�T�u���[�`��</H4>
-����́A�O��̃R�[�h���x�[�X�ɂ��Ă��܂��̂ŁA�ύX�^�ǉ������֐��̂݋L�ڂ��܂��B<BR>
+<H3>【４】プログラム</H3>
+ソースコードは、<A HREF="obj/LedKanji.zip">こちらから、</A>ダウンロードしてください（LedKanji.zip）。<BR>
+<H4>【４－１】サブルーチン</H4>
+今回は、前回のコードをベースにしていますので、変更／追加した関数のみ記載します。<BR>
 <table border="2" bgcolor="#C0C0E0">
-    <tr><td>�֐���</td><td>����</td></tr>
-    <tr><td>FontInit</td><td>�t�H���g�t�@�C��(MISAKI.FNT)�ǂݍ���</td></tr>
-    <tr><td>SjisToImg</td><td>������(SJIS)����ALED�}�g���b�N�X�ɕ\�����邽�߂̃o�C�i���f�[�^���쐬����(���P�j</td></tr>
-    <tr><td>write_binary</td><td>�������LED�}�g���b�N�X�ɕ\������(���Q�j</td></tr>
+    <tr><td>関数名</td><td>説明</td></tr>
+    <tr><td>FontInit</td><td>フォントファイル(MISAKI.FNT)読み込み</td></tr>
+    <tr><td>SjisToImg</td><td>文字列(SJIS)から、LEDマトリックスに表示するためのバイナリデータを作成する(※１）</td></tr>
+    <tr><td>write_binary</td><td>文字列をLEDマトリックスに表示する(※２）</td></tr>
 </table>
 <BR>
-�i���P�j�i���Q�j<BR>
-�O���FONT�f�[�^���Q�Ƃ��āALED�}�g���b�N�X�ɕ\������֐�(write_font)���g�p���Ă��܂����B<BR>
-����́A�����SjisToImg�ƁAwite_binary��2�ɕ������Ă��܂��B��U�o�C�i���f�[�^���쐬���Ă��܂��B<BR>
-����́A�ȉ��̗��R����ł��B<BR>
-�E�O��́A���������\����������ASCII����̃I�t�Z�b�g�v�Z���P���ł��������A<BR>
-�@�����FONTX�����߂��邽�ߏ��������G�ɂȂ��Ă���<BR>
-�E�O��́AFONT���̕����f�[�^�i�o�C�i���j�̕��������|���ɂȂ��Ă������A<BR>
-�@�����FONT�͉��|���ɂȂ��Ă��Ȃ����߁A�X�N���[�������̂��߁A<BR>
-�@���|���̃o�C�i���f�[�^���쐬���Ă���<BR>
+（※１）（※２）<BR>
+前回はFONTデータを参照して、LEDマトリックスに表示する関数(write_font)を使用していました。<BR>
+今回は、これをSjisToImgと、wite_binaryの2つに分解しています。一旦バイナリデータを作成しています。<BR>
+これは、以下の理由からです。<BR>
+・前回は、数字だけ表示したためASCIIからのオフセット計算が単純であったが、<BR>
+　今回はFONTXを解釈するため処理が複雑になっている<BR>
+・前回は、FONT内の文字データ（バイナリ）の文字が横倒しになっていたが、<BR>
+　今回のFONTは横倒しになっていないため、スクロール処理のため、<BR>
+　横倒しのバイナリデータを作成している<BR>
 
-<H4>�y�S�|�Q�z�R���p�C���Ǝ��s</H4>
-�R���p�C���́ALedKanji.c��gcc�ŃR���p�C�����܂��B<BR>
-�R���\�[�����牺�L�̂悤�ɃC���v�b�g����ƁA"LedKanji"�Ƃ������s�t�@�C�����쐬����܂��B<BR>
+<H4>【４－２】コンパイルと実行</H4>
+コンパイルは、LedKanji.cをgccでコンパイルします。<BR>
+コンソールから下記のようにインプットすると、"LedKanji"という実行ファイルが作成されます。<BR>
 <TABLE  BORDER=1 WIDTH=500 cellspacing="0" bgcolor="#C0C0E0" >
 <TR><TD>
 gcc LedKanji.c -o LedKanji<BR>
 </TD></TR>
 </TABLE>
 <BR>
-���s�́A�ȉ��̂悤�ɓ��͂��Ă��������B<BR>
+実行は、以下のように入力してください。<BR>
 <TABLE  BORDER=1 WIDTH=500 cellspacing="0" bgcolor="#C0C0E0" >
 <TR><TD>
 sudo ./LedKanji kanji.sjis<BR>
 </TD></TR>
 </TABLE>
-�{�v���O�����ł́ASJIS�`���̃e�L�X�g�t�@�C�����ALED�}�g���b�N�X�ɃX�N���[���\������v���O�����ł��B<BR>
-�t�H���g�t�@�C���́A�O�L�̂Ƃ���<A HREF="http://www.geocities.jp/littlimi/misaki.htm">����t�H���g</A>�́uFONTX2 �`���v���g�p���Ă��܂��B<BR>
-����t�H���g��HP����_�E�����[�h�����uMISAKI.FNT�v�t�@�C�������s�t�@�C���Ɠ����f�B���N�g���ɃR�s�[���Ă��������B<BR>
-�܂��A�y�R�z�ō쐬�����ASJIS�̃e�L�X�g�t�@�C���ikanji.sjis�j�����s�t�@�C���Ɠ����f�B���N�g���ɃR�s�[���Ă��������B<BR>
-��~�̓v���O���~���O���Ă��Ȃ��̂ŁA[CTRL]+[C]�ŋ����I�������Ă��������B<BR>
+本プログラムでは、SJIS形式のテキストファイルを、LEDマトリックスにスクロール表示するプログラムです。<BR>
+フォントファイルは、前記のとおり<A HREF="http://www.geocities.jp/littlimi/misaki.htm">美咲フォント</A>の「FONTX2 形式」を使用しています。<BR>
+美咲フォントのHPからダウンロードした「MISAKI.FNT」ファイルを実行ファイルと同じディレクトリにコピーしてください。<BR>
+また、【３】で作成した、SJISのテキストファイル（kanji.sjis）を実行ファイルと同じディレクトリにコピーしてください。<BR>
+停止はプログラミングしていないので、[CTRL]+[C]で強制終了させてください。<BR>
 <HR>
-<H3>�y�Q�l�z</H3>
-<A HREF="https://qiita.com/meketen/items/a66c6953b3cff380d9b8">�}�C�R���œ��{���\��������ׂ�FONTX2�̎d�l�𒲂ׂ܂���</A><BR>
-<A HREF="http://www.geocities.jp/littlimi/misaki.htm">8�~8 �h�b�g���{��t�H���g�u����t�H���g�v</A>
+<H3>【参考】</H3>
+<A HREF="https://qiita.com/meketen/items/a66c6953b3cff380d9b8">マイコンで日本語を表示させる為にFONTX2の仕様を調べました</A><BR>
+<A HREF="http://www.geocities.jp/littlimi/misaki.htm">8×8 ドット日本語フォント「美咲フォント」</A>
 <HR>
-�y�����L�^�z<BR>
-2018/05/20�ŁF���J<BR>
+【改訂記録】<BR>
+2018/05/20版：公開<BR>
 
 </P>
-<A HREF="index.html">[�z�[���֖߂�n</A><BR>
+<A HREF="index.html">[ホームへ戻る］</A><BR>
 <HR>
 
 <FONT SIZE=-1>Copyright (c) 1997-2018, BearBeetle, Allrights reserved.</FONT>
