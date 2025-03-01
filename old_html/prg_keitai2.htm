@@ -1,0 +1,510 @@
+<HTML>
+<HEAD>
+   <TITLE>BB Lab, Keitai Memory dial</TITLE>
+</HEAD>
+<BODY BACKGROUND="bcg_280.gif">
+<A NAME="TOP_TOP"></A><FONT SIZE=-1>このページはNetscape
+Navigator 2.0以降及びMicrosoft Internet Explorer 3.0以降で正常に見られます。</FONT>
+<BR><FONT SIZE=-2>Solly,Japanese only</FONT>
+<BR>
+<HR>
+<CENTER><BLINK><FONT COLOR="#3366FF"><FONT SIZE=-1>★ ＢＢ研究所 ★</FONT></FONT></BLINK></CENTER>
+<CENTER><FONT COLOR="#3366FF"><FONT SIZE=+2>携帯電話メモリダイヤルアクセス －ソフトウェア編－ </FONT></FONT></CENTER>
+<P>
+<HR>
+<H3><FONT COLOR="#3366FF">はじめに</FONT></H3>
+　ここでは、ハードウェア編で作成したケーブルを使って、携帯電話にアクセスする方法について解説します。<BR>
+まず、直接アクセスする方法について簡単に説明した後、ＢＢＫライブラリを使用してアクセスする方法について解説します。
+<HR>
+<H3><FONT COLOR="#3366FF">１．シリアルポートのオープン／クローズ</FONT></H3>
+　携帯電話へは、シリアルポートを通じてアクセスします。<BR>
+　シリアルポートを使用できるようにするためには、シリアルポートデバイスをオープンする必要があります。<BR>
+方法は他のデバイスと同様に、CreateFile APIを使用します。<BR>
+以下に例を示します。<BR>
+【例】<BR>
+<TABLE  BORDER=1 cellspacing="0" bgcolor="#C0C0E0" >
+<TR><TD>
+<PRE>
+
+HANDLE hCom;                // シリアルポートのハンドル
+BYTE   lpRcvBytes[100];     // 受信用バッファ
+int    nBytes;　　　　　　　// 受信バイト数
+・・・
+hCom=CreateFile("COM1",GENERIC_READ|GENERIC_WRITE,0,NULL,OPEN_EXISTING,0,NULL);
+・・・
+初期化処理（後述）
+・・・
+if(!ReadFile(hCom,lpRcvBytes,sizeof(lpRcvBytes),&nBytes,NULL)){
+　　　エラー処理
+　　　return FALSE;
+}
+・・・・
+CloseHandle(hCom);
+
+</PRE>
+</TD></TR>
+</TABLE>
+上記の例では、完了復帰型呼出で、シリアルポートから１００バイトリードします。<BR>
+オープン～リードの間にある、初期化処理については、次章で説明します。<BR>
+その他の詳細については、WIN32 APIの資料やWindowsによる通信の本を参照して下さい<BR>
+<P>
+
+<HR>
+<H3><FONT COLOR="#3366FF">２．シリアルポートの設定</FONT></H3>
+携帯電話のメモリダイヤル用シリアル通信は、通常は600 bps,START=1,DATA=8,PARITY=1,STOP=1に設定します。<FONT COLOR=#A0A0A0><STRIKE>最近の機種では、通信速度を9600bpsまで上げられるようですが、その手段については私は知りません（知っている方は、是非ご一報下さい）</STRIKE>【削除:2000-11-26】</FONT>。<BR>WIN32 APIにも、シリアルポートの設定のためのAPIがあります。SetCommStateです。引数として、DCB構造体が必要となります。この構造体には、パラメータが多く、全て指定するには手間がかかります。このため、通常はGetCommStateで、DCB構造体に現在の設定を格納し、必要な箇所だけ変更する手法を取ります。<BR>また、BuildCommDCB APIを使用すれば、DCB構造体のパラメータを直接変更するよりも、直感的に分かりやすい文字列で変更することができます。<BR>また、タイムアウトの設定も必要ですが、ここでは省略します。キーワードはSetCommTimeoutsです。各自調べてみて下さい。<BR>
+以上を前述の例に継ぎ足すと、以下に示すコードとなります。
+<TABLE  BORDER=1 cellspacing="0" bgcolor="#C0C0E0" >
+<TR><TD>
+<PRE>
+
+HANDLE hCom;                // シリアルポートのハンドル
+BYTE   lpRcvBytes[100];     // 受信用バッファ
+int    nBytes;　　　　　　　// 受信バイト数
+DCB    stDcb;               // COMポート設定
+
+・・・
+hCom=CreateFile("COM1",GENERIC_READ|GENERIC_WRITE,0,NULL,OPEN_EXISTING,0,NULL);
+・・・
+/*
+ *	COMポート設定
+ *	600 bps,START=1,DATA=8,PARITY=1,STOP=1
+ */
+if(GetCommState(hCom,&stDcb)==FALSE){
+	エラー処理
+	CloseHandle(stBbkArg-&gthCom);
+	return FALSE;
+}
+if(BuildCommDCB("baud=600 parity=e data=8 stop=1",&stDcb)==FALSE){
+	エラー処理
+	CloseHandle(hCom);
+	return FALSE;
+}
+if(SetCommState(hCom,&stDcb)==FALSE){
+	エラー処理
+	CloseHandle(hCom);
+	return FALSE;
+}
+・・・
+if(!ReadFile(hCom,lpRcvBytes,sizeof(lpRcvBytes),&nBytes,NULL)){
+	エラー処理
+	return FALSE;
+}
+・・・・
+CloseHandle(hCom);
+
+</PRE>
+</TD></TR>
+</TABLE>
+
+
+
+<HR>
+<H3><FONT COLOR="#3366FF">３．実習（自機の電話番号を取得する）</FONT></H3>
+実習ではいままで、ちゃんと動くソフトのプロジェクトを添付してましたが、今回ヒマがなくなってきたので、BBKライブラリの該当ソースをそのまま添付します（乱暴ですいません^^;）。<BR>
+引数、サブルーチンやグローバル関数についての説明がありませんが、NTT DoCoMoのホームページで公開しているコマンドを参照しながら、見ていただければわかると思います。<BR>
+（簡単に言えば、１バイト（8Eh）を携帯電話に送ると、電話番号が送られてきます）
+<TABLE  BORDER=1 cellspacing="0" bgcolor="#C0C0E0" >
+<TR><TD>
+<PRE>
+/*
+ *	自機のダイヤル取得
+ *
+ *	引数：
+ *		strRetDial      ... ダイヤルを戻す格納バッファへのポインタ
+ *                          ※( MAX_NUMBER_LENGTH + 1 )バイト確保すること
+ *		lLength         ... 取得したダイヤル文字列のレングスが戻される
+ */
+BOOL	BBK_CMD_GetMyDial(BBK_ARGUMENT *stBbkArg,char *strRetDial,long *lLength)
+{
+	BYTE bSend=0x8e,bRcv;
+	long l=0,lLen=1;
+	if(BBK_CMD_SendString(stBbkArg,&bSend,&lLen)==FALSE)
+		return FALSE;
+
+	while(1){
+		BBK_CMD_ReceiveByte(stBbkArg,&bRcv);
+		switch(bRcv){
+			case 0x9a:
+				strRetDial[l]='0';
+				break;
+			case 0x91:
+				strRetDial[l]='1';
+				break;
+			case 0x92:
+				strRetDial[l]='2';
+				break;
+			case 0x93:
+				strRetDial[l]='3';
+				break;
+			case 0x94:
+				strRetDial[l]='4';
+				break;
+			case 0x95:
+				strRetDial[l]='5';
+				break;
+			case 0x96:
+				strRetDial[l]='6';
+				break;
+			case 0x97:
+				strRetDial[l]='7';
+				break;
+			case 0x98:
+				strRetDial[l]='8';
+				break;
+			case 0x99:
+				strRetDial[l]='9';
+				break;
+			case 0xaa:
+				strRetDial[l]='\0';
+				*lLength=l;
+				return TRUE;
+			default:
+				BBK_SetErrTypeCmd();
+				return FALSE;
+		}
+		l++;
+		if(l==(*lLength-1)){
+			strRetDial[l]=='\0';
+			BBK_SetErrTypeInv();
+			return FALSE;
+		}
+	}
+	return TRUE;
+}
+</PRE>
+</TD></TR>
+</TABLE>
+
+<HR>
+<H3><FONT COLOR="#3366FF">４．BBKライブラリを使ったアクセス１（初期化）></FONT></H3>
+BBKライブラリはDLLです。DLL内部の関数をアクセスできるようにするため、ちょっとした手順が必要です。まずLoadLibrary APIを使用して、DLLをロードします。次に、GetProcAddress APIを使ってDLL内部関数にアクセスするためのポインタを取得します。そのリストは次章にありますので、LoadBBKLibraryの項目を参照して下さい。DLLロード後は、各種関数が使用できます。関数を呼び出せば、内部でシリアルポートの初期化、コマンド送出、データの取得、シリアルポートのクローズを自動的に実施してくれます。ただし、これらの関数呼出前に、引数を初期化しておく必要があります。くわしくは、BBKライブラリに添付されているヘルプファイルを参照して下さい。
+<HR>
+<H3><FONT COLOR="#3366FF">５．BBKライブラリを使ったアクセス２（BBKTest1.EXE）</FONT></H3>
+以下にリストを示します。<FONT COLOR=#A0A0A0><STRIKE>これは、BBKライブラリに添付されているソースと同一のものです。</STRIKE>【削除：2000-11-26】</FONT>コンソールアプリケーションなので、コード量が少なく参考にしやすいと思います。ただし、コンソールアプリケーションでは、引数BBK_ARGUMENT構造体のhWndは、NULLに指定してありますが、ウィンドウアプリケーションでは、ウィンドウハンドルを指定する必要があります。この一点だけご注意下さい。<BR>
+また、工夫すればDelphiやVisual Basicからでも呼び出せるようです（テクは知りませんが）。<BR>
+<TABLE  BORDER=1 cellspacing="0" bgcolor="#C0C0E0" >
+<TR><TD>
+<PRE>
+/*
+ *	BBKライブラリアクセスサンプル
+ *
+ *	(c) 1998,BearBeetle
+ */
+#include	&ltstdio.h&gt
+#include	&ltwindows.h&gt
+#include	"..\include\bbk.h"
+
+
+/*
+ *	BBKライブラリ APIへのポインタ
+ */
+BOOL	(FAR *lpfnBBK_GetMemoryDial)(BBK_ARGUMENT *,BBK_MEMORY_DIAL_DATAS *,long,long);
+BOOL	(FAR *lpfnBBK_SetMemoryDial)(BBK_ARGUMENT *,BBK_MEMORY_DIAL_DATAS *,long,long);
+BOOL	(FAR *lpfnBBK_AllClearMemoryDial)(BBK_ARGUMENT *);
+BOOL	(FAR *lpfnBBK_GetMyDial)(BBK_ARGUMENT *,char *,long *);
+
+/*
+ *	エラーの表示
+ */
+void	DisplayBBKError(BBK_ARGUMENT *stArg)
+{
+	char *strErrString;
+	
+	switch(stArg-&gtenLastErrType){
+
+		case BBK_SYNTAX_ERR:		// BBK_ API呼び出しの文法エラー
+			strErrString="BBK_SYNTAX_ERR";
+			break;
+
+		case BBK_INVALID_VAL_ERR:	// BBK_ APIへの引数が不正
+			strErrString="BBK_INVALID_VAL_ERR";
+			break;
+		
+		case BBK_INVALID_PASSWD_ERR:// 暗証番号が違う
+			strErrString="BBK_INVALID_PASSWD_ERR";
+			break;
+
+		case BBK_IF_INIT_ERR:		// BBKライブが内部的に呼び出すI/F関数の初期化エラー
+			strErrString="BBK_IF_INIT_ERR";
+			break;
+
+		case BBK_IF_WR_ERR:
+			strErrString="BBK_IF_WR_ERR";
+			break;
+
+		case BBK_CMD_ERR:			// 携帯電話の反応がおかしい
+			strErrString="BBK_CMD_ERR";
+			break;
+
+		default:
+			strErrString="Uncknown error";
+			break;
+
+	}
+	fprintf(stderr,"BBK Library Err Type:%s\n",strErrString);
+}
+
+/*
+ *	ライブラリの開放
+ */
+BOOL	FreeBBKLibrary(HINSTANCE hInstBBK)
+{
+	return FreeLibrary(hInstBBK);
+}
+
+/*
+ *	ライブラリのロードとポインタの取得
+ */
+BOOL	LoadBBKLibrary(HINSTANCE hInstBBK)
+{
+	// DLLのロード
+	hInstBBK=LoadLibrary("BBK.DLL");
+	if( hInstBBK &lt= (HINSTANCE)HINSTANCE_ERROR ){
+		fprintf(stderr,"BBK.DLLのロードに失敗しました\n");
+		return FALSE;
+	}
+
+	// ポインタの取得
+	lpfnBBK_GetMemoryDial=(BOOL (FAR *)(BBK_ARGUMENT *,BBK_MEMORY_DIAL_DATAS *,long,long))
+							GetProcAddress(hInstBBK,"BBK_GetMemoryDial");
+	if(lpfnBBK_GetMemoryDial==NULL){
+		fprintf(stderr,"BBK_GetMemoryDialのアドレスが取れません\n");
+		FreeBBKLibrary(hInstBBK);
+		return FALSE;
+	}
+
+	lpfnBBK_SetMemoryDial=(BOOL (FAR *)(BBK_ARGUMENT *,BBK_MEMORY_DIAL_DATAS *,long,long))
+							GetProcAddress(hInstBBK,"BBK_SetMemoryDial");
+	if(lpfnBBK_SetMemoryDial==NULL){
+		fprintf(stderr,"BBK_SetMemoryDialのアドレスが取れません\n");
+		FreeBBKLibrary(hInstBBK);
+		return FALSE;
+	}
+
+	lpfnBBK_AllClearMemoryDial=(BOOL (FAR *)(BBK_ARGUMENT *))
+							GetProcAddress(hInstBBK,"BBK_AllClearMemoryDial");
+	if(lpfnBBK_AllClearMemoryDial==NULL){
+		fprintf(stderr,"BBK_AllClearMemoryDialのアドレスが取れません\n");
+		FreeBBKLibrary(hInstBBK);
+		return FALSE;
+	}
+
+	lpfnBBK_GetMyDial=(BOOL (FAR *)(BBK_ARGUMENT *,char *,long *))
+							GetProcAddress(hInstBBK,"BBK_GetMyDial");
+	if(lpfnBBK_GetMyDial==NULL){
+		fprintf(stderr,"BBK_GetMyDialのアドレスが取れません\n");
+		FreeBBKLibrary(hInstBBK);
+		return FALSE;
+	}
+
+	return TRUE;
+}
+
+/*
+ *	メモリダイヤルの読出し
+ *	(BBK_GetMemoryDialコール)
+ */
+void	GetMemoryDial(BBK_ARGUMENT *stArg,BBK_MEMORY_DIAL_DATAS *stMemDialDatas)
+{
+	long	lRecode,lRecodeStart,lRecodeEnd;
+
+	// パラメータ設定
+	printf("読込開始レコード番号, 終了レコード番号:");
+	scanf("%d,%d",&lRecodeStart,&lRecodeEnd);
+
+	// BBKライブラリ呼出し
+	if(lpfnBBK_GetMemoryDial(stArg,stMemDialDatas,lRecodeStart,lRecodeEnd)==FALSE){
+		DisplayBBKError(stArg);
+		return;
+	}
+
+	// 結果の表示
+	printf("--- 結果(番号,ｲﾝﾃﾞｯｸｽ名,電話番号,ｸﾞﾙｰﾌﾟ,種別, ｼｰｸﾚｯﾄ, 文字ｺｰﾄﾞ) ---\n");
+	for(lRecode=lRecodeStart; lRecode&lt=lRecodeEnd; lRecode++){
+		printf("%3u: %s, %s,%3u, %2X, %u, %u\n",lRecode,
+			stMemDialDatas-&gtMDial[lRecode].strIndexName,
+			stMemDialDatas-&gtMDial[lRecode].strDial,
+			stMemDialDatas-&gtMDial[lRecode].lGroup,
+			stMemDialDatas-&gtMDial[lRecode].bType,
+			stMemDialDatas-&gtMDial[lRecode].IsSecret,
+			stMemDialDatas-&gtMDial[lRecode].bIndexCode);
+
+	}
+}
+
+/*
+ *	メモリダイヤルの書込み
+ *	(BBK_SetMemoryDialコール)
+ */
+void	SetMemoryDial(BBK_ARGUMENT *stArg,BBK_MEMORY_DIAL_DATAS *stMemDialDatas)
+{
+	long	lRecode,lRecodeStart,lRecodeEnd;
+	char dat[10];
+
+	// パラメータ設定
+	printf("書込開始レコード番号, 終了レコード番号:");
+	scanf("%d,%d",&lRecodeStart,&lRecodeEnd);
+	for(lRecode=lRecodeStart; lRecode&lt=lRecodeEnd; lRecode++){
+		
+		printf("No.%3u:ｲﾝﾃﾞｯｸｽ名:",lRecode);
+		scanf("%s",stMemDialDatas-&gtMDial[lRecode].strIndexName);
+
+		printf("No.%3u:電話番号:",lRecode);
+		scanf("%s",stMemDialDatas-&gtMDial[lRecode].strDial);
+
+		printf("No.%3u: ｸﾞﾙｰﾌﾟ番号, 種別(0), ｼｰｸﾚｯﾄ, 文字ｺｰﾄﾞ :",lRecode);
+		scanf("%u,%x,%u,%u",
+			&stMemDialDatas-&gtMDial[lRecode].lGroup,
+			&stMemDialDatas-&gtMDial[lRecode].bType,
+			&stMemDialDatas-&gtMDial[lRecode].IsSecret,
+			&stMemDialDatas-&gtMDial[lRecode].bIndexCode);
+
+		stMemDialDatas-&gtMDial[lRecode].lIndexNameLength =
+				strlen( stMemDialDatas-&gtMDial[lRecode].strIndexName );
+
+		stMemDialDatas-&gtMDial[lRecode].lDialLength      =
+				strlen( stMemDialDatas-&gtMDial[lRecode].strDial );
+	}
+
+	// 確認
+	printf("\n--- 番号,ｲﾝﾃﾞｯｸｽ名,電話番号,ｸﾞﾙｰﾌﾟ,種別, ｼｰｸﾚｯﾄ, 文字ｺｰﾄﾞ ---\n");
+	for(lRecode=lRecodeStart; lRecode&lt=lRecodeEnd; lRecode++){
+		printf("%3u: %s, %s,%3u, %2X, %u, %u\n",lRecode,
+			stMemDialDatas-&gtMDial[lRecode].strIndexName,
+			stMemDialDatas-&gtMDial[lRecode].strDial,
+			stMemDialDatas-&gtMDial[lRecode].lGroup,
+			stMemDialDatas-&gtMDial[lRecode].bType,
+			stMemDialDatas-&gtMDial[lRecode].IsSecret,
+			stMemDialDatas-&gtMDial[lRecode].bIndexCode);
+
+	}
+	printf("書き込みますか？[Y/N]");
+	scanf("%s",dat);
+	if(dat[0]!='y' && dat[0]!='Y')
+		return;
+
+	// BBKライブラリ呼出し
+	if(lpfnBBK_SetMemoryDial(stArg,stMemDialDatas,lRecodeStart,lRecodeEnd)==FALSE){
+		DisplayBBKError(stArg);
+		return;
+	}
+
+}
+
+/*
+ *	メイン
+ *
+ */
+void main()
+{
+	HINSTANCE			hInstBBK;	// BBKライブラリのハンドル
+	// 引数
+	static BBK_ARGUMENT		stArg;
+	static BBK_MEMORY_DIAL_DATAS	stMemDialDatas;
+
+	// ライブラリロード
+	if(LoadBBKLibrary(&hInstBBK) == FALSE )
+		exit(-1);
+
+	// 変数初期化
+	stArg.hWnd=NULL;	// コンソールアプリはNULLにする
+	printf("デバイス名:(\"com1\",\"com2\",...):");
+	scanf("%s",stArg.strDevName);
+	printf("暗証番号（４ケタ）:");
+	{
+		char buf[10];
+		scanf("%s",buf);
+		memcpy(stArg.lpbPassWord,buf,4);
+	}
+
+	// メインメニュー
+	int i=1;
+	while(i!=99){
+		printf("\nBBK Library acess sample\n\n");
+		printf(" 1:BBK_GetMemoryDial\n");
+		printf(" 2:BBK_SetMemoryDial\n");
+		printf(" 3:BBK_AllClearMemoryDial\n");
+		printf(" 4:BBK_GetMyDial\n");
+		printf("99:Exit\n");
+
+		printf("Command:");
+		char getstring[80];
+		scanf("%s",getstring);
+		i=atoi(getstring);
+		if(i&lt0){
+			continue;
+		}
+		switch(i){
+			case 1:	// BBK_GetMemoryDial
+				GetMemoryDial(&stArg,&stMemDialDatas);
+				break;
+
+			case 2:	// BBK_SetMemoryDial
+				SetMemoryDial(&stArg,&stMemDialDatas);
+				break;
+
+			case 3:	// BBK_AllClearMemoryDial
+				lpfnBBK_AllClearMemoryDial(&stArg);
+				break;
+
+			case 4:	// BBK_GetMyDial
+				{
+					char	strDial[MAX_NUMBER_LENGTH+1];
+					long	lLength=sizeof(strDial);
+					lpfnBBK_GetMyDial(&stArg,strDial,&lLength);
+					printf("自機電話番号：%s\n",strDial);
+				}
+				break;
+
+			case 99:// 終了
+				break;
+			default:
+				continue;
+		}
+	}
+
+	// ライブラリアンロード
+	if( FreeBBKLibrary(hInstBBK) == FALSE )
+		exit(-1);
+	exit(0);
+}
+</PRE>
+</TD></TR>
+</TABLE>
+
+<HR>
+<H3><FONT COLOR="#3366FF">おわりに</FONT></H3>
+　今回時間がなかったため、乱暴な内容になってしまいました。申し訳ありません(T_T)。<BR>
+しかし、いつまでも“執筆中”よりはましかと思い、一気に書き上げてしまいました。<BR>
+今後、暇ができたら改訂していきたいと思いますので、ご了承下さい。<BR>
+　<STRIKE>前回の「HW編」後に、某店に、「ケーブル作って！」とお願いしましたが、「コストがあいません」ということで、断られてしまいました。<BR>
+最新コマンドは入手できないわ、ケーブルは自作しかないわで、この企画は失敗に終わりそうですが、</STRIKE>まだ諦めたわけではありません。どなたか、力になって下さる方がいる場合は是非ご一報下さいm(_ _)m。<BR>
+<HR>
+
+
+<H3><FONT COLOR="#3366FF">v0.02（改訂:99/01/04,99/02/16）</FONT></H3>
+市販ソフトで使われている、新コマンドがわかってきました。<BR>
+これは、「ラジオ・ライフ」'98年12月号の記事がきっかけになりました。この記事自体はさわりしか触れていないので、現在研究中です。いまのところ、「カタカナ」で「９６００ｂｐｓ」までは実現してv0.02で公開しています。<BR>
+しかし、漢字についてはまだ検討中です（ラジオ・ライフの記事では「携帯機情報読出動作」「移動機情報要求」の１～３６桁に相当する部分が不明です。ここがわからないまま、作ってしまっても良いのですが気持ちが悪いのでいまのところ検討中です）。<BR>
+<BR>
+
+<HR>
+<BR>
+<H3><FONT COLOR="#3366FF">その後（改訂:2000/11/25）</FONT></H3>
+<BR>
+その後、皆さんのお力添えのお陰で、ＢＢＫはグループ，漢字，高速転送ができるようになり、また、ケーブル単体の販売も一般的に行われるようなってきました。<BR>
+今後はE-Mailアドレスや複数電話番号を是非扱いたいと思っているのですが、毎度の事ながら情報がまったくありません。<BR>
+もし、情報を持っている方がいたら、是非私のほうまでご一報下さい。よろしくお願い致します。<BR>
+<BR>
+<HR>
+<BR><A HREF="index.htm">【もどる】</A>
+<HR>
+【改訂記録】<BR>
+1998/08/31版：公開<BR>
+1999/01/04版：新バージョン記事<BR>
+1999/02/16版：新バージョン記事<BR>
+1999/02/16版：新バージョン記事<BR>
+2000/11/25版：見なおし<BR>
+<HR><FONT SIZE=-1>Copyright (c) 1997-2000, BearBeetle, Allrights reserved.</FONT>
+</BODY>
+</HTML>

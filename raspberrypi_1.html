@@ -1,0 +1,173 @@
+<HTML>
+<HEAD>
+   <TITLE>Raspberry Pi GPIO control to the 8x8 LED Matrix(1)</TITLE>
+</HEAD>
+<BODY BACKGROUND="img/bcg_280.gif">
+<A NAME="TOP_TOP"></A>
+<BR>
+<P>
+<CENTER><BLINK><FONT SIZE=+1 COLOR="#3366FF">★ Raspberry Piで8x8 LEDマトリックスを制御(1)／スクロール時計表示 ★</FONT></BLINK></CENTER>
+<HR>
+<CENTER>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/khMbMRzCaTA" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+<BR>
+実行例（「5/3 14:54」とスクロール表示）<BR>
+</CENTER>
+<HR>
+<H3>【１】はじめに</H3>
+<A HREF="https://ja.wikipedia.org/wiki/Raspberry_Pi">Raspberry Pi</A>は、本体基板の価格は680円程度と非常に安価なコンピューターで、
+その割にはかなり高性能であり、OSにLinuxやWindows10が使用できます。またGPIOがついているので、これをインタフェースとして、色々なセンサーやデバイスを接続することができます。<BR>
+私も、遅まきながら、Raspberry Piを購入して、さらに自作HWをつなげて遊んでみました。
+ネットには、もっと凝ったものはたくさんありますが、私はあまりお金も時間もないのであまり凝ったことができません。<BR>
+ということで、秋葉原で何となく買った、8x8 LEDマトリックスを使って、
+日時をスクロール表示するシンプルな時計のようなものを作成しましたので、紹介します。<BR>
+<BR>
+
+<H3>【２】Raspberry Piの準備</H3>
+書籍や、他のHPにもたくさん記事があるのでそちらを参照してください。<BR>
+私は、あまり、セットアップ等に煩わされたくなかったので、Raspberry Piは、Wi-FiつきのZero WHのセットをAmazonで購入しました。<BR>
+<FONT SIZE=-1>
+※「Raspberry Pi Zero WH Starter Kit 8GB」を4,968円で購入しました。GPIOのヘッダピンが既に取り付けられており、またOSイメージが書き込み済みのSDカードや、ケース、電源、USBとVHDIの変換コネクタ類がついているので、妥当な価格と思います。<BR>
+</FONT><BR>
+今回、OSはRaspberry Pi標準のRaspbian(Linux)をインストールしました。<BR>
+<BR>
+<BR>
+<H3>【３】8x8 LEDマトリックス回路</H3>
+部品表と結線図は、<A HREF="pdf/LED_Matrix_SCH.pdf">こちら</A>を参照してください。<BR><BR>
+試作ボードは、穴あきベーク板にジャンパー線をはんだ付けして作成しました。<BR>
+<FONT SIZE=-1>
+(数年ぶりに半田ごてを握って、ジャンパーを飛ばそうとすると、見えない・・ダブって見える。仕方なしに、拡大眼鏡を装着しましたが、結局芋半になってしまった(T_T)..）<BR>
+</FONT>
+<BR>
+
+部品代は全部で1,000円程度です。<BR>
+8x8 LEDマトリックスは、8端子あるアノード端子をOPEN又は5Vを印可し、8端子あるカソード端子にOPEN又はGNDに接続することで、任意のLEDを点灯させることができます
+（そのままだと過電流となるため、直列に100～150Ω程度の抵抗をいれる）。
+Raspberry Piからは、GBPIO出力をソースドライバー／シンクドライバーというトランジスタアレイを介して制御します。<BR>
+8x8 LEDマトリックスは、アノード8端子＋カソード8端子＝16端子となるので、GPIOを16端子分使用します。Raspberry PiのGPIOは、0～26の27端子あるので数としては足ります。<BR>
+<FONT SIZE=-1>
+※本HPの方法だと、8x8 LEDマトリックスが2個以上だとGPIO端子が足りなくなるので、破綻してしまいます。ほかのHPを見ると、直接GPIOでの制御は行わず、て、I2C＋デコーダ回路などの構成にしているようでした。<BR>
+</FONT>
+Rasberry Piのヘッダピンに接続できるように、穴あきベーク板側にPCB ソケット（2 列×20P ）を取り付けています。<BR>
+LEDマトリックスは、任意の行、又は列について点灯パターンを制御することができます。
+但し、複数行は同時制御できないので、各行順次ON/OFFしながらの表示となります（切り替えが速いので人間の目にはわからない）。<BR><BR>
+<CENTER>
+＜写真＞<BR>
+<IMG SRC="img/LedMatrix1.jpg"><BR>Raspberry Piと試作ボード<BR>
+<IMG SRC="img/LedMatrix2.jpg"><BR>Raspberry Piと試作ボードを接続<BR>
+<IMG SRC="img/LedMatrix3.jpg"><BR>裏返したところ<BR>
+</CENTER>
+<BR>
+<H3>【４】プログラム</H3>
+ソースコードは、<A HREF="obj/LedWatch.zip">こちらから、</A>ダウンロードしてください（LedWatch.zip）。<BR>
+Raspberry Piのプログラム言語は、Pythonの使用を想定しています。このため、各種ライブラリーも、Python用となっています。<BR>
+私も今回少しばかりPythonをかじってみました。しかしながら、GPIO制御ライブラリをダウンロードしようとしてうまくいかず、気の短い私としては、ライブラリを必要としない方法として
+昔懐かしいC言語で進めることにしました。<BR><BR>
+
+<H4>【４－１】サブルーチン</H4>
+各サブルーチンの説明を以下に記載します<BR>
+<table border="2" bgcolor="#C0C0E0">
+    <tr><td>関数名</td><td>説明</td></tr>
+    <tr><td>MapGPIO</td><td>メモリデバイスをオープンして、物理メモリを仮想メモリ上にマップする（初期化処理）</td></tr>
+    <tr><td>UnmapGPIO</td><td>メモリデバイスをクローズする（使っていない）</td></tr>
+    <tr><td>InitGPIO</td><td>GPIO端子をOUT/INのいずれかに設定する処理。引数：GpioNo=GPIO番号、data=0ならIN設定、data=1ならOUT設定</td></tr>
+    <tr><td>OutOnGPIO</td><td>指定したGPIO端子をONにする処理。引数：GpioNo=GPIO番号</td></tr>
+    <tr><td>OutOffGPIO</td><td>指定したGPIO端子をOFFにする処理。引数：GpioNo=GPIO番号</td></tr>
+    <tr><td>FontInit</td><td>フォントファイル(MSKG.FNT)読み込み、メモリ上の一部フォント(SP,':','/')の位置を移動</td></tr>
+    <tr><td>write_font</td><td>文字列をLEDマトリックスに表示する</td></tr>
+</table>
+<BR>
+<H4>【４－２】GPIOへのアクセス</H4>
+C言語では、GPIOレジスタをメモリマップしてアクセスする形になります。<BR>
+具体的には、ソースコードの、MapGPIO関数を参照してください。<BR>
+<BR>
+また、本ソースコードでは、GPIOのアドレス(GPIO_BASE)は、以下のように定義しています。<BR><BR>
+<TABLE  BORDER=1 WIDTH=500 cellspacing="0" bgcolor="#C0C0E0" >
+<TR><TD>
+#define GPIO_BASE       PERIPHERAL_BASE + 0x00200000
+</TD></TR>
+</TABLE>
+<BR>
+Raspberry Pi Zero と、Raspberry Pi 2ではGPIOのアドレスが異なります。<BR>
+本ソースコードは、Raspberry Pi Zero用となっています。<BR>
+Raspberry Pi 2では、下記のコメントアウト行の方を有効にすればうまくいくはずです（試していません）。<BR>
+<BR>
+<TABLE  BORDER=1 WIDTH=500 cellspacing="0" bgcolor="#C0C0E0" >
+<TR><TD>
+#define PERIPHERAL_BASE 0x20000000      // PI0<BR>
+//#define PERIPHERAL_BASE       0x7E000000  // PI2<BR>
+</TD></TR>
+</TABLE>
+<BR>
+<BR>
+Raspberry PiのGPIO制御用レジスタには、以下の３種類があります。<BR>
+<BR>
+<table border="2" bgcolor="#C0C0E0">
+    <tr><td>No</td><td>種類</td><td>説明</td></tr>
+    <tr><td>１</td><td>GPIOの機能を設定するレジスタ</td><td>各GPIOを出力にするか、入力にするかの機能を設定する</td></tr>
+    <tr><td>２</td><td>GPIO出力を設定するレジスタ</td><td>各GPIOをOn(5V）にする</td></tr>
+    <tr><td>３</td><td>GPIO出力をクリアするレジスタ</td><td>各GPIOをOff(0V）にする</td></tr>
+</table>
+<BR>
+プログラムの起動時にNo.1でGPIOの機能を設定し、No.2でON,No.3でOFF制御を実施します。<BR>
+<BR>
+各レジスタの仕様をまとめたものと、このレジスタの制御を実施しているコード部分についての説明をPDFにまとめました。
+<A HREF="pdf/RaspberryPiGpioRegs.pdf">こちらを</A>参照してください<BR>
+<BR>
+LEDマトリックスを構成する各LEDの行番号および列番号と、そこに接続されているGPIOピンの番号はそれぞれ以下の配列で定義しています。<BR>
+GXが横方向で、GYが縦方向になりますので結線を変えた場合はこちらを調整してください。<BR>
+<BR>
+<TABLE  BORDER=1 WIDTH=500 cellspacing="0" bgcolor="#C0C0E0" >
+<TR><TD>
+int GX[8] = {  2,  3,  4, 17, 18, 27, 22, 23 };<BR>
+int GY[8] = { 24, 25, 12,  5,  6, 13, 19,  0 };<BR>
+</TD></TR>
+</TABLE>
+<BR>
+GPIOへのアクセスの詳細は、、末尾の【参考】に記載されているHPの記事を参照にしてください。<BR>
+<BR>
+<H4>【４－３】文字のLEDマトリックスへの表示</H4>
+本プログラムでは、フォントファイルをロードして、そのビット配置に応じて、LEDマトリックスの各LEDを点灯／消灯させています。<BR>
+フォントファイルは、<A HREF="http://www.geocities.jp/littlimi/misaki.htm">美咲フォント</A>というものを使用しています。<BR>
+「PC-E500 SCRNJPN.FNT 形式」を使用しています。<BR>
+実行時に、HPからダウンロードした「MSKG.FNT」ファイルを同じディレクトリにコピーしてください。<BR>
+但し、PC-E500形式でのフォントの並びがASCII配列、UNICODEや、SJISなどとは一致しておらずどうなっているのかわかりませんでした。<BR>
+ASCII配列と一部かぶっていたので、その部分に対して適当にオフセット計算しています。また、スペース、'/'、':'なども全然違うところに
+あるため、初期化時に無理やり配置しなおしています。<BR>
+このため、折角の漢字FONTなのに、漢字が使えない状態となっています。<BR>
+これに関しては、今後の課題です。<BR>
+なお、文字は90度横になっているため、スクロール処理にビットシフトが不要であり、簡単にすることができています。<BR>
+<BR>
+
+<H4>【４－４】コンパイルと実行</H4>
+コンパイルは、LedWatch.cをgccでコンパイルします。<BR>
+コンソールから下記のようにインプットすると、"LedWatch"という実行ファイルが作成されます。<BR>
+<TABLE  BORDER=1 WIDTH=500 cellspacing="0" bgcolor="#C0C0E0" >
+<TR><TD>
+gcc LedWatch.c -o LedWatch<BR>
+</TD></TR>
+</TABLE>
+<BR>
+実行は、以下のように入力してください。<BR>
+<TABLE  BORDER=1 WIDTH=500 cellspacing="0" bgcolor="#C0C0E0" >
+<TR><TD>
+sudo ./LedWatch<BR>
+</TD></TR>
+</TABLE>
+【重要】事前に【４－３】に記載した「MSKG.FNT」を同じディレクトリにコピーしておく必要があります。<BR><BR>
+停止はプログラミングしていないので、[CTRL]+[C]で強制終了させてください。<BR>
+<HR>
+<H3>【参考】</H3>
+<A HREF="https://qiita.com/moutend/items/534d597cf5c867273319">[Lチカ] Raspberry PiでC言語からSoCのレジスタを操作してGPIOを制御する</A>・・・GPIO制御のC言語コードを参考にさせてもらいました。<BR>
+<A HREF="http://www.geocities.jp/littlimi/misaki.htm">8×8 ドット日本語フォント「美咲フォント」</A>
+<HR>
+【改訂記録】<BR>
+2018/05/13版：公開<BR>
+2018/05/20版：誤記修正・写真追加<BR>
+2018/05/30版：GPIOレジスタを説明するPDFを追加、それに合わせて文章を修正<BR>
+<A HREF="index.html">[ホームへ戻る］</A><BR>
+<HR>
+
+<FONT SIZE=-1>Copyright (c) 1997-2018, BearBeetle, Allrights reserved.</FONT>
+</BODY>
+</HTML>

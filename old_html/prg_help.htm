@@ -1,0 +1,226 @@
+<HTML>
+<HEAD>
+   <TITLE>BB Lab, HELP File</TITLE>
+</HEAD>
+<BODY BACKGROUND="bcg_280.gif">
+<A NAME="TOP_TOP"></A><FONT SIZE=-1>このページはNetscape
+Navigator 2.0以降及びMicrosoft Internet Explorer 3.0以降で正常に見られます。</FONT>
+<BR><FONT SIZE=-2>Solly,Japanese only</FONT>
+<BR>
+<HR>
+<CENTER><BLINK><FONT COLOR="#3366FF"><FONT SIZE=-1>★ ＢＢ研究所 ★</FONT></FONT></BLINK></CENTER>
+<CENTER><FONT COLOR="#3366FF"><FONT SIZE=+2>ＨＥＬＰファイル入門</FONT></FONT></CENTER>
+<P>
+&nbsp;　ＨＥＬＰファイルは、拡張子が、.HLPのファイルで、ソフトの取説などをペーパレスで行うものです。<BR>
+最近はＨＴＭＬ技術の発達により、Microsoft社もHELPをHTMLに変更する方針のようですが、軽快さやコンパクトさでは、HELPファイルの方がまだ使えると思います。<BR>
+　ここでは、ＨＥＬＰファイルの入門的な部分のみふれます。詳細については、アスキー出版より良い解説書が出ているようです。<BR>
+私自身、この解説書を入手したいのですが、いかんせん名前がわからないので入手できません(T_T)。<BR>
+　それではまず以下のツールを用意して下さい。
+
+<UL>
+<LI>Word（ＲＴＦファイルを生成できる、エディタ）</LI>
+<LI>Microsoft Help Workshop</LI>
+<BR>
+VC++/VB等の開発ツールに添付されていますが、最近フリー化したので、<A HREF="ftp://ftp.microsoft.com/softlib/MSLFILES/hcwsetup.EXE">ここから</A>ダウンードできます。<BR>
+※WORD 97から、ＲＴＦの書式が変わったようで、古いバージョンのHelp Workshopは対応できなくなりました。<BR>　この場合も<A HREF="ftp://ftp.microsoft.com/softlib/MSLFILES/hcwsetup.EXE">ここから</A>ダウンロードして下さい。</UL>
+
+<HR>
+<H2><FONT COLOR="#000000">１．まずは、簡単なＨＥＬＰファイルを作ってみましょう！</FONT></H2>
+<H3><FONT COLOR="#000000">１．１．ＲＴＦファイルを作る</FONT></H3>
+
+<FONT COLOR="#000000">　Ｗｏｒｄを立ち上げて下さい。</FONT><BR>
+<FONT COLOR="#000000">　Ｗｏｒｄで、まず以下の文章を作って下さい。</FONT>
+<BR>
+<BR>
+<TABLE  BORDER=1 WIDTH=500 cellspacing="0" bgcolor="#C0C0E0" >
+<TR><TD>これは、ヘルプファイルです。
+<P>ようこそ！</TD></TR>
+</TABLE>
+
+「名前を付けて保存(A)」で、保存して下さい。このとき、「ファイルの種類(T)」を「リッチテキスト形式（ＲＴＦ）」にして下さい。
+<BR>ファイル名は適当に付けてかまいません。今回は、「TEST1.RTF」にします。
+<BR>
+
+<H3>１．２．ヘルププロジェクトを作る</H3>
+
+<UL>
+
+<LI>Help Workshopを立ち上げて下さい。</LI>
+<LI>「File」→「New」を選びます。</LI>
+
+<UL>
+<LI>「Help Project」を選びます。</LI>
+<LI>RTFファイルと同じディレクトリ（フォルダ）に移動して、「test.hlp」というファイル名にして下さい。</LI>
+<LI>「test.hpj」ウィンドウが作成されます。</LI>
+</UL>
+
+<LI>「Files...」をクリックします</LI>
+<LI>「Add...」をクリックします。</LI>
+
+<UL>
+<LI>「test.rtf」を選びます。</LI>
+<LI>「OK」をクリックします。</LI>
+</UL>
+
+<LI>「Save and Complile」を選びます。</LI>
+
+</UL>
+
+以上で、HELPファイルが作成されます。
+
+<P>
+HELPファイル「test1.hlp」を起動してみましょう。<BR>ちゃんと表示されましたか？<BR>
+このように簡単にヘルプファイルは作成できます。続いて、もうちょっと見目のよいヘルプファイルを作ってみましょう！
+<P>
+
+<HR>
+
+<H2>２．目次付きのＨＴＭＬファイルを作りましょう！</H2>
+
+<H3><FONT COLOR="#000000">２．１．ＲＴＦファイルを作る</FONT></H3>
+
+<UL>
+<LI><FONT COLOR="#000000">　　まずＷｏｒｄで、以下の文章を作って下さい。</FONT></LI>
+<BR>&nbsp;
+
+<TABLE  BORDER=1 WIDTH=500 cellspacing="0" bgcolor="#C0C0E0" >
+<TR><TD>
+<H3>#タイトル（第１章）
+　<FONT SIZE=+0>(←１行目に書く）</FONT></H3>
+第１章の本文
+<H3>
+------------------- <FONT SIZE=+0>(改ページを挿入）</FONT></H3>
+
+<H3>
+#タイトル（第２章） 　　　<FONT SIZE=+0>(←１行目に書く）</FONT></H3>
+第２章の本文</TD>
+</TR>
+</TABLE>
+
+※タイトル１の前にカーソルを持っていき、「挿入(I)」→「注釈(N)」→（任意の注釈番号）に、＃をいれて、「ＯＫ」をクリックして下さい。
+<BR>　そして、（注釈ウィンドウ）に、「ID_TITLE1」と入力して下さい。
+<BR>　タイトル２も同様に「ID_TITLE2」を入力して下さい。
+<BR>
+<LI>
+ファイル名、「TEST2.RTF」で保存して下さい。</LI>
+</UL>
+
+<H3>２．２．ヘルププロジェクトを作る</H3>
+
+<UL>
+<LI>Help Workshopを立ち上げて下さい。</LI>
+<LI>「File」→「New」を選びます。</LI>
+<UL>
+<LI>「Help Project」を選びます。</LI>
+<LI>RTFファイルと同じディレクトリ（フォルダ）に移動して、「test2.hlp」というファイル名にして下さい。</LI>
+<LI>「test2.hpj」ウィンドウが作成されます。</LI>
+</UL>
+<LI>「Files...」をクリックします</LI>
+<LI>「Add...」をクリックします。</LI>
+<UL>
+<LI>「test2.rtf」を選びます。</LI>
+<LI>「OK」をクリックします。</LI>
+</UL>
+<LI>「File」→「New」を選びます。</LI>
+<UL>
+<LI>「Help Contents」を選びます。</LI>
+<LI>「Default fileame(and window)」に、「test2」と入力します。</LI>
+<LI>「Default title」に、「テスト２」と入力します。</LI>
+<LI>「Add Above...」をクリックします。</LI>
+<UL>
+<LI>「Title」に「タイトル(第１章）」と入力します。</LI>
+<LI>「Topic ID」に「ID_TITLE1」と入力します。</LI>
+</UL>
+
+<LI>「Add Below..」をクリックします。</LI>
+<UL>
+<LI>「Title」に「タイトル(第２章）」と入力します。</LI>
+<LI>「Topic ID」に「ID_TITLE2」と入力します。</LI>
+</UL>
+</UL>
+
+<LI>「File」→「Save As...」を選択し、コンテンツファイル名に「test2.cnt」を指定してセーブします。</LI>
+<LI>「test2.hpj」ウィンドウを選択する。</LI>
+<LI>「Save and Complile」を選びます。</LI>
+</UL>
+以上で、HELPファイルが作成されます。
+
+<P>HELPファイル「test1.hlp」を起動してみましょう。<BR>
+今度は、目次が表示されるハズです。ちゃんと表示されましたか？<BR>
+このように目次を作成することができます。<BR>
+また、RTFファイル中に、注釈「#」を挿入し、ID_XXXと名付けることにより、その部分に目次を作ることができます。
+<BR>
+<HR>
+<H2>３．本文中にリンクを張りましょう。</H2>
+リンクを張るのは、ＲＴＦファイルの変更だけですみます。TEST2.RTFに以下のように１行追加しましょう。
+<BR>
+<TABLE  BORDER=1 WIDTH=500 cellspacing="0" bgcolor="#C0C0E0" >
+<TR>
+<TD>
+<H3>
+#タイトル（第１章）　　
+　<FONT SIZE=+0>(←１行目に書く）</FONT></H3>
+第１章の本文&nbsp;
+<BR>リンクを張るぞー：<U><FONT COLOR="#003300">ここをクリック</FONT><FONT COLOR="#990000">I</FONT></U><FONT COLOR="#990000">D_TEST2</FONT>&nbsp;
+<H3>
+------------------- <FONT SIZE=+0>(改ページを挿入）</FONT></H3>
+
+<H3>
+#タイトル（第２章） 　　　<FONT SIZE=+0>(←１行目に書く）</FONT></H3>
+第２章の本文</TD>
+</TR>
+</TABLE>
+<U><FONT COLOR="#003300">ここをクリック：</FONT></U><FONT COLOR="#000000">リンクを張りたい範囲を、下線（２重）にして下さい。</FONT>
+<BR><FONT COLOR="#990000"><U>I</U>D_TEST2</FONT><FONT COLOR="#000000">：リンク先のＩＤを隠し文字で記述します。※２重下線のあとに間をあけずに記述しなければなりません。</FONT>
+
+<P>これを、Help Workshopによりコンパイルすると、リンクを張ることができます。
+
+<P>
+<HR WIDTH="100%">
+<H2>
+３．索引をつくりましょう。</H2>
+索引の作成も、ＲＴＦファイルの変更だけですみます。TEST2.RTFにさらに以下のように１行追加しましょう。
+<BR>
+<TABLE  BORDER=1 WIDTH=500 cellspacing="0" bgcolor="#C0C0E0" >
+
+<TR>
+<TD>
+<H3>
+#タイトル（第１章）　　　<FONT SIZE=+0>(←１行目に書く）</FONT></H3>
+第１章の本文
+<BR>リンクを張るぞー：<FONT COLOR="#000000"><U>ここをクリックI</U>D_TEST2</FONT>&nbsp;
+
+<P><B>K</B>飛行機は、空を飛ぶ乗り物です。
+<H3>
+------------------- <FONT SIZE=+0>(改ページを挿入）</FONT></H3>
+
+<H3>
+#タイトル（第２章） 　　　<FONT SIZE=+0>(←１行目に書く）</FONT></H3>
+第２章の本文</TD>
+</TR>
+</TABLE>
+「飛行機」の前に、カーソルを持っていき、「挿入(I)」→「注釈(N)」→（任意の注釈番号）に、Ｋをいれて、「ＯＫ」をクリックして下さい。
+<BR>　そして、（注釈ウィンドウ）に、「飛行機」と入れて下さい。
+
+<P>このＲＴＦをHelp Workshopによりコンパイルして下さい。
+
+<P>索引に、「飛行機」ができるはずです。うまくいきましたか？
+
+<P>
+<HR WIDTH="100%">
+<H2>４．おわりに</H2>
+　例を挙げたのみで、実際の意味合いについてはほとんど触れませんでしたが、多分みなさん理解できると思います。
+<BR>　これらのテクを知っていると、結構まともなヘルプファイルが作れます（私の場合、ほとんどこれしか知らない(^ ^;。さらに、アプリケーションとの連携とかありますが、そこら辺はウィザードを使ってつくると簡単なようです。
+<BR>　また、ＨＥＬＰファイル作成支援ソフトもあります。ある程度以上大規模なHELPファイルになると、これらのツールを使った方が効率的でしょう。
+
+<P>
+<HR WIDTH="100%">
+【改訂記録】<BR>
+98/04/05版：公開<BR>
+98/04/30版：誤記修正<BR>
+99/01/04版：構成修正（見やすく）<BR>
+<HR>
+<BR><A HREF="index.htm">【もどる】</A>
+<HR><FONT SIZE=-1>Copyright (c) 1997-1999, BearBeetle, Allrights reserved.</FONT>
+</BODY>
+</HTML>

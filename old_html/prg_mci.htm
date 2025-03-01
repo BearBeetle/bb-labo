@@ -1,0 +1,244 @@
+<HTML>
+<HEAD>
+   <TITLE>BB Programming Lab.</TITLE>
+</HEAD>
+<BODY BACKGROUND="bcg_280.gif">
+<A NAME="TOP_TOP"></A><FONT SIZE=-1>このページはNetscapeNavigator
+2.0以降及びMicrosoft Internet Exploler 3.0以降で正常に見られます。</FONT>
+<BR><FONT SIZE=-2>Solly,Japanese only</FONT>
+<BR>
+<HR>
+<CENTER><BLINK><FONT COLOR="#3366FF"><FONT SIZE=-1>★ ＢＢ研究所 ★</FONT></FONT></BLINK></CENTER>
+<CENTER><FONT COLOR="#3366FF"><FONT SIZE=+2>MCIによる動画再生</FONT></FONT></CENTER>
+　<FONT SIZE=-1>VBプログラマやDelphiプログラマの方には申し訳ありませんが、このページも例によって、VC++（C言語）プログラマを前提にしています。また、Windows95を前提に解説いたします。</FONT><BR>
+
+<HR>
+
+　MCI(Multimedia Control Interface)とは、マルチメディアのコントロールインタフェースです。これは、その昔Microsoft社がApple社のQickTimeに対抗して、
+開発したもので、その後QTWやその他のマルチメディアドライバも、MCIからアクセスできるようになったため、機能は少ないながら、現在一番手軽なマルチメディアドライバへのアクセス方法となっています。<BR>
+　ちなみに、Microsoft社はその後、ActiveMovieやNetShowといった更に強力なマルチメディアドライバを作り、IEやOSにバンドルしましたが、これらも、互換を保つためにMCIサポートしています（もっとも、MPEG4に盛り込まれるなど、QickTimeに軍配が上がりつつあるようですが・・・）。<BR>
+　MCIは、どちらかというと有名な技術で解説本も多いのですが、拙作<A HREF="http://www2s.biglobe.ne.jp/~img/download_free.htm#VIDEO_SCREEN">ヴィデオ・スクリーン</A>でも使用していることから、今回扱うことにしました。<BR>
+　ここでは、このMCIによる動画再生について簡単なサンプルを交えながら解説いたします。<BR>
+※MCIはWAV,MIDI等オーディオも扱えますがここでは特に触れません<BR>
+<BR>
+<P>
+<HR>
+<H3><FONT COLOR="#3366FF">１．必要な環境</FONT></H3>
+　MCIコマンドを使用出来るようにするには、MCI用のヘッダファイル(MMSYSTEM.H）をインクルードし、ライブラリ（WINMM.LIB)をリンクする必要があります。これらは、標準のVC++に添付されています。<BR>
+　VC++5.0では、MCIプロジェクトを作成したときに「プロジェクト(P)」→「設定(S)」を選び、「リンク」の「オブジェクト／ライブラリ・モジュール」に、「WINMM.LIB」を追加して下さい。そして、<BR>
+<UL><PRE>
+#include &lt;MMSYSTEM.H&gt;
+</PRE></UL>
+をソースへ追加して下さい。<BR>
+<P>
+<HR>
+<H3><FONT COLOR="#3366FF">２．mciSendStringとmciSendCommand</FONT></H3>
+　MCIコマンドには、文字列で命令を与える方法と、数値や構造体で命令を与える方法の２種類があり、それぞれmciSendStringとmciSendCommandを用います。<BR>
+　mciSendStringは以下の書式で呼び出します。<BR>
+<UL><PRE>
+MCIERROR mciSendString(lpszCommand, lpszReturnString, cchReturn, hwndCallback)
+<UL>
+<LI>lpszCommand
+<UL>NULLで終わる文字列へのポインタです。この文字列には､ 次の形式でMCIコマンド文字列を指定します。<BR>[command] [device] [parameters]<BR></UL>
+<LI>lpszReturnString
+<UL>情報が戻されるバッファへのポインタ。情報が不要のときは､ このパラメータにNULLを指定します。</UL>
+<LI>cchReturn
+<UL>lpszReturnStringのバッファサイズをバイト数で指定します。</UL>
+<LI>hwndCallback
+<UL>コマンド文字列の中で“notify”(通知) が指定されているときに､ コールバックするウィンドウを識別します。</UL>
+</PRE></UL>
+</UL>
+　また、mciSendCommandは以下の書式で呼び出します。
+<UL><PRE>
+MCIERROR mciSendCommand(IDDevice, uMsg, fdwCommand, dwParam)
+
+<UL>
+<LI>IDDevice
+<UL>コマンド メッセージを受け取るMCIデバイスのデバイスIDを指定します。このデバイスIDは、MCI_OPENコマンド(uMsg=MCI_OPEN)で取得できます。また、IDDeviceは MCI_OPENコマンドでは使われません。</UL>
+<LI>uMsg
+<UL>コマンド メッセージを指定します。</UL>
+<LI>fdwCommand
+<UL>コマンド メッセージのフラグを指定します。(uMsgに応じて意味合いが変わります）</UL>
+<LI>dwParam
+<UL>コマンド メッセージのパラメータ ブロックを格納している構造体を指すポインタです。(uMsgに応じて意味合いが変わります）</UL>
+</UL></PRE></UL>
+<HR>
+<H3><FONT COLOR="#3366FF">３．MCIデバイス一覧表示ソフト</FONT></H3>
+それでは、まず簡単なMCIストリングを使った方法で、システムに登録されているMCIデバイスの一覧を表示させるサンプルソフトを作成します。<BR>
+システム一覧は"sysinfo"コマンドを使用します。数を取得するにはオプションに"all quantity"を指定し、各デバイス名は"all devname 番号"で指定します。<BR>
+それでは、コンソールアプリで、以下のソースを作成し、ビルトして下さい。このとき、「WINMM.LIB」のリンクも忘れないで下さい。<BR>
+<TABLE BORDER >
+<TR><TD>
+<PRE>
+#include	&lt;stdio.h&gt;
+#include	&lt;windows.h&gt;
+#include	&lt;mmsystem.h&gt;
+
+
+void main()
+{
+	char szReturnString[500];
+	char szSendString[500];
+	long lNumOfDevice,l;
+
+	printf("登録MCIデバイス表示ソフト\n");
+
+	// MCIデバイス数の取得
+	if(mciSendString("Sysinfo all quantity",szReturnString,sizeof(szReturnString),NULL)!=0){
+		fprintf(stderr,"MCIにエラー発生\n");
+		exit(-1);
+	}
+	lNumOfDevice=atoi(szReturnString);
+
+	// 一覧の作成
+	for(l=1;l<=lNumOfDevice;l++){
+		wsprintf(szSendString,"sysinfo all name %d",l);
+		mciSendString(szSendString,szReturnString,sizeof(szReturnString),NULL);
+		printf("MCI Device(%d):%s\n",l,szReturnString);
+	}
+
+	exit(0);
+}
+</PRE>
+</TD></TR>
+</TABLE>
+<P>
+実行例を以下に示します。
+<TABLE BORDER >
+<TR><TD>
+<PRE>
+D:\ito\Src\MciQuery\Debug>mciquery  
+登録MCIデバイス表示ソフト
+MCI Device(1):LiveAudioFile
+MCI Device(2):LiveAudioMetafile
+MCI Device(3):QTWVideo
+MCI Device(4):MPEGVideo
+MCI Device(5):avivideo
+MCI Device(6):waveaudio
+MCI Device(7):sequencer
+MCI Device(8):cdaudio
+
+D:\ito\Src\MciQuery\Debug>
+</PRE>
+</TD></TR>
+</TABLE>
+<P>
+上記の例では、(1)(2)がLiveAudio､(3)がQTW(Qick Time for Windows)、(4)がActiveMovie、(5)がVFW(Video for Windows)です。
+<P>
+<HR>
+<H3><FONT COLOR="#3366FF">４．処理の流れ</FONT></H3>
+ここでは、MCIデバイスに対する一般的な処理の流れを取り上げます。<BR>
+処理の流れは、mciSendString／mciSendCommandともに同じで以下のようになります。
+<UL>
+<LI>open
+<LI>play
+<LI>stop
+<LI>close
+</UL>
+通常、アプリケーション起動時又はユーザによるファイルオープン時に、openを実行し、アプリケーションの終了又は他のファイルのオープン前にcloseを行います。playとstopは、ユーザによるイベントにより実行します。
+以下の章で、各コマンドについて説明します。<BR>
+<P>
+<HR>
+
+<H3><FONT COLOR="#3366FF">５．open</FONT></H3>
+ openは、再生したい動画ファイル（＝コンテンツ(contents)番組内容）を開きます。このとき、
+mciSendString系ではエリアス（別名：下記例では"mcitest"）を付けます。closeまでの間、このエリアスに対して各種コマンドを発行できます。mciSendCommandではエリアスを指定する代わりに、open時にデバイスＩＤが戻されます。<BR>
+それぞれの書式は、以下の通り。<BR>
+<UL>
+<LI>mciSendStringコマンド<BR>
+<UL>"open ファイル名 alias エリアス名"<BR><BR>
+【例】<BR>
+mciSendString("open sample1.av1 alias mcitest",NULL,0,NULL);
+</UL>
+<BR>
+<LI>mciSendCommand命令
+<UL>MCI_OPEN (dwFlags=...，dwPalam=LPMCI_OPEN_PARMS *)
+<BR><BR>
+【例】(下記例は「ヴィデオ・スクリーン」のソースから抜粋したので、枠無し子ウィンドウというすこし変わった形態になってます）
+<PRE>
+// パラメータの設定
+stOpenParams.lpstrElementName=strPlayFileNameShort; // ファイル名
+stOpenParams.hWndParent=hMainWnd; // 親ウィンドウのハンドル
+stOpenParams.dwStyle=WS_CHILD;    // 作成するウィンドウのタイプ
+// オープン
+RetVal=mciSendCommand(0,
+	MCI_OPEN,
+	MCI_WAIT|MCI_OPEN_ELEMENT|MCI_ANIM_OPEN_PARENT|MCI_ANIM_OPEN_WS	,
+	(DWORD)(LPVOID)&stOpenParams);
+// デバイスＩＤの取得
+IDDevice=stOpenParams.wDeviceID;
+</PRE>
+</UL>
+</UL>
+<P>
+<HR>
+
+<H3><FONT COLOR="#3366FF">６．play</FONT></H3>
+<UL>
+<LI>mciSendStringコマンド<BR>
+<UL>"play エリアス名"<BR><BR>
+【例】<BR>
+mciSendString("play mcitest",NULL,0,NULL);<BR><BR>
+</UL>
+<LI>mciSendCommand命令(dwFlags=...，dwPalam=LPMCI_PLAY_PARMS *)<BR>
+<UL>
+MCI_PLAY<BR><BR>
+【例】
+<BR>
+MCI_PLAY_PARMS strPlayParams;
+...
+mciSendCommand(IDDevice,MCI_PLAY,MCI_NOTIFY,(DWORD)&strPlayParams);
+</UL></UL>
+<P>
+<HR>
+
+<H3><FONT COLOR="#3366FF">７．stop</FONT></H3>
+<UL>
+<LI>mciSendStringコマンド<BR>
+<UL>"stop エリアス名"<BR><BR>
+【例】<BR>
+mciSendString("stop mcitest",NULL,0,NULL);
+</UL></UL>
+<UL>
+<LI>mciSendCommand命令<BR>
+<UL>MCI_STOP<BR>
+<BR>
+【例】<BR>
+mciSendCommand(IDDevice,MCI_STOP,MCI_WAIT,(DWORD)NULL);
+</UL></UL>
+<P>
+<HR>
+
+<H3><FONT COLOR="#3366FF">８．close</FONT></H3>
+<UL>
+<LI>mciSendStringコマンド<BR>
+<UL>"close エリアス名"<BR><BR>
+【例】<BR>
+mciSendString("close mcitest",NULL,0,NULL);
+</UL><BR>
+<LI>mciSendCommand命令<BR>
+<UL>MCI_CLOSE<BR><BR>
+【例】<BR>
+mciSendCommand(IDDevice,MCI_CLOSE,MCI_WAIT,(DWORD)NULL);
+</UL></UL
+<P>
+<HR>
+
+<H3><FONT COLOR="#3366FF">９．サンプル</FONT></H3>
+上記説明だけでは、具体的な操作がわかりにくいと思いますので、参考にopen/play/stop/closeを使用した簡単なサンプルプログラムを作成しました。これをみることで、操作法についてはある程度理解できると思います。<BR>
+mciSendStringコマンド系を使用しています。MFCのダイアログで作成しました。<BR>
+ソースのほとんどは、ウィザードが自動生成したものです。このスケルトンに対し、リソースとMCI_StrDlg.c/MCI_StrDlg.hに変更を加えました。変更箇所は「追加 byBB」とコメントしているのでわかると思います。<BR>
+ソースは<A HREF="obj/MCI_Str.lzh">ここから</A>ダウンロードして下さい。<BR>
+オブジェクトとプロジェクトをLHA圧縮してあります。尚、使用ツールは、VC++ v5.0 Proffessinalです。<BR>
+<P>
+<HR>
+
+<H3><FONT COLOR="#3366FF">おわりに</FONT></H3>
+ MCIは比較的簡単ではありますが、それでも上記以外にかなり豊富な機能を持っています。今回作成したサンプルは、実用にはなりません。最低でもエラー処理とseekは要るでしょう。また、子ウィンドウに表示させるためにはそのウィンドウのウィンドウハンドルを取得して、拡大／縮小させる等の技術が必要になります。ここら辺は実際に作ってみると良いでしょう。最後にアドバイスですが、MCIには各社のマルチメディアデバイスがありますので、一つだけではなくなるべく多くのデバイスに対して、作ったアプリケーションのテストをする必要があります。デバイスによって動きが異なってきます。<BR>
+<P>
+<HR>
+
+<P><A HREF="index.htm">[ホームへ戻る］</A>
+<HR><FONT SIZE=-1>Copyright (c) 1997-1999, BearBeetle, Allrights reserved.</FONT>
+</BODY>
+</HTML>

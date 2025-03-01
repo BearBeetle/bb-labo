@@ -1,0 +1,164 @@
+﻿<HTML>
+<HEAD>
+   <TITLE>Raspberry Pi SPI control of the 8x32 LED Matrix(2)</TITLE>
+</HEAD>
+<BODY BACKGROUND="img/bcg_280.gif">
+<A NAME="TOP_TOP"></A>
+<BR>
+<P>
+<CENTER><BLINK><FONT SIZE=+1 COLOR="#3366FF">★ Raspberry Piで秋月電子の8x32 LEDマトリックスを制御(2) ★</FONT></BLINK></CENTER>
+<HR>
+<CENTER>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/M00V926Ob1I" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+<BR>
+実行例<BR>
+</CENTER>
+<HR>
+<H3>【１】はじめに</H3>
+前回に引き続き、秋月電子の「MAX7219使用赤色ドットマトリクスLEDモジュール」を使用します。<BR>
+今回は、予告通り漢字文字列をスクロール表示するプログラムを作りましたので、紹介いたします。<BR><BR>
+<FONT COLOR="RED">【注意事項】</FONT><BR>
+Raspberry Piの設定や結線などは前回と同じです。<BR>
+また、前回と同様に事前にRaspberry PiのSPI設定や、wiringPiの設定を行う必要があります。<BR>
+これらの情報については、<A HREF="raspberrypi_3.htm">前回の記事</A>を参照してください。<BR>
+<BR>
+<H3>【２】フォント形式</H3>
+一般的な漢字フォントは本来16x16以上のドット数が必要ですが、使用しているLEDマトリックスは、8x8ドットであり使用できません。<BR>
+このため、8x8ドットに対応している<A HREF="http://littlelimit.net/misaki.htm">美咲フォント</A>(FONTX2形式)をダウンロードして使用します。<BR>
+FONTX2形式は、フォント形式の一種であり、下記の形式のヘッダ部分＋漢字イメージの組み合わせになります。<BR>
+漢字イメージは、（プロポーショナルではなく、）ドットデータです。このため、ヘッダ内にフォントのサイズ情報(XSize,YSize)があります。<BR>
+また、漢字コードはシフトJISです。効率化のため有効な文字コード部分の範囲をブロックとして扱っています。<BR>
+下記の、Tnumがブロックの数です。そのあとに、Block[x].Start～Block[x].Endに文字コードのリストがあります。<BR>
+このリスト通りにヘッダに続く漢字イメージが格納されています。
+これらの情報から、各文字コードに対する、文字コードに該当するオフセット（先頭からのバイト数）を計算することができます。<BR>
+<BR><IMG Width=500 SRC="./img/raspberrypi4_1.png"><BR>
+上記のヘッダ部分をC言語の構造体で表現すると以下のようになります。
+
+<TABLE  BORDER=1 WIDTH=500 cellspacing="0" bgcolor="#C0C0E0" >
+<TR><TD><PRE>
+typedef struct {
+        char Identifier[6];
+        char FontName[8];
+        unsigned char XSize;
+        unsigned char YSize;
+        unsigned char CodeType;
+        unsigned char Tnum;     // number of MojiCode Entory
+        struct {
+                unsigned short Start;
+                unsigned short End;
+        } Block[];
+} font_head;
+</PRE></TD></TR>
+</TABLE>
+<BR>
+<BR>
+<H3>【３】ソースコード</H3>
+ソースコードは、<A HREF="./obj/test2.c">こちらから</A>ダウンロードしてください。<BR>
+ソースコードの大まかなフローを以下にまとめました。
+<BR><IMG  Width=800 SRC="./img/raspberrypi4_2.png"><BR>
+
+<H3>【４】コンパイル</H3>
+本項では、ソースコードのコンパイルと実行について記載します。<BR>
+まずは、【３】のソースコードをtest2.cとして保存してください。<BR>
+次に、同じディレクトリに、以下のMakefileを保存してください。<BR>
+<TABLE  BORDER=1 WIDTH=500 cellspacing="0" bgcolor="#C0C0E0" >
+<TR><TD>
+<PRE>
+test2: test2.c
+        gcc -o test2 -lwiringPi test2.c
+</PRE>
+</TD></TR>
+</TABLE>
+<BR>
+※「-lwiringPi」が、wiringPiライブラリをリンクする指定になります。<BR>
+<BR>
+lsコマンドで、Makefileとtest2.cがあることを確認してください。
+<TABLE  BORDER=1 WIDTH=500 cellspacing="0" bgcolor="#C0C0E0" >
+<TR><TD>
+<PRE>
+<strong>ls</strong>
+Makefile  test2.c
+</PRE>
+</TD></TR>
+</TABLE>
+<BR>
+次にmakeコマンドで、コンパイルを実施してください。<BR>
+<TABLE  BORDER=1 WIDTH=500 cellspacing="0" bgcolor="#C0C0E0" >
+<TR><TD>
+<PRE>
+<strong>make</strong>
+gcc -o test2 -lwiringPi test2.c
+</PRE>
+</TD></TR>
+</TABLE>
+<BR>
+lsコマンドで、test2(実行ファイルが)が作成されたことを確認してください。<BR>
+<TABLE  BORDER=1 WIDTH=500 cellspacing="0" bgcolor="#C0C0E0" >
+<TR><TD>
+<PRE>
+<strong>ls</strong>
+Makefile  <FONT COLOR="GREEN">test2</FONT>  test2.c
+</PRE>
+</TD></TR>
+</TABLE>
+<H3>【５】テキストファイルの準備</H3>
+美咲フォントで扱う文字コードは、シフトJIS形式です。<BR>
+しかし、Raspberry PiのOSは、UNICODEであるUTF-8が標準的に使用されています。<BR>
+今回の動画では、以下のテキストファイル(kanji.utf-8)を作成しました。
+<TABLE  BORDER=1 WIDTH=500 cellspacing="0" bgcolor="#C0C0E0" >
+<TR><TD>
+<PRE>
+ラズパイに秋月電子のＬＥＤマトリックスを接続して漢字を表示
+</PRE>
+</TD></TR>
+</TABLE>
+<BR>
+Raspberry Piのテキストエディタで上記テキストファイルを作成すると、UTF-8形式になります。<BR>
+このままでは、今回作成したツールでは、LEDマトリックスに表示できないので、iconvという文字コード変換ツールを使用します。<BR>
+下記の例では、UTF-8形式のテキストファイルkanji.utf-8から、シフトJS形式のテキストファイルkanji.sjisを作成します。<BR>
+<TABLE  BORDER=1 WIDTH=500 cellspacing="0" bgcolor="#C0C0E0" >
+<TR><TD>
+<PRE>
+iconv -f utf-8 -t sjis kanji.utf-8 -o kanji.sjis
+</PRE>
+</TD></TR>
+</TABLE>
+この、kanji.sjisを実行ファイル(test2)と同じディレクトリにコピーしてください。<BR>
+
+<H3>【６】フォントファイルの準備</H3>
+フォントファイルは、前記のとおり美咲フォントの「FONTX2 形式」を使用しています。<BR>
+<A HREF="http://littlelimit.net/misaki.htm">美咲フォントのHP</A>からダウンロードした「MISAKI.FNT」を、
+実行ファイル(test2)と同じディレクトリにコピーしてください。<BR>
+
+<BR>
+<H3>【７】プログラム実行</H3>
+テキストファイルkanji.sjisと、フォントファイルMISAKI.FNTが、実行ファイルtest2と、
+同じディレクトリに存在することを確認してください。<BR>
+実行は以下のように入力してください。<BR>
+<TABLE  BORDER=1 WIDTH=500 cellspacing="0" bgcolor="#C0C0E0" >
+<TR><TD>
+<PRE>
+<strong>sudo ./test2 kanji.sjis</strong>
+</PRE>
+</TD></TR>
+</TABLE>
+<HR>
+<BR>
+実行を止めるときは、[CTRL]+[C]キーを押してください。<BR>
+<BR>
+
+<HR>
+<H3>【参考】</H3>
+<A HREF="https://qiita.com/meketen/items/a66c6953b3cff380d9b8">マイコンで日本語を表示させる為にFONTX2の仕様を調べました</A><BR>
+<A HREF="http://littlelimit.net/misaki.htm">8×8 ドット日本語フォント「美咲フォント」</A>
+<HR>
+【改訂記録】<BR>
+2019/06/15版：公開<BR>
+
+</P>
+<A HREF="index.htm">[ホームへ戻る］</A><BR>
+<HR>
+
+<FONT SIZE=-1>Copyright (c) 1997-2019, BearBeetle, Allrights reserved.</FONT>
+</BODY>
+</HTML>

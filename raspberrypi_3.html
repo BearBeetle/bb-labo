@@ -1,0 +1,318 @@
+﻿<HTML>
+<HEAD>
+   <TITLE>Raspberry Pi SPI control of the 8x32 LED Matrix(1)</TITLE>
+</HEAD>
+<BODY BACKGROUND="img/bcg_280.gif">
+<A NAME="TOP_TOP"></A>
+<BR>
+<P>
+<CENTER><BLINK><FONT SIZE=+1 COLOR="#3366FF">★ Raspberry Piで秋月電子の8x32 LEDマトリックスを制御(1) ★</FONT></BLINK></CENTER>
+<HR>
+<CENTER>
+<IMG SRC="img/raspberrypi3_1.jpg">
+<BR>
+実行例<BR>
+</CENTER>
+<HR>
+<H3>【１】はじめに</H3>
+1年ぶりの記事投稿です。<BR>
+過去2回の記事では8x8 LEDマトリックスをRaspberry PiのGPIO経由で制御しました。<BR>
+今回は、新たに秋月電子の<A HREF="http://akizukidenshi.com/catalog/g/gM-09984/">「MAX7219使用赤色ドットマトリクスLEDモジュール」</A>を使用します。<BR>
+これは8x8 LEDマトリックスを4つつなげ8x32 LEDマトリックスにしたもので、マキシム社のLEDディスプレイドライバICであるMAX7219を使用した
+モジュールになっています。 <BR>
+MAX7219にに信号を入力することで個別のLEDの点灯制御ができます。<BR>
+最終的には漢字のスクロール表示を目指しますが、今回の記事ではシンプルに「／／／／」と「＼＼＼＼」を交互に表示することを目指します<BR>
+また、プログラム言語はC言語(gcc)を使用します。<BR>
+<BR>
+
+<H3>【２】回路</H3>
+今回購入したのモジュールは、MAX7219が組み込まれたモジュールになっているため、LEDの各端子を直接制御するのではなく、
+SPI(Serial Peripheral Interface)という、シリアルインタフェースを使用して制御することになります。<BR>
+このため、接続に必要な線はわずか5本です。<BR>
+モジュールに付属しているケーブルで接続できるため、Raspberry Pi側にヘッダピンを立てていれば、
+ブレッドボードや、半田付けは不要になっています。<BR>
+接続図を以下に示します。<BR>
+<IMG SRC="img/raspberrypi3_2.png">
+<BR>
+<BR>
+SPIはクロックと同期してデータを転送するシリアル規格でありIC間のデータ転送に使われます。<BR>
+類似の規格であるI2Cにくらべ高速にデータが転送できます。<BR>
+Raspberry Piのコネクタは、標準ではGPIOとして使用しますが、専用ツールによるモード設定により、
+一部のピンをSPIインタフェース用の信号線に変更することができます。<BR>
+
+<H3>【３】Raspberry Piの設定変更（SPI有効設定)</H3>
+前述の通り、Raspberry PiでSPI接続するためには、設定を変更する必要があります。<BR>
+/boot/config.txtの設定で変更できますが、直接編集するのではなく、ツールを使用して変更します。<BR>
+GUI(Grafical User Interface)画面の左上の「メニュー」ボタンをクリックして、リストの中から「設定」→「Raspberry Piの設定」とクリックします。<BR>
+「インタフェース」タブを選択し、「SPI」を有効に設定します。<BR>
+<IMG SRC="img/raspberrypi3_3.png">
+<BR>
+<BR>
+GUIを使えない場合（CLIしか使用できない場合）は、コンソールから「sudo raspi-config」と起動してください。<BR>
+同様に設定することができます<BR>
+
+<H3>【４】SPIライブラリロード</H3>
+Raspberry PiのSPIには複数のライブラリがあるようですが、ネットで調べたところメジャーなwiringPiを使用することにしました。wiringPi自体はGPIOのライブラリですが、SPIも扱うことができます。<BR>
+<A HREF="http://wiringpi.com/the-gpio-utility/wiringPi">wiringPiのHP</A>によると、予めコンソールで、以下のコマンドを実施する必要があります。<BR>
+
+<TABLE  BORDER=1 WIDTH=500 cellspacing="0" bgcolor="#C0C0E0" >
+<TR><TD>
+<PRE>
+gpio load spi
+</PRE>
+</TD></TR>
+</TABLE>
+<BR>
+私の使用した環境(Raspberry Pi Zero WH)では上記コマンドを実施すると以下のようなメッセージが出てきました。<BR>
+
+<TABLE  BORDER=1 WIDTH=500 cellspacing="0" bgcolor="#C0C0E0" >
+<TR><TD>
+<PRE>
+gpio: Unable to load/unload modules as this Pi has the device tree enabled.
+  You need to run the raspi-config program (as root) and select the
+  modules (SPI or I2C) that you wish to load/unload there and reboot.
+</PRE>
+</TD></TR>
+</TABLE>
+<BR>
+
+
+しかし、実際に後述するプログラムは正常動作したため、環境としてはSPIが使えるようになっていました。<BR>
+表示内容も「このPiではデバイスツリーが有効になっているため、モジュールをロード/アンロードできない」という
+内容なので、すでにロード済みで固定していたのかもしれません<BR>
+
+<H3>【５】SPIへのデータ形式、LEDマトリックスのデータ形式</H3>
+SPIは送受信できますが、本記事では送信についてのみ記述します（LEDマトリックス制御は、データ送信のみであり、受信は行わないため）。<BR>
+SPIは、バイトデータ(8bit)をシリアルデータ(1bitデータ列)に変換して送信します。<BR>
+1イトのデータを送付するとき、そのバイトデータからシリアルへの変換はMSB（Most Significant Bit:上位ビット）ファーストになります。<BR>
+例えば、0x12という16進数のバイトデータは、2進数では、00010010bと表現できますが、SPI上はMSBから、0,0,0,1,0,0,1,0の順に送信されます。<BR>
+<BR>
+今回使用するLEDマトリックスは、8行x32列となっていますが、8行x8列のLEDマトリックスが4個連結されています。<BR>
+各LEDマトリックスの1行は、16bit(2byte)で指定します。<BR>
+　　　LEDマトリックス(1個)の1行　=　①4bit未使用(0000b)　+　②4bitアドレス　+　③8bitデータ<BR><BR>
+　　　　①は、0を指定します<BR>
+　　　　②のアドレスは、行を指定します。<BR>
+　　　　　LEDマトリックスのマニュアルに記載されているアドレスはLSB Firstで表現されていますので<BR>
+　　　　　バイトデータで表現すると以下のようになります。<BR><FONT SIZE=-1>
+　　　　　　　　1行目 1000(D8-D11) → 0001b(D11-D8) → 0x01<BR>
+　　　　　　　　2行目 0100(D8-D11) → 0010b(D11-D8) → 0x02<BR>
+　　　　　　　　3行目 1100(D8-D11) → 0011b(D11-D8) → 0x03<BR>
+　　　　　　　　4行目 0010(D8-D11) → 0100b(D11-D8) → 0x04<BR>
+　　　　　　　　5行目 1010(D8-D11) → 0101b(D11-D8) → 0x05<BR>
+　　　　　　　　6行目 0110(D8-D11) → 0110b(D11-D8) → 0x06<BR>
+　　　　　　　　7行目 1110(D8-D11) → 0111b(D11-D8) → 0x07<BR>
+　　　　　　　　8行目 0001(D8-D11) → 1000b(D11-D8) → 0x08<BR></FONT>
+　　　　③のアドレスは、8bitデータを指定します。LEDマトリックスに表示されるビットパターンはMSB/LSBが逆になります<BR>
+　　　　　例えば、0x11は、00010001bですが、LEDマトリックスには、■□□□■□□□と表示されます（■が点灯）。<BR>
+LEDマトリックスのマニュアルには以下の記載があります。<BR>
+<TABLE  BORDER=1 WIDTH=500 cellspacing="0" bgcolor="#C0C0E0" >
+<TR><TD>
+<PRE>
+
+１　アドレス＋データ信号を4回（4基板分）送り、CS信号をL→Hにする事で1行分（8×4＝32ドット）分の表示データがMAX7219に記憶されます。
+２　この操作を各行分（合計8回）行う事で、１画面分の表示データが送られます。
+
+</PRE>
+</TD></TR>
+</TABLE>
+Raspberry Piは、CE信号(LEDマトリックス側のCS信号)が通常Hになっており、送信中(write中）のみLになります。<BR>
+このため、特に意識して制御を行わなくても自動的に上記１に記載されている「CS信号をL→Hにする」を行うことになります。<BR>
+ただし、送信(write)のたびにCE信号が、H→L→Hと遷移するため、1行x4回分(16bitx4)を一度にwriteする必要があります。<BR>
+<BR>
+<H3>【６】LEDマトリックスの初期化</H3>
+LEDマトリックスのマニュアルには以下のように記載されおり、事前にMAX7219の初期設定をする必要があることがわかります。<BR>
+<TABLE  BORDER=1 WIDTH=500 cellspacing="0" bgcolor="#C0C0E0" >
+<TR><TD>
+<PRE>
+
+アドレス9～Fは、制御レジスタのアドレスです。
+表示データを送る前に、制御データを制御レジスタに、送る必要があります。
+制御レジスタのデータ内容は、MAX7219の資料をご覧ください。
+
+</PRE>
+</TD></TR>
+</TABLE>
+<BR>
+具体的な設定方法について、MAX7219のデータシートを見てもイメージがつかめないため、秋月電子HPにあるArduinoボード用のサンプルソースを参考にします。<BR>
+サンプルソースコードを読み解くと、以下の初期化処理をしていることが分かりました。今回、同じ初期化処理を行うことにします。<BR>
+<TABLE  BORDER=1 WIDTH=500 cellspacing="0" bgcolor="#C0C0E0" >
+<TR><TD>
+<PRE>
+
+(1)アドレス0x09 Data=0x00を送信
+(2)アドレス0x0a Data=0x04を送信
+(3)アドレス0x0b Data=0x07を送信
+(4)アドレス0x0c Data=0x01を送信
+(5)アドレス0x0f Data=0x00を送信
+(6)アドレス0x00 Data=0x00を送信 (shift data)
+(7)アドレス0x00 Data=0x00を送信 (shift data)
+(8)アドレス0x00 Data=0x00を送信 (shift data)
+(9)delay(100)
+
+- (1)は「データシート表４」参照：No decode for digits 7-0
+- (2)は「データシート表７」参照：輝度 15/32
+- (3)は「データシート表８」参照：Display digits 0 1 2 3 4 5 6 7
+- (4)は「データシート表３」参照：Normal Operation
+- (5)は「データシート表１０」参照：Normal Operation
+
+</PRE>
+</TD></TR>
+</TABLE>
+<BR>
+<H3>【７】ソースコード</H3>
+test1.c<BR>
+<TABLE  BORDER=1 WIDTH=500 cellspacing="0" bgcolor="#C0C0E0" >
+<TR><TD>
+<PRE>
+#include &lt;stdio.h&gt;
+#include &lt;string.h&gt;
+#include &lt;wiringPi.h&gt;
+#include &lt;wiringPiSPI.h&gt;
+#include &lt;stdint.h&gt;
+
+
+typedef struct  {
+  unsigned char adr;
+  unsigned char dat;
+} _send_data;
+
+int main(void)
+{
+  int fd;
+  static _send_data data[8];
+  static unsigned char set_data[2];
+
+
+<FONT COLOR="RED">
+  /* Setup SPI libraly */
+  wiringPiSetup();
+  if((fd = wiringPiSPISetup(0,500000)) < 0){
+      printf("SPI initialize error\n");
+      return -1;
+  }
+</FONT>
+
+<FONT COLOR="BLUE">
+  /* Initialize MAX7219 */
+  memset((void *)data,0,sizeof(data));
+  set_data[0] = 0x09, set_data[1] = 0x00; wiringPiSPIDataRW(0,set_data,2);
+  set_data[0] = 0x0a, set_data[1] = 0x04; wiringPiSPIDataRW(0,set_data,2);
+  set_data[0] = 0x0b, set_data[1] = 0x07; wiringPiSPIDataRW(0,set_data,2);
+  set_data[0] = 0x0c, set_data[1] = 0x01; wiringPiSPIDataRW(0,set_data,2);
+  set_data[0] = 0x0f, set_data[1] = 0x00; wiringPiSPIDataRW(0,set_data,2);
+  set_data[0] = 0x00, set_data[1] = 0x00; wiringPiSPIDataRW(0,set_data,2);
+  set_data[0] = 0x00, set_data[1] = 0x00; wiringPiSPIDataRW(0,set_data,2);
+  set_data[0] = 0x00, set_data[1] = 0x00; wiringPiSPIDataRW(0,set_data,2);
+  delay(100);
+</FONT>
+
+<FONT COLOR="GREEN">
+  /* Draw LED matrix */
+  int i,j;
+loop:
+  for(i=1; i<=8; i++){
+      for(j=0; j<4; j++){
+          data[j].adr = i;
+          data[j].dat = 1 << (i-1);
+      }
+      wiringPiSPIDataRW(0,(unsigned char *)data,8);
+  }
+  delay(1000);
+  for(i=1; i<=8; i++){
+      for(j=0; j<4; j++){
+          data[j].adr = i;
+          data[j].dat = 0x80 >> (i-1);
+      }
+      wiringPiSPIDataRW(0,(unsigned char *)data,8);
+  }
+  delay(1000);
+  goto loop;
+</FONT>
+}
+</PRE>
+</TD></TR>
+</TABLE>
+<BR>
+<FONT COLOR="RED">赤文字部分が、ライブラリのwiringPiを初期化する箇所です。</FONT>
+wiringPiSPISetup ()は、SPIセットアップを行う関数です。<BR>
+第1引数は、チャネル番号で、第2引数は、転送レートを指定します。<BR>
+<FONT COLOR="BLUE">青部分が、LEDマトリックス（のMAX7219）初期化部分です。</FONT><BR>
+内容は、【６】を参照してください。<BR>
+<FONT COLOR="GREEN">部分が、LEDマトリックスの描画部分になります。</FONT><BR>
+i=1～8は、アドレス（行）を指しています。<BR>
+j=0～4は、4個あるLEDマトリックスを指しています。LEDdata[j].datは、各LEDマトリックスの1行分のデータを表しています。<BR>
+wiringPiSPIDataRW()は、送信、受信を行う関数です。<BR>
+前述のとおり、送信(write)のたびにCE信号が、H→L→Hと遷移するため、1行x4回分(16bitx4)を一度にwriteしています<BR>
+緑部分の処理で、「／／／／」と「＼＼＼＼」を交互に表示されることになります。<BR>
+
+<H3>【８】コンパイルと実行</H3>
+本項では、ソースコードのコンパイルと実行について記載します。<BR>
+まずは、【７】のソースコードをtest1.cとして保存してください。<BR>
+次に、同じディレクトリに、以下のMakefileを保存してください。<BR>
+<TABLE  BORDER=1 WIDTH=500 cellspacing="0" bgcolor="#C0C0E0" >
+<TR><TD>
+<PRE>
+test1: test1.c
+        gcc -o test1 -lwiringPi test1.c
+</PRE>
+</TD></TR>
+</TABLE>
+<BR>
+※「-lwiringPi」が、wiringPiライブラリをリンクする指定になります。<BR>
+<BR>
+lsコマンドで、Makefileとtest1.cがあることを確認してください。
+<TABLE  BORDER=1 WIDTH=500 cellspacing="0" bgcolor="#C0C0E0" >
+<TR><TD>
+<PRE>
+<strong>ls</strong>
+Makefile  test1.c
+</PRE>
+</TD></TR>
+</TABLE>
+<BR>
+次にmakeコマンドで、コンパイルを実施してください。<BR>
+<TABLE  BORDER=1 WIDTH=500 cellspacing="0" bgcolor="#C0C0E0" >
+<TR><TD>
+<PRE>
+<strong>make</strong>
+gcc -o test1 -lwiringPi test1.c
+</PRE>
+</TD></TR>
+</TABLE>
+<BR>
+lsコマンドで、test1(実行ファイルが)が作成されたことを確認してください。<BR>
+<TABLE  BORDER=1 WIDTH=500 cellspacing="0" bgcolor="#C0C0E0" >
+<TR><TD>
+<PRE>
+<strong>ls</strong>
+Makefile  <FONT COLOR="GREEN">test1</FONT>  test1.c
+</PRE>
+</TD></TR>
+</TABLE>
+
+<BR>
+実行は以下のように入力してください。<BR>
+<TABLE  BORDER=1 WIDTH=500 cellspacing="0" bgcolor="#C0C0E0" >
+<TR><TD>
+<PRE>
+<strong>sudo ./test1</strong>
+</PRE>
+</TD></TR>
+</TABLE>
+<HR>
+<BR>
+実行を止めるときは、[CTRL]+[C]キーを押してください。<BR>
+<H3>【参考】</H3>
+<A HREF="http://akizukidenshi.com/">秋月電子通商</A><BR>
+<A HREF="http://wiringpi.com/the-gpio-utility/wiringPi">Wiring Pi</A>
+<HR>
+【改訂記録】<BR>
+2019/06/02版：公開<BR>
+
+</P>
+<A HREF="index.html">[ホームへ戻る］</A><BR>
+<HR>
+
+<FONT SIZE=-1>Copyright (c) 1997-2019, BearBeetle, Allrights reserved.</FONT>
+</BODY>
+</HTML>

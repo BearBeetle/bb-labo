@@ -1,0 +1,671 @@
+<HTML>
+<HEAD>
+   <TITLE>BB Programming Lab.</TITLE>
+</HEAD>
+<BODY BACKGROUND="bcg_280.gif">
+<A NAME="TOP_TOP"></A><FONT SIZE=-1>このページはNetscapeNavigator
+2.0以降及びMicrosoft Internet Exploler 3.0以降で正常に見られます。</FONT>
+<BR><FONT SIZE=-2>Solly,Japanese only</FONT>
+<BR>
+<HR>
+<CENTER><BLINK><FONT COLOR="#3366FF"><FONT SIZE=-1>★ ＢＢ研究所 ★</FONT></FONT></BLINK></CENTER>
+<CENTER><FONT COLOR="#3366FF"><FONT SIZE=+2>TWAIN</FONT></FONT></CENTER>
+<H3><FONT COLOR="#3366FF">１．はじめに</FONT></H3>
+TWAINは<A HREF="http://www.twain.org/">TWAIN Working Group</A>という団体が標準化した、主にスキャナをターゲットにしたソフトウェアインタフェースの規格です。<BR>
+Windows2000からは、Microsoftが独自の新規格を提案していますが、
+TWAINも引き続きサポートされるようです。<BR>
+このTWAINは、個人的にはあまりきれいな規格とは思いません。<BR>
+その為か、市販の画像ライブラリにはTWAINを簡単に
+あつかえる機能を持っているものが数多くあります。<BR>
+また、初期のWindows95を除いて、Windows標準のツールとなっている、イメージングのOCXでもTWAINを扱えます。<BR>
+簡単にスキャナーを使いたいのなら、これらを使うことをお勧めします。<BR>
+しかし、細かな設定等を行うのならやはりTWAINを直接アクセスする必要があります。<BR><BR>
+TWAINアプリの開発に際しては、<A HREF="http://www.twain.org/">TWAIN Working Group</A>から
+必要なツールキットが公開されています。このツールキット内にはサンプルソースも含まれているのですが、
+すべての操作が行えるため、かなり複雑な構造をしています（そしてバグってます）。<BR><BR>
+そこで、今回は独自のサンプルを示しながらTWAINの導入を説明します。<BR>
+<BR>
+TWAINは主にMAC用とWindows用が用意されていますが、ここではWindows(WIN32)を前提に話を進めます。<BR>
+以下のものを、用意してください<BR>
+<UL>
+<LI>VisualC++ (ver4以降)
+<LI>仕様書（原文）：<A HREF="http://www.twain.org/download.htm">TWAIN Specification </A>
+<LI>開発ツールキット：<A HREF="http://www.twain.org/devfiles/twainkit.exe">TWAIN Developer Toolkit</A>
+<LI>スキャナ（開発ツールキットにエミュレータはついていますが、実物があったほうがより便利です）
+</UL>
+ソースには、ヘッダファイルTWAIN.Hをインクルードして下さい。<BR>
+また、ツールキットにはTWAIN.LIBは含まれていないため、LoadLibrary()を使用します。<BR>
+※詳しくは７項を参照してください。<BR>
+それでは、TWAINの説明をはじめます。<BR>
+<HR>
+<H3><FONT COLOR="#3366FF">２．TWAINの構成</FONT></H3>
+TWAINは、以下の３つの層で構成されています<BR>
+</PRE>
+<BR>
+<TABLE  BORDER=1 cellspacing="0" bgcolor="#C0C0E0" >
+<TR><TD>アプリケーション</TD></TR>
+<TR><TD>ソースマネージャ</TD></TR>
+<TR><TD><CENTER>ソース</CENTER></TD></TR>
+</TABLE>
+<BR>
+　ここで言う「アプリケーション」はTWAINを操作するアプリケーションのことを指します。<BR>
+要はこれから私たちが作ろうとしている部分です。<BR>
+　「ソースマネージャ」は、アプリケーションとソースの橋渡しをする部分です。<BR>
+　「ソース」は、アプリケーションからみて、スキャナ制御を行う部分になります。<BR>
+アプリケーションは最終的にソースを通じてスキャナを制御したいのですが、<BR>
+そのためには必ずソースマネージャを呼び出すことになります。<BR>
+ソースマネージャとのインタフェースはDSM_Entry()という関数のみを使用します。<BR>
+アプリケーションはDSM_Entry()にいろんな引数を指定して、ソースに命令を出します。<BR>
+<BR>
+<HR>
+
+<H3><FONT COLOR="#3366FF">３．DSM_Entry()</FONT></H3>
+アプリケーションがTWAINに発行する全てのコマンドは、DSM_Entry()を通じて行われます。<BR>
+DSM_Entry()は以下のように定義されています。<BR>
+<BR>
+<TABLE  BORDER=1 cellspacing="0" bgcolor="#C0C0E0" >
+<TR><TD>
+<PRE>
+
+TW_UNIT16 FAR PASCAL DSM_Entry
+(	pTW_IDENTITY		pOrigin,	// source of message
+  	pTW_IDENTITY		pDest,		// destination of message
+ 	TW_UNIT32		DG,		// data group ID: DG_xxx
+	TW_UNIT16		DAT,		// data argument type: DAT_xxx
+	TW_UNIT16		MSG,		// message ID: MESxxx
+	TW_MEMREF		pData		// pointer to data 
+);
+
+</PRE>
+</TD></TR>
+</TABLE>
+<BR>
+pOrigin,pDestはTW_IDENTITY構造体へのポインタでそれぞれ命令の発行元と宛先を表す記述子のようなものです。<BR>
+ここで発行元とは、アプリケーション、宛先はソースマネージャ又はソースになります。<BR>
+DG/DAT/MSGはそれぞれデータグループ／データ引数タイプ／メッセージを表しています。<BR>
+またこれらの値はマクロ定義されており、それぞれDG_/DAT_/MES_ではじまります。<BR>
+TWAINコマンドはこの３つの値で決定するためTWAIN Specificationでは、
+TWAINコマンドをDG_XXX/DAT_XXX/MES_XXXXという形で表現しています。<BR>
+<BR>
+pDataは引数データへのポインタです。<BR>
+TWAINのパラメータ設定である、DG_CONTROL／DAT_CAPABILITY／MSG_GET及び
+DG_CONTROL/DAT_CAPABILITY/MSG_SETでは、pDataのデータ型をいくつかのフォーマット（構造体）に標準化しており、
+それをデータの入れ物という意味でコンテナと呼んでいます。<BR>
+
+戻り値は、結果が格納されます。メッセージ（DG_/DAT_/MES_）の種類によって異なりますが、
+主にTWRC_SUCCESS（成功）,TWRC_CANCEL（キャンセル）,TWRC_FAILURE（失敗）が戻されます。<BR>
+更に詳細なエラーを取得するには、DG_CONTROL/DAT_STATUS/MSG_GETを使用します。<BR>
+<BR>
+<TABLE  BORDER=1 cellspacing="0" bgcolor="#C0C0E0" >
+<TR><TD>
+<PRE>
+
+TW_UINT16 rc;
+TW_STATUS twStatus;
+char	  *strMsg;
+	
+rc = lpfnDSM_Entry(pAppId,pSourceId,DG_CONTROL,DAT_STATUS,MSG_GET,&twStatus);
+
+switch (twStatus.ConditionCode){
+	case TWCC_BADCAP:
+　　　　　　　　・・・
+		break;
+	case TWCC_CAPUNSUPPORTED:
+　　　　　　　　・・・
+		break;
+	case TWCC_CAPBADOPERATION:
+　　　　　　　　・・・
+		break;
+	case TWCC_CAPSEQERROR:
+　　　　　　　　・・・
+		break;
+	case TWCC_BADDEST:
+　　　　　　　　・・・
+		break;
+	case TWCC_BADVALUE:
+　　　　　　　　・・・
+		break;
+	case TWCC_SEQERROR:
+　　　　　　　　・・・
+		break;
+	default:
+		//Unknown Error
+　　　　　　　　・・・
+		break;
+}
+</PRE>
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+
+<H3><FONT COLOR="#3366FF">４．ＴＷＡＩＮのデータ型</FONT></H3>
+Twain.hでは、各データ型をTW_xxxという形式で表現しています。<BR>
+殆どのデータ型はそのまま、C言語の型を置き換えたものですが、
+実数型のTW_FIX32型はC言語のfloat型とは異なるので注意が必要です。<BR>
+<BR>
+TW_FIX32型とfloat型の変換は以下の関数を使用します。<BR>
+<BR>
+<TABLE  BORDER=1 cellspacing="0" bgcolor="#C0C0E0" >
+<TR><TD>
+<PRE>
+
+float Fix32ToFloat (TW_FIX32 fix32)
+{
+	float floater;
+	floater = (float)fix32.Whole + (float)fix32.Frac / (float)65536.0;
+	return floater;
+}
+
+TW_FIX32 FloatToFix32 (float floater)
+{
+	TW_FIX32 Fix32_value;
+	TW_INT32 value = (TW_INT32) (floater * 65536.0 + 0.5);
+	Fix32_value.Whole =(short)( value >> 16);
+	Fix32_value.Frac =(short)( value & 0x0000ffffL);
+	return (Fix32_value);
+}
+
+</PRE>
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+
+<H3><FONT COLOR="#3366FF">５．ＴＷＡＩＮからのイベント処理</FONT></H3>
+
+<BR>
+TWAINソースからの状態変化等の各種イベント通知されます。<BR>
+この通知は、ウィンドウのイベントループで取得することが出来ます。<BR>
+以下に、その部分を記述します。<BR><BR>
+【注】<BR>
+<UL>
+<LI>以下のソースではDSM_Entry()をlpfnDSM_Entry()と表現していますが、７項に合わせたためです。
+<LI>この部分は、殆どTWAIN Specificationをコピーしたものですが、そのままでは動作しません。<BR>
+　６項で説明する状態４～７で有効です。<BR>
+　if文等により、状態１～２ではDG_CONTROL/DAT_EVENT/MSG_PROCESSEVENTとその関連処理を行わないようにして下さい。
+<LI>下記の例は、概要です。全てのイベント処理を行っているわけではありません。
+</UL>
+<BR>
+<BR>
+<TABLE  BORDER=1 cellspacing="0" bgcolor="#C0C0E0" >
+<TR><TD>
+<PRE>
+
+TW_EVENT twEvent;
+TW_INT16 rc;
+while (GetMessage ( (LPMSG) &msg, NULL, 0, 0) ){
+	// もしソースがイネーブルの場合以下を実行
+	// ※実際にはif文等でイネーブル時だけ実行させるようにして下さい
+	twEvent.pEvent = (TW_MEMREF)&msg;
+	twEvent.TWMessage = MSG_NULL;
+	rc = lpfnDSM_Entry(pAppId,pSourceId,
+		DG_CONTROL,DAT_EVENT,MSG_PROCESSEVENT,
+		(TW_MEMREF)&twEvent);
+	// ソースからのメッセージ取得
+	switch (twEvent.TWMessage){
+		case MSG_XFERREADY:
+			// TWAINがレディ（状態６）になった
+			SetupAndTransferImage(NULL);
+			break;
+		case MSG_CLOSEDSREQ:
+			// ユーザ指示でTWAINから
+			// ソースのディセーブル＆クローズ要求が来た
+			DisableAndCloseSource(NULL);
+			break;
+		case MSG_NULL:
+			// ソースからメッセージは来ていない
+			break;
+	}
+	// 以下は通常の（TWAIN以外の）ウィンドウイベント
+	if (rc == TWRC_NOTDSEVENT){
+		TranslateMessage( (LPMSG) &msg);
+		DispatchMessage( (LPMSG) &msg);
+	}
+}
+
+</PRE>
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+
+<H3><FONT COLOR="#3366FF">６．TWAINの状態</FONT></H3>
+<BR>
+TWAINには以下の７状態があります。<BR>
+各状態で、できることが異なってきます<BR>
+<BR>
+<TABLE  BORDER=1 cellspacing="0" bgcolor="#C0C0E0" >
+<TR><TD>１．Pre-Session（作業前）</TD><TD>ソースマネージャはロードされていない</TD></TR>
+<TR><TD>２．Source Manager Loaded（ソースマネージャロード済み）</TD><TD>アプリ：エントリポイントの取得</TD></TR>
+<TR><TD>３．Source Manager Opened（ソースマネージャオープン済み）</TD><TD>ユーザ：ソースのセレクト</TD></TR>
+<TR><TD>４．Source Open（ソースオープン）</TD><TD>能力の調整（ネゴ）</TD></TR>
+<TR><TD>５．Source Enable（ソースイネーブル）</TD><TD>ソース：ユーザインタフェースの提示</TD></TR>
+<TR><TD>６．Transfer Ready （ 転送準備済み）</TD><TD>アプリ：画像（オーディオ）情報の要求　</TD></TR>
+<TR><TD>７．Transferring （転送中）</TD><TD> データの転送</TD></TR>
+</TABLE>
+<BR>
+アプリケーションの起動時は状態１になっています。<BR>
+TWAINからデータを取得するためには、状態１から最終的に状態７まで遷移させる必要があります。<BR>
+上記の状態の遷移条件を以下に示します。<BR>
+<BR>
+<TABLE  BORDER=1 cellspacing="0" bgcolor="#C0C0E0" >
+<TR><TD>１→２</TD><TD>アプリ：ソースマネージャのロード</TD></TR>
+<TR><TD>１←２</TD><TD>アプリ：ソースマネージャのアンロード</TD></TR>
+<TR><TD>２→３</TD><TD>アプリ：ソースマネージャのオープン</TD></TR>
+<TR><TD>２←３</TD><TD>アプリ：ソースマネージャのクローズ</TD></TR>
+<TR><TD>３→４</TD><TD>アプリ：ソースのオープン</TD></TR>
+<TR><TD>３←４</TD><TD>アプリ：ソースのクローズ</TD></TR>
+<TR><TD>４→５</TD><TD>アプリ：ソースをイネーブルにする</TD></TR>
+<TR><TD>４←５</TD><TD>ソース：転送ディセーブルをアプリに通知 or アプリ：ソースをディセーブルにする</TD></TR>
+<TR><TD>５→６</TD><TD>ソース：アプリケーションに転送準備が整ったことを通知</TD></TR>
+<TR><TD>５←６</TD><TD>ソース：転送保留分の画像がもう無いことをアプリに通知</TD></TR>
+<TR><TD>６→７</TD><TD>アプリ：転送をソースに指示</TD></TR>
+<TR><TD>６←７</TD><TD>アプリ：転送終了に応答</TD></TR>
+</TABLE>
+<BR>
+<HR>
+
+<H3><FONT COLOR="#3366FF">７．TWAINライブラリのロード（状態１→２）／アンロード（状態１←２）</FONT></H3>
+<BR>
+アプリケーションからTWAIN（マネージャ＆ソース）にコマンドを出すためには、TWAINライブラリのDSM_Entry()を使用します。<BR>
+TWAINライブラリは、Win32(Windows95/98/NT/2000/Me等)では、Twain_32.dllを使用します。<BR>
+通常DLLの使用にあたっては対応するヘッダファイルTwain.hと
+スタティックリンクライブラリ(.lib)が必要になります。<BR>
+しかし、TWAINの場合、Twain.hはTWAINツールキットに含まれているものの、
+.libが含まれていません。このため、動的にＤＬＬをロードし、DSM_Entry()のポインタを取得する必要があります。<BR>
+<BR>
+DLLをロード／アンロードはLoadLibrary()を使用します。<BR>
+またDLL内からエントリー（関数）のポインタを取得するには、GetProcAddress()を使用します。<BR>
+これらのWIN32 APIの使い方はVisualC++のオンラインヘルプ等で調べて下さい。<BR>
+<BR>
+DLLのロード／アンロード例は「TWAIN Specification」に記述されていますが、
+ちょっと煩雑なので、もう少し簡単にしたものを以下に示します。<BR>
+<BR>
+
+<TABLE  BORDER=1 cellspacing="0" bgcolor="#C0C0E0" >
+<TR><TD>
+<PRE>
+
+DSMENTRYPROC	lpfnDSM_Entry;
+HMODULE		hDSMDLL;
+・・・
+
+BOOL LoadDLL()
+{
+	char szDllFile[MAX_PATH];
+	OFSTRUCT of;
+	
+	// DLLパスの作成
+	GetWindowsDirectory (szDllFile, sizeof(szDllFile));
+	if (szDllFile [(lstrlen (szDllFile) - 1)] != '\\'){
+		lstrcat( szDllFile, "\\" );
+	}
+	lstrcat( szDllFile, "TWAIN_32.DLL" );
+
+	// DLLファイルの確認
+	if (OpenFile(szDllFile, &of, OF_EXIST) == -1)
+		return FALSE;
+
+	// DLLのロード
+	if ( (hDSMDLL = LoadLibrary(szDllFile)) == NULL)
+		return FALSE;
+
+	// ポインタの取得
+	if( (lpfnDSM_Entry = (DSMENTRYPROC)GetProcAddress(hDSMDLL,"DSM_Entry")) == NULL){
+		UnLoadDLL();
+		return FALSE;
+	}
+	return TRUE;
+}
+
+BOOL UnLoadDLL()
+{
+	if(hDSMDLL)
+		return FreeLibrary(hDSMDLL);
+
+	return TRUE;
+}
+
+</PRE>
+</TD></TR>
+</TABLE>
+<BR>
+上記の例では、ポインタlpfnDSM_Entryにエントリポインタを取得しました。<BR>
+こうすることにより、lpfnDSM_Entry(...);という形式でDSM_Entry()を呼び出すことが出来るようになります。<BR>
+<BR>
+<HR>
+
+<H3><FONT COLOR="#3366FF">８．ソースマネージャのオープン（状態２→３）／クローズ（状態２←３）</FONT></H3>
+<BR>
+ソースマネージャのオープンは、DG_CONTROL/DAT_PARENT/MSG_OPENDSM命令で実施します。<BR>
+このときの第1引数（pAppId)はTW_IDENTITY型構造体へのポインタで、アプリケーションの属性を記述します。<BR>
+実際には以下のように初期化して、DSM_Entry()を呼び出します。<BR>
+<BR>
+<TABLE  BORDER=1 cellspacing="0" bgcolor="#C0C0E0" >
+<TR><TD>
+<PRE>
+
+TW_UINT16 rc;		// 戻値
+
+// アプリケーションＩＤの初期化
+pAppId->Id = 0;		// 0にする
+pAppId->Version.MajorNum = 0;	// アプリケーションのバージョンメジャー番号
+pAppId->Version.MinorNum = 1;	// アプリケーションのバージョンマイナー番号
+pAppId->Version.Language = TWLG_JAPANESE;// 言語
+pAppId->Version.Country = TWCY_JAPAN;	// 国
+lstrcpy (pAppId->Version.Info, "0.1");	// バージョン文字列
+pAppId->ProtocolMajor = TWON_PROTOCOLMAJOR;
+pAppId->ProtocolMinor = TWON_PROTOCOLMINOR;
+pAppId->SupportedGroups = DG_IMAGE | DG_CONTROL;
+lstrcpy (pAppId->Manufacturer, "BearBeetle");	//アプリのメーカー
+lstrcpy (pAppId->ProductFamily, "BB LAB");	//アプリの製品ファミリー
+lstrcpy (pAppId->ProductName, "BB TWAIN SAMPLE");//アプリの製品名
+
+// ソースマネージャのオープン
+rc=lpfnDSM_Entry(pAppId,NULL,DG_CONTROL,DAT_PARENT,MSG_OPENDSM,(TW_MEMREF)&hWnd);
+
+if(rc != TWRC_SUCCESS)
+	return FALSE;
+
+return TRUE;
+
+</PRE>
+</TD></TR>
+</TABLE>
+<BR>
+ソースマネージャのクローズはDG_CONTROL/DAT_PARENT/MSG_CLOSEDSM命令で実施します。<BR>
+引数は、オープンとまったく同じです。<BR>
+<BR>
+<TABLE  BORDER=1 cellspacing="0" bgcolor="#C0C0E0" >
+<TR><TD>
+<PRE>
+
+・・・
+rc=lpfnDSM_Entry(pAppId,NULL,DG_CONTROL,DAT_PARENT,MSG_CLOSEDSM,(TW_MEMREF)&hWnd);
+
+if(rc != TWRC_SUCCESS)
+	return FALSE;
+
+return TRUE;
+
+</PRE>
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+
+<H3><FONT COLOR="#3366FF">９．ソースのオープン（状態３→４）／クローズ（状態３←４）</FONT></H3>
+<BR>
+ソースマネージャのオープンは、DG_CONTROL/DAT_PARENT/MSG_OPENDS命令で実施します。<BR>
+このときの第1引数（pAppId)は８項と同じものを使用します。<BR>
+pDataには、TW_IDENTITY型構造体を以下のpSourceIdのように初期化します。<BR>
+<BR>
+<TABLE  BORDER=1 cellspacing="0" bgcolor="#C0C0E0" >
+<TR><TD>
+<PRE>
+
+・・・
+// データソースＩＤはシステムデフォルト値にする場合
+pSourceId->ProductName[0]='\0';
+pSourceId->Id=0;
+
+</PRE>
+</TD></TR>
+</TABLE>
+<BR>
+
+または、DG_CONTROL / DAT_IDENTITY / MSG_USERSELECT命令を使用すると、
+ソースを選択するダイアログボックスが表示され、ユーザがソースを選択できます。<BR>
+このときの取得したpDataの値をpSourceIdにすることもできます。<BR>
+<BR>
+<TABLE  BORDER=1 cellspacing="0" bgcolor="#C0C0E0" >
+<TR><TD>
+<PRE>
+
+rc=lpfnDSM_Entry(pAppId,NULL,DG_CONTROL,DAT_IDENTITY,MSG_OPENDS,pSourceId);
+if(rc != TWRC_SUCCESS)
+	return FALSE;
+
+return TRUE;
+　・・・
+</PRE>
+</TD></TR>
+</TABLE>
+<BR>
+ソースマネージャのクローズはDG_CONTROL/DAT_PARENT/MSG_CLOSEDS命令で実施します。<BR>
+引数は、オープンとまったく同じです。<BR>
+<BR>
+<TABLE  BORDER=1 cellspacing="0" bgcolor="#C0C0E0" >
+<TR><TD>
+<PRE>
+
+rc=lpfnDSM_Entry(pAppId,NULL,DG_CONTROL,DAT_IDENTITY,MSG_CLOSEDS,pSourceId);
+
+if(rc != TWRC_SUCCESS)
+	エラー処理
+</PRE>
+</TD></TR>
+</TABLE>
+<HR>
+<BR>
+<H3><FONT COLOR="#3366FF">１０．設定の取得と変更（状態４）</FONT></H3>
+<BR>
+　画像取り込み時の各種設定の取得／変更は状態４（Source Open）で行います。<BR>
+　これらの設定はDG_CONTROL/DAT_CAPABILITY/MSG_GET 又は DG_CONTROL/DAT_CAPABILITY/MSG_SETで行います。<BR>
+　この時、コンテナにTW_CAPABILITY型の構造体を使用します。<BR>
+　この構造体のCapフィールド取得／設定したい内容を指定します。<BR>
+Capフィールドに指定する値はマクロ定義されておりICAP_ではじまります。<BR>
+例えば、CapフィールドにICAP_PHYSICALWIDTHを指定すると、
+スキャンできる幅を取得することが出来ます。<BR>
+<BR>
+　DG_CONTROL/DAT_CAPABILITY/MSG_SETで値を取得するときは以下のようなルーチンになります。<BR>
+<BR>
+<TABLE  BORDER=1 cellspacing="0" bgcolor="#C0C0E0" >
+<TR><TD>
+<PRE>
+
+TW_CAPABILITY	twCapability;
+TW_UINT16	rc;
+float		flPhysWidth;
+
+twCapability.Cap=ICAP_PHYSICALWIDTH;	// 設定内容をICAP_XXXで指定する
+twCapability.ConType = TWON_ONEVALUE;	// コンテナのタイプを指定する
+twCapability.hContainer = NULL;		// NULLを指定する
+
+rc=lpfnDSM_Entry(pAppId,pSourceId,DG_CONTROL,DAT_CAPABILITY,MSG_GET,(TW_MEMREF)&twCapability);
+
+if(twCapability.hContainer){
+	ptwOneValue = (pTW_ONEVALUE) GlobalLock((HANDLE)twCapability.hContainer);
+	flPhysWidth = Fix32ToFloat((pTW_FIX32)&ptwOneValue->Item);
+	GlobalUnlock((HANDLE)twCapability.hContainer);
+	GlobalFree((HANDLE)twCapability.hContainer);
+}
+
+if(rc != TWRC_SUCCESS){
+	エラー処理
+}
+
+</PRE>
+</TD></TR>
+</TABLE>
+<BR>
+ここで、注意が必要なのは、取得したコンテナのhContainerフィールドの指す領域に
+ConTypeフィールドで指定した型のデータがTWAIN内でGlobalAlloc()により確保／格納されていることです。<BR>
+上記例ではTW_ONEVALUE型のデータがhContainerフィールドの指す領域に格納されています。<BR>
+アプリケーションはGlobalLock()を使ってポインタを取得し、そのデータに参照します。<BR>
+そして、参照しなくなったらGlobalUnlock()/GlobalFree()を使用して領域を解放しなければなりません。<BR>
+<BR>
+逆にDG_CONTROL/DAT_CAPABILITY/MSG_SETで値を設定する場合は、アプリケーションは必要なデータ領域を
+GlobalAlloc()を使用して確保／設定し、このハンドルをhContainerフィールドに格納しなければなりません。<BR>
+以下の例は、解像度の設定です。<BR>
+<BR>
+<TABLE  BORDER=1 cellspacing="0" bgcolor="#C0C0E0" >
+<TR><TD>
+<PRE>
+
+TW_FIX32	tw;
+float		fReso;
+
+// fResoに解像度を設定する
+fReso = xxx.0;
+
+// コンテナ確保
+twCapability.hContainer = GlobalAlloc(GHND,sizeof(TW_ONEVALUE));
+ptwOneValue = (pTW_ONEVALUE)GlobalLock(twCapability.hContainer);
+
+// OneValueの値を設定する
+ptwOneValue->ItemType=TWTY_FIX32;	
+tw=FloatToFix32(flReso);
+memcpy((void*)&ptwOneValue->Item,(void *)&tw,sizeof(TW_FIX32));
+
+// コンテナを設定する
+twCapability.Cap=ICAP_YRESOLUTION;	// 設定内容をICAP_XXXで指定する
+twCapability.ConType = TWON_ONEVALUE;	// コンテナのタイプを指定する
+
+// コマンド
+rc=lpfnDSM_Entry(pAppId,pSourceId,DG_CONTROL,DAT_CAPABILITY,MSG_SET,(TW_MEMREF)&twCapability);
+
+// コンテナ開放
+GlobalUnlock(twCapability.hContainer);
+GlobalFree(twCapability.hContainer);
+
+</PRE>
+</TD></TR>
+</TABLE>
+<BR>
+
+<HR>
+
+<H3><FONT COLOR="#3366FF">１１．イネーブル（状態４→状態５→状態６）／ディセーブル（状態４←状態５）</FONT></H3>
+
+<BR>
+　TWAINをイネーブルにするには、DG_CONTROL/DAT_USERINTERFACE/MSG_ENABLEDを使用します。<BR>
+<BR>
+<TABLE  BORDER=1 cellspacing="0" bgcolor="#C0C0E0" >
+<TR><TD>
+<PRE>
+
+TW_UINT16 rc;				// 戻値
+TW_USERINTERFACE ui;
+
+ui.ShowUI=FALSE;
+ui.ModalUI=FALSE;
+ui.hParent=親ウィンドウ（ShowUI=TRUEの時は必須）
+
+rc=lpfnDSM_Entry(pAppId,pSourceId,DG_CONTROL,DAT_USERINTERFACE,MSG_ENABLEDS,&ui);
+
+if(rc != TWRC_SUCCESS){
+	エラー処理
+}
+</PRE>
+</TD></TR>
+</TABLE>
+<BR>
+この時、ui.ShowUI及びui.ModalUIをTRUEにすると、
+エンドユーザから直接各種設定及び転送まで実行できるダイアログボックスが表示されます。<BR>
+このダイアログボックスはソースが作成します。<BR>
+イネーブルを発行して状態５（Source Enable）にすると、ソースは転送準備にかかる。<BR>
+準備が整うとソースはイベント（MSG_XFERREADY）を発生させ状態６（Transfer Ready）に移ります。<BR>
+<BR>
+ディセーブルにするには、DG_CONTROL/AT_USERINTERFACE/MSG_DISABLEDSを使用します<BR>
+<BR>
+<TABLE  BORDER=1 cellspacing="0" bgcolor="#C0C0E0" >
+<TR><TD>
+<PRE>
+
+TW_UINT16 rc;				// 戻値
+TW_USERINTERFACE ui;
+
+ui.ShowUI=FALSE;
+ui.ModalUI=FALSE;
+ui.hParent=親ウィンドウ(要らないかもしれない）
+
+rc=lpfnDSM_Entry(pAppId,pSourceId,DG_CONTROL,DAT_USERINTERFACE,MSG_DISABLEDS,&ui);
+
+if(rc != TWRC_SUCCESS){
+	エラー処理
+}
+
+</PRE>
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+
+<H3><FONT COLOR="#3366FF">１２．データ転送（状態５←→状態６）</FONT></H3>
+<BR>
+ソースからイベント（MSG_XFERREADY）を受け取るとデータ転送を行うことが出来ます。<BR>
+（イベントの取り方は５項を参照して下さい）<BR>
+データ転送は、DG_IMAGE/DAT_IMAGENATIVEXFER/MSG_GETを使用します。<BR>
+<BR>
+<TABLE  BORDER=1 cellspacing="0" bgcolor="#C0C0E0" >
+<TR><TD>
+<PRE>
+
+TW_UINT16 rc;
+TW_UINT32 hBitmap;
+TW_BOOL PendingXfers = TRUE;
+LPBITMAPINFOHEADER	lpDib;
+
+
+// 画像転送
+hBitmap = NULL;
+rc = lpfnDSM_Entry(pAppId,pSourceId,DG_IMAGE,DAT_IMAGENATIVEXFER,MSG_GET,(TW_MEMREF)&hBitmap);
+
+lpDib = (LPBITMAPINFOHEADER)GlobalLock((void*)hBitmap);
+
+// 戻値のチェック
+switch(rc){
+	case TWRC_XFERDONE:
+		if(lpDib!=NULL){
+			// DIBオブジェクトを取得できました
+			・・・・
+		}
+		break;
+		case TWRC_CANCEL:
+		// ユーザによってキャンセルされました
+		・・・
+		break;
+
+	case TWRC_FAILURE:
+		// 転送中にエラーが発生しました
+		・・・
+		break;
+}
+if(lpdib!=NULL){
+	GlobalUnlock((void*)hBitmap);
+	GlobalFree((void*)hBitmap);
+}
+
+</PRE>
+</TD></TR>
+</TABLE>
+<BR>
+ここで取得したlpDibがビットマップオブジェクトになるので、ディスプレイに表示するなり、
+ファイルに保存するなりすることが出来ます。<BR>
+スキャナが、オートフィーダを持っている場合、転送ペンディング分が
+通知されるようですが、私自身ここまで調べていないのでよく分かりません。<BR>
+もし必要でしたら、各自で調べてみて下さい。<BR>
+尚、転送終了は、DG_CONTROL/DAT_PENDINGXFERS/MSG_ENDXFER,
+ペンディングリセットはDG_CONTROL/DAT_PENDINGXFERS/MSG_RESETを使用します。<BR>
+<BR>
+
+<HR>
+<H3><FONT COLOR="#3366FF">１３．おわりに</FONT></H3>
+<BR>
+今回は、サンプルソフトを添付しませんでしたが、その分コード例を増やしたので参考にできると思います。
+TWAINにはいろいろなモードやパラメータがあります。<BR>
+ここでは、基本的な流れしか触れていませんが、<A HREF="http://www.twain.org/download.htm">TWAIN Specification </A>を参照するための予備知識的はつける
+ことができたと思います。<BR>
+これを足がかりに、皆さんのアプリケーションでTWAINをサポートしていきましょう！
+<BR>
+<HR>
+<P><A HREF="index.htm">[ホームへ戻る］</A>
+<BR>
+【改訂記録】<BR>
+2000/06/21版：公開<BR>
+2001/11/02版：誤記修正<BR>
+<HR><FONT SIZE=-1>Copyright (c) 1997-2001, BearBeetle, Allrights reserved.</FONT>
+</BODY>
+</HTML>

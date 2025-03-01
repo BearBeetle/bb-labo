@@ -1,0 +1,335 @@
+<HTML>
+<HEAD>
+   <TITLE>BB Programming Lab.</TITLE>
+</HEAD>
+<BODY BACKGROUND="bcg_280.gif">
+<A NAME="TOP_TOP"></A><FONT SIZE=-1>このページはNetscape
+Navigator 2.0以降及びMicrosoft Internet Explorer 3.0以降で正常に見られます。</FONT>
+<BR><FONT SIZE=-2>Solly,Japanese only</FONT>
+<BR>
+<HR>
+<CENTER><BLINK><FONT COLOR="#3366FF"><FONT SIZE=-1>★ ＢＢ研究所 ★</FONT></FONT></BLINK></CENTER>
+
+<CENTER><FONT COLOR="#3366FF"><FONT SIZE=+2>Netscape プラグインの作成法（概要）</FONT></FONT></CENTER>
+
+<HR>
+<BR>　Netscapeプラグインは、Netscape Navigatorを拡張するバイナリです。
+Navigatorは、データタイプ(MIME)に応じた、プラグインを呼び出し、Navigatorのサポートしていないデータを扱うことができるようになります。
+Netscapeプラグインを作成するためには、先ずNetscape社ホームページよりプラグインガイドとＳＤＫ(Software
+Development Kit＝ソフトウェア開発キット）をダウンロードする必要があります。
+<BR>
+<UL>
+<LI>
+プラグインガイド<A HREF="http://developer.netscape.com/library/documentation/communicator/plugin/index.htm">http://developer.netscape.com/library/documentation/communicator/plugin/index.htm</A></LI>
+
+<LI>
+プラグインガイド（PDF形式）※ ：<A HREF="http://developer.netscape.com/library/documentation/communicator/composer/plugin/guide.pdf">http://developer.netscape.com/library/documentation/communicator/composer/plugin/guide.pdf</A></LI>
+
+<LI>ＳＤＫ：<A HREF="http://home.netscape.com/comprod/development_partners/plugin_api/index.html">http://home.netscape.com/comprod/development_partners/plugin_api/index.html</A></LI>
+
+<BR>
+
+<P>※PDF形式を参照するためには、adobe社の<A HREF="http://www.adobe.co.jp/product/acrobat/readstep.html">Acrobat
+Reader（フリー）</A>をインストールする必要があります。</UL>
+【注意】　
+<UL>
+<LI>
+入門的な内容しか扱いませんので、詳細はプラグインガイドを参照して下さい。　</LI>
+
+<LI>
+プラグインは、Windows,MAC,UNIX用に開発することができますが、ここではWindowsプラットフォームでの動作のみ解説します。</LI>
+
+<BR>※プラグインガイドには全てのプラットフォームについて記述されています。
+<LI>
+<B>十分なWindows API及びC言語(VC++)の知識を持っていることを前提としています。</B></LI>
+
+<LI>
+現バージョンのＳＤＫは、Communicator用のv4.0です。旧バージョンＳＤＫ(v3.0)はもはや入手することはできませんが、v4.0の追加機能を使用しなければ、Netscape
+Navigator ver3.0用のプラグインも開発することができます。</LI>
+
+<LI>
+追加仕様としては、Javaと協調した動作やWindow less等がありますが、ここでは解説を行いません。</LI>
+</UL>
+
+<H3>
+
+<HR WIDTH="100%">プラグインの働き</H3>
+　プラグインは、NavigatorのＡＰＩを使って、以下の操作を行います。
+<UL>
+<LI>
+一つ又は複数のMIMEタイプを登録する</LI>
+
+<LI>
+Navigatorのウィンドウの一部に描画する</LI>
+
+<LI>
+キーボードやマウスのイベントを取得する</LI>
+
+<LI>
+URLを使用してネットワークからデータを取得する</LI>
+
+<LI>
+URLにデータをポスト（書込み）する</LI>
+
+<LI>
+新しいURLへのリンクへのハイパーリンクかホットスポットを追加する</LI>
+
+<LI>
+ＨＴＭＬページ上のセクションに描画する</LI>
+</UL>
+　あなたが使用しているNavigator上でヘルプメニューに行き、「プラグインについて」をクリックすると、インストールされているプラグインの一覧が表示されます。このとき、対応するデータのMIMEタイプとファイル拡張子が一緒に表示されます。
+<H3>
+
+<HR WIDTH="100%">Navigator側の動作(概要)</H3>
+　Navigatorは、プラグインディレクトリをチェックしプラグインモジュールを探します。
+<BR>Webページをオープンしたとき、メディアタイプのデータがはめ込まれていたとき、プラグインを呼び出します。
+<BR>そのときのシーケンスは以下のようになります。
+<UL>
+<LI>
+該当するMIMEタイプのプラグインがあるかチェックする。</LI>
+
+<LI>
+メモリーにプラグインコードを読み込む</LI>
+
+<LI>
+プラグインを初期化する</LI>
+
+<LI>
+プラグインの新しいインスタンス（データのようなもの）を生成する</LI>
+</UL>
+　Navigatorは、同じページや別のページに拘わらず、同じプラグインで複数のインスタンスを扱うことができます。
+<BR>詳細な動作は次章で説明します。
+<H3>
+
+<HR WIDTH="100%">動作(詳細)</H3>
+　プラグインは一つ又は複数のMIMEタイプに関連づけられた、動的コードモジュールです（ここでいう”動的(dynamic)”は、Navigatorの起動後にモジュールの読込み、解放ができることを指します。いわゆるDLLです）。
+<BR>　MIMEタイプはWindowsの場合、プラグインのリソース(VBで言えば、form?）に記述します。
+<BR>　以下にプラグインのロード（読込み）からアンロード（解放）までの一生を示します。
+<UL>
+<LI>
+NavigatorがHTML文章を解釈中に登録されているプラグインのMIMEタイプのデータに出会うと（これはEMBEDと別ファイルの両タイプとも共通）、対応するプラグインモジュールを読込みます（既に読み込まれている場合は除く）。そしてインスタンスを生成します。</LI>
+
+<BR>この後、プラグインのAPI　 NPP_Initializeを呼び出します。
+<LI>
+Navigatorは、インスタンスを作成するときにプラグインのAPI NPP_Newを呼び出します。複数のインスタンスを生成するときはこの関数が複数回呼び出されます。</LI>
+
+<LI>
+インスタンスを表示しているページを離れるときに、Navigatorはインスタンスを破棄します。これに先立ってNPP_Destroyを呼び出します。</LI>
+
+<LI>
+そして、最後のインスタンスが破棄された後、プラグインをメモリからアンロードします。これに先だってNPP_Shutdownを呼び出します。</LI>
+</UL>
+
+<H3>
+
+<HR WIDTH="100%">プラグインの書式</H3>
+Navigatorやプラグインの書式は以下のように決定されています（ポーランド記号のようなものですね）
+。
+<UL>
+<LI>
+プラグインメソッド、（プラグイン内の関数）は、NPP_ではじまる。例：NPP_New</LI>
+
+<LI>
+Netscapeメソッド、（NetscapeのAPI）は、NPN_ではじまる。例：NPN_Write</LI>
+
+<LI>
+データ構造体は、NPではじまる。例：NPWindow</LI>
+
+<LI>
+モジュールの書式</LI>
+
+<UL>
+<LI>
+NPではじまる</LI>
+
+<LI>
+拡張子はDLL</LI>
+
+<LI>
+8.3文字</LI>
+</UL>
+</UL>
+
+<HR WIDTH="100%">
+<H3>
+ディスプレイモード</H3>
+プラグインの表示方法の種類（ディスプレイモード）には以下の３種類があります。
+<UL>
+<LI>
+embed（はめ込み）の表示</LI>
+
+<LI>
+embedの隠し</LI>
+
+<LI>
+フルページ</LI>
+</UL>
+「embed（はめ込み）の表示」は、HTML文章の一部の指定された資格内に表示されます。マクロメディア社のShowckWaveプラグインがこれに当たります。これは、ＨＴＭＬ文書内に&lt;EMBRED>タグで表記します。そしてデータはSRC属性で指定し、ｻｲｽﾞはHEIGHTとWIDTHで表します。
+<BR>【例】
+<UL>&lt;EMBED SRC="newave.avi" WIDTH=320 HEIGHT=200
+<BR> AUTSTART=true LOOP=true></UL>
+「embedの隠し」は、HIDDEN属性を追加します。
+<BR>【例】
+<UL>&lt;EMBED SRC="audiplay.aiff" TYPE="audio/x-aiff" HIDDEN></UL>
+「フルページ」は、HTMLではなく、直接データを指定します。Adobe社のAcrobat
+Readerがこれにあたります。
+<BR>
+<HR WIDTH="100%">
+<H3>
+プラグイン開発の流れ</H3>
+
+<OL>
+<LI>
+開発するプラグインに必要な機能のプランを立てる。</LI>
+
+<LI>
+MIMEタイプとファイル拡張子を決定する。</LI>
+
+<LI>
+SDKをダウンロードする</LI>
+
+<LI>
+プラグインプロジェクトを作成する。これは、ＳＤＫのサンプルソースを元に作成するのが望ましい</LI>
+
+<LI>
+テンプレートから必要な機能を盛り込んでいく</LI>
+
+<LI>
+ビルトする</LI>
+
+<LI>
+インストーラをつくる</LI>
+
+<LI>
+テスト・デバックを行う。</LI>
+</OL>
+
+<HR WIDTH="100%">
+<H3>
+ プラグインの登録</H3>
+　Navigatorは、MIMEタイプ又はファイル拡張子から、対応するプラグインをロードします。
+<BR>HTMLファイルでは、EMBEDタグのTYPE属性でMIME属性を指定します。
+<BR>【例】
+<UL>&lt;EMBED SRC="audiplay.aiff" TYPE="audio/x-aiff"></UL>
+　このMIMEタイプはメジャータイプ（applicationやimage等）とマイナータイプから構成されます（image/jpeg等）。
+<BR>MIMEタイプはRFC 1521"MIME:Mechanisms for Specifying and Describing
+the Forms of Internet Message Bodies"とRFC 1590"Media Type Registration
+Procedure"で規定されています。もし、あなたが新しいMIMEタイプを定義したい場合は、IETF(Internet
+Engineering Task Force)に登録する必要があり、登録されるまでは、"x-"を頭に付けます。たとえば、"image/x-nwin"等です。
+
+<P>　 Windowsでは、プラグインはNavigatorアプリケーションと同じディレクトリに格納します。そして「プラグインの書式」で述べたように、ファイルネームは、8.3文字，NPではじまる,拡張子はDLLである必要があります。
+<BR>　また、プラグインのMIMEタイプは、リソース(*.rcファイル)のバージョン情報に以下の２行を追加します。
+<BR>※リソースエディタではこの２項目は追加できないので、テキストエディタで追加する必要があります。
+<BR>
+<UL>
+<LI>
+"File Extends" ... ファイル拡張の記述</LI>
+
+<LI>
+"MIME Types" ... MIMEタイプの記述</LI>
+</UL>
+複数のMIMEタイプを指定したい場合は、"|"で区切ってMIME文字列を追加します。
+<BR>【例】
+<UL>video/quicktime|audio/aiff|image/jpeg</UL>
+※詳しくはSDKのサンプルを参照して下さい。
+
+<P>尚、バージョン情報には必ずLanguage項目があることを確認して下さい。
+
+<P>
+<HR WIDTH="100%">
+<H3>
+ プラグインによる描画とメモリのハンドリング</H3>
+　プラグインは描画前に、描画のための情報を設定し、更に再描画などのイベントのハンドルを行わなければなりません。
+<BR>その為、Navigatorは以下のプラグインメソッドを呼び出します。
+<UL>
+<LI>
+NPP_GetValue：プラグインの情報を取得するメッソッド</LI>
+
+<LI>
+NPP_Print：インスタンスの印刷</LI>
+
+<LI>
+NPP_SetValue：Navigatorの情報を 設定する</LI>
+
+<LI>
+NPP_SetWindow ：プラグインに描画するウィンドウをセット(WindowsのSetWindow
+APIに相当）</LI>
+
+<LI>
+NPP_HandleEvent ：インスタンスのイベントハンドル</LI>
+</UL>
+プラグインはNavigatorの情報取得及び設定の為にNetscapeメソッドを呼び出すことができます。
+<UL>
+<LI>
+NPN_GetValue:Navigatorの情報を取得する</LI>
+
+<LI>
+NPN_SetValue:Navigatorにプラグインの情報を設定</LI>
+</UL>
+プラグインでメモリのアロケーションを行う場合、WindowsのAPIではなく、NavigatorのAPIを使用しなければなりません。
+<UL>
+<LI>
+NPN_MemAllock：メモリのアロケーション</LI>
+
+<LI>
+NPN_MemFree：NPN_MemAllockで確保したメモリを解放する</LI>
+</UL>
+
+<HR WIDTH="100%">
+<H3>
+ストリームの送受信</H3>
+　ストリームは、URLから供給されるデータです。ストリームはプラグインのインスタンスと関連づけられますが、一つのインスタンスで複数のストリームを扱うことができます。ストリームはNavigatorによって作成されてプラグインインスタンスにより消費されるか、プラグインインスタンスにより作成されてNavigatorによって消費されます。いずれのストリームフォーマットも、関連づけられたMIMEタイプにより指定されます。
+<BR>　ストリームはNavigatorから自動的に生成されてプラグインに送られる場合とプラグインの要求により送られる場合があります。プラグインは以下の２つの転送モード(transmission
+modes）から一つを選ぶことができます。
+<UL>
+<LI>
+<B>ノーマルモード</B>：Navigatorにデータが届いたときに、そのままプラグインにシーケンシャルに送ります。</LI>
+
+<LI>
+<B>ランダムアクセスモード</B>：プラグインによるストリームの任意のポイントへのジャンプ要求をサポートします。この場合、サーバも対応機能が必要になります。</LI>
+
+<LI>
+<B>ファイルモード：</B>Navigatorは、データをローカルキャッシュにセーブし、そのファイルパスをプラグインに渡します。</LI>
+</UL>
+プラグインで作られNavigatorへ渡されるストリームは、転送方向を除いて上記のノーマルモードに似ています。ノーマルモードでは、Navigatorはストリームがあるとプラグインを呼出して、それをプラグインへ通知し残りのデータを送ります。対照的にプラグインによって作られたストリームの場合、プラグインはストリームがあることをNavigatorを呼び出してデータを書き込み、その後データを破棄します。
+<BR>
+<HR WIDTH="100%">
+<H3>
+プラグインのビルド</H3>
+Win32の場合プラグインＳＤＫは、VC++4.2用に作成されています。以下にサンプルのビルド方法を記述します。
+<UL>
+<LI>
+まずＳＤＫ(WinNPSDK.zip)を<A HREF="http://home.netscape.com/comprod/development_partners/plugin_api/index.html">ダウンロード</A>します</LI>
+
+<LI>
+zipユーティリティを使用してWinNPSDK.zipを解凍します。もし、ＳＤＫを変更しない場合はルートディレクトリで、pkunzipを-dフラグで使用すれば\PluginSDKディレクトリ以下にＳＤＫが作成されます。</LI>
+
+<LI>
+\Program Files\Examples\Simple\Windows\NPSimple32.mdpをオープンしビルドします。</LI>
+
+<LI>
+できたオブジェクトを、\Program Files\Netscape\Navigator\Program\Pluginsへコピーします。</LI>
+
+<LI>
+Java classファイル（\PluginSDK\Examples\Simple\Simple.class)をプラグインと同じディレクトリにコピーします。</LI>
+
+<BR>※このJava classファイルはJavaScriptへのインタフェースになります。
+<LI>
+もし、Navigatorが起動中なら一旦終了させて下さい。</LI>
+
+<LI>
+Navigatorを起動し、以下のファイルを読み込んで下さい</LI>
+
+<BR>\PluginSDK\Examples\Simple\Testing\SimpleExsample.html</UL>
+
+<HR WIDTH="100%">
+<H3>
+おわりに</H3>
+実は、コレはプラグインガイドを拾い読みしてまとめたものなので、これを読んだだけでは、なにがなんだかわからないと思います。
+<BR>次の実習で実際のプラグインを作成します。両方を読めば、ある程度感じがつかめるようになると思います。
+
+<P><A HREF="index.htm">[ホームへ戻る］</A>
+<BR>
+<HR><FONT SIZE=-1>Copyright (c) 1997-1999, BearBeetle, Allrights reserved.</FONT>
+</BODY>
+</HTML>
