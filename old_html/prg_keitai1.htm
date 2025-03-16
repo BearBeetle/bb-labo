@@ -1,230 +1,232 @@
+<!DOCTYPE html>
 <HTML>
 <HEAD>
+   <meta charset="UTF-8">
    <TITLE>BB Lab, Keitai Memory dial</TITLE>
 </HEAD>
 <BODY BACKGROUND="bcg_280.gif">
-<A NAME="TOP_TOP"></A><FONT SIZE=-1>���̃y�[�W��Netscape
-Navigator 2.0�ȍ~�y��Microsoft Internet Explorer 3.0�ȍ~�Ő���Ɍ����܂��B</FONT>
+<A NAME="TOP_TOP"></A><FONT SIZE=-1>このページはNetscape
+Navigator 2.0以降及びMicrosoft Internet Explorer 3.0以降で正常に見られます。</FONT>
 <BR><FONT SIZE=-2>Solly,Japanese only</FONT>
 <BR>
 <HR>
-<CENTER><BLINK><FONT COLOR="#3366FF"><FONT SIZE=-1>�� �a�a������ ��</FONT></FONT></BLINK></CENTER>
-<CENTER><FONT COLOR="#3366FF"><FONT SIZE=+2>�g�ѓd�b�������_�C�����A�N�Z�X �|�n�[�h�E�F�A�ҁ| </FONT></FONT></CENTER>
+<CENTER><BLINK><FONT COLOR="#3366FF"><FONT SIZE=-1>★ ＢＢ研究所 ★</FONT></FONT></BLINK></CENTER>
+<CENTER><FONT COLOR="#3366FF"><FONT SIZE=+2>携帯電話メモリダイヤルアクセス －ハードウェア編－ </FONT></FONT></CENTER>
 <P>
 <HR>
-<H3><FONT COLOR="#3366FF">�͂��߂�</FONT></H3>
-�@�ŋߌg�ѓd�b�̃������_�C�������Ǘ�����c�[�����e�Ђ��甭������A���\����Ă���悤�ł��B<BR>
-��͂萔�疜������y���Ă���g�ѓd�b�̓d�b�����Ǘ�����j�[�Y������Ƃ������Ƃł��傤�B����́A�\�v�Z�\�t�g��A�Z���^���̃\�t�g�ł́A�g�ѓd�b�̃������_�C�����̊Ǘ��͕K�{�����ƂȂ��Ă��邩���m��܂���B<BR>
-�@�Ƃ������ƂŁA����͌g�ѓd�b�̃������_�C�����ɂ��Ď��グ�܂����B<BR>
-�@�ŏI�I�ɂ͍��x�V�K�i���ɂP�N�Ԃ�I�j�ɍ쐬�����A<A HREF="http://www2s.biglobe.ne.jp/~img/download_free.htm#BBK">�y�a�a�g�ѓd�b�������_�C�����A�N�Z�X���C�u�����i�a�a�j���C�u�����j�z</A>���A�݂Ȃ���Ɏg���Ă����������Ɗ��ł��B���̃��C�u�����̓t���[�ł��B����g���Ă݂ĉ������B<BR>
-�@����͑傫���Q�̃p�[�g�ɕʂ��܂����B�悸�́A�y�n�[�h�E�F�A�ҁz�B�����ł̓P�[�u���ڑ��ɂ��ĉ�����܂��B���Ɂy�\�t�g�ݒ�ҁz�ł��B�����ł́A�u�b�{�{���g���A�V���A���|�[�g��ʂ��ăA�N�Z�X������@��������܂��B�܂��A���̍����BBK���C�u�����ɂ��A�N�Z�X�@�ɂ��Ă�������܂��B<BR>
-���A�����ɍڂ��Ă�����́A<A HREF="http://docomo-web.nttdocomo.co.jp/ntt_docomo/ntt_car/cindex.html">NTT DoCoMo</A>�̃z�[���y�[�W�����ɂ��Ă��܂��B�����A�d�q��H��ʐM�̒m��������A�q�}�������Ղ肠��l�Ȃ�΁A����NTT DoCoMo�̃z�[���y�[�W���������������B<BR><BR>
-����ł́A�n�[�h�E�F�A�҂̐��������܂��B<BR>
+<H3><FONT COLOR="#3366FF">はじめに</FONT></H3>
+　最近携帯電話のメモリダイヤルを管理するツールが各社から発売され、結構売れているようです。<BR>
+やはり数千万台も普及している携帯電話の電話帳を管理するニーズがあるということでしょう。今後は、表計算ソフトや、住所録等のソフトでは、携帯電話のメモリダイヤルの管理は必須条件となってくるかも知れません。<BR>
+　ということで、今回は携帯電話のメモリダイヤルについて取り上げました。<BR>
+　最終的には今度新規（実に１年ぶり！）に作成した、<A HREF="http://www2s.biglobe.ne.jp/~img/download_free.htm#BBK">【ＢＢ携帯電話メモリダイヤルアクセスライブラリ（ＢＢＫライブラリ）】</A>を、みなさんに使っていただこうと企画です。このライブラリはフリーです。是非使ってみて下さい。<BR>
+　解説は大きく２つのパートに別けました。先ずは、【ハードウェア編】。ここではケーブル接続について解説します。次に【ソフト設定編】です。ここでは、ＶＣ＋＋を使い、シリアルポートを通じてアクセスする方法を解説します。また、私の作ったBBKライブラリによるアクセス法についても解説します。<BR>
+尚、ここに載っている情報は、<A HREF="http://docomo-web.nttdocomo.co.jp/ntt_docomo/ntt_car/cindex.html">NTT DoCoMo</A>のホームページを元にしています。もし、電子回路や通信の知識があり、ヒマがたっぷりある人ならば、直接NTT DoCoMoのホームページをご覧ください。<BR><BR>
+それでは、ハードウェア編の説明をします。<BR>
 <HR>
 <P>
 
 
-<H3><FONT COLOR="#3366FF">PC���V���A���|�[�g�M����</FONT></H3>
-�g�ѓd�b�Ƃ̒ʐM�C���^�t�F�[�X�Ƃ��āA�o�b���̓V���A���|�[�g���g�p���܂��B<BR>
-�g�ѓd�b�́A�������_�C�����p�V���A���M���́A���菇�A���������Ƃ��Ă��܂��BPC���̃V���A���|�[�g�����̕����ŒʐM�ł���悤�ɁAPC���̒[�q�͈ȉ��̂悤�ɂ��܂��B<BR>
-���X�s����O��ɂ��Ă��܂��B<BR>
-�������̂Ȃ��s����NC(�ڑ�����)<BR>
+<H3><FONT COLOR="#3366FF">PC側シリアルポート信号線</FONT></H3>
+携帯電話との通信インタフェースとして、ＰＣ側はシリアルポートを使用します。<BR>
+携帯電話の、メモリダイヤル用シリアル信号は、無手順、調歩式をとっています。PC側のシリアルポートがこの方式で通信できるように、PC側の端子は以下のようにします。<BR>
+※９ピンを前提にしています。<BR>
+※説明のないピンはNC(接続せず)<BR>
 <table border="1">
-    <tr><td>�M����</td><td>�s���ԍ�</td><td>����</td></tr>
-    <tr><td>TXD</td><td>3</td><td>���M�i�g�ё��̃V���A��IN�ցj</td></tr>
-    <tr><td>RXD</td><td>2</td><td>��M�i�g�ё��̃V���A��OUT�ցj</td></tr>
-    <tr><td>RTS</td><td>7</td><td>�n���h�V�F�[�N�p�i�g��Ȃ��̂ŁACTS�ƃV���[�g�j</td></tr>
-    <tr><td>CTS</td><td>8</td><td>�n���h�V�F�[�N�p�i�g��Ȃ��̂ŁARTS�ƃV���[�g�j</td></tr>
-    <tr><td>G</td><td>5</td><td>�O�����h</td></tr>
+    <tr><td>信号名</td><td>ピン番号</td><td>説明</td></tr>
+    <tr><td>TXD</td><td>3</td><td>送信（携帯側のシリアルINへ）</td></tr>
+    <tr><td>RXD</td><td>2</td><td>受信（携帯側のシリアルOUTへ）</td></tr>
+    <tr><td>RTS</td><td>7</td><td>ハンドシェーク用（使わないので、CTSとショート）</td></tr>
+    <tr><td>CTS</td><td>8</td><td>ハンドシェーク用（使わないので、RTSとショート）</td></tr>
+    <tr><td>G</td><td>5</td><td>グランド</td></tr>
 </table>
 <BR>
 <HR>
-<H3><FONT COLOR="#3366FF">�g�ё��V���A���|�[�g�M����</FONT></H3>
-�g�ѓd�b���́A�d�b�̒�ʂɂ���R�l�N�^���g�p���܂��B�ʏ킱�̃R�l�N�^�P�i�͔�������Ă��܂��񂪁A�H�t���Ȃǂ̓d�C�X�ŁA�W�����N�i��T���Γ���ł��܂��B���[�J�ɂ���Ď኱�`�󂪈قȂ邱�Ƃ�����悤�ł����A�����p�̂��̂��g�p����΁A�قڑS�Ă̌g�ѓd�b�ɐڑ��ł���悤�ł��B<BR>
-PC���Ɠ��l�Ɍg�ё��̐M���ŁA�������_�C�����p�V���A���Ɏg�p������̂��ȉ��Ɏ����܂��B<BR><BR>
+<H3><FONT COLOR="#3366FF">携帯側シリアルポート信号線</FONT></H3>
+携帯電話側は、電話の底面にあるコネクタを使用します。通常このコネクタ単品は発売されていませんが、秋葉原などの電気街で、ジャンク品を探せば入手できます。メーカによって若干形状が異なることがあるようですが、松下用のものを使用すれば、ほぼ全ての携帯電話に接続できるようです。<BR>
+PC側と同様に携帯側の信号で、メモリダイヤル用シリアルに使用するものを以下に示します。<BR><BR>
 
 <BR>
 <table border="1">
-    <tr><td>�M����</td><td>�s���ԍ�</td><td>����</td></tr>
-    <tr><td>�V���A���h�m</td><td>6</td><td>��M�i�g�ё���TXD�ցj</td></tr>
-    <tr><td>�V���A��OUT</td><td>7</td><td>���M�i�g�ё���RXD�ցj</td></tr>
-    <tr><td>�g�ы@���암����M���P</td><td>12</td><td>�ʐM����GND�ɗ��Ƃ�</td></tr>
-    <tr><td>G</td><td>1,3,9</td><td>�O�����h</td></tr>
+    <tr><td>信号名</td><td>ピン番号</td><td>説明</td></tr>
+    <tr><td>シリアルＩＮ</td><td>6</td><td>受信（携帯側のTXDへ）</td></tr>
+    <tr><td>シリアルOUT</td><td>7</td><td>送信（携帯側のRXDへ）</td></tr>
+    <tr><td>携帯機操作部制御信号１</td><td>12</td><td>通信中はGNDに落とす</td></tr>
+    <tr><td>G</td><td>1,3,9</td><td>グランド</td></tr>
 </table>
 <BR>
 <BR>
 
-<FONT COLOR=DARKRED>�y�����F99/03/02,11,12,21�z�R�l�N�^���W���</FONT><BR>
-���[�U����̕񍐂ňȉ��̓X�œ���ł���悤�ł��B<BR>
+<FONT COLOR=DARKRED>【改訂：99/03/02,11,12,21】コネクタ収集情報</FONT><BR>
+ユーザからの報告で以下の店で入手できるようです。<BR>
 <UL>
-<LI><A HREF="http://www.sengoku.co.jp/">��Γd��</A>����X���̓����t�߂ɔ����Ă܂���</A>
-<LI>SHINKO DENKI?�i����o���j�����Γd���ׂ̗̂��X�B���������ł��i�ł��݌ɂ����Ȃ����j
-<LI><A HREF="http://home.interlink.or.jp/~maple/conoder.htm">���C�v��</A>����ʔ̂ł�
-<LI>����d�q���i����H�t�����W�I�f�p�[�g�̂P�e�����ł��i03-3251-6715�j
-<LI><A HREF="http://www.kyohritsu.com/DIGIT/index.html">�f�W�b�g</A>��������{���S���ڂɂ��邻���ł��B�W�����N�i�ł��B��P208�ɂ͐ڑ��ł��Ȃ��Ƃ̂��Ƃł�(2000/03/05�C���j�B
+<LI><A HREF="http://www.sengoku.co.jp/">千石電商</A>･･･店内の入口付近に売ってました</A>
+<LI>SHINKO DENKI?（うろ覚え）･･･千石電商の隣のお店。安かったです（でも在庫が少なそう）
+<LI><A HREF="http://home.interlink.or.jp/~maple/conoder.htm">メイプル</A>･･･通販です
+<LI>西川電子部品･･･秋葉原ラジオデパートの１Ｆ入口です（03-3251-6715）
+<LI><A HREF="http://www.kyohritsu.com/DIGIT/index.html">デジット</A>･･･大阪日本橋４丁目にあるそうです。ジャンク品です。※P208には接続できないとのことです(2000/03/05修正）。
 </UL>
-�܂��A�i�q�̉w�̂j�h�n�r�j�ŁA�s�n�o�k�`�m�c�́u�d�b�̓d�r�v�Ƃ������̂������Ă܂����B<BR>
-�v�͌g�ѓd�b�̓d�r���؂ꂽ���Ɏg�p����g���̂Ă̓d�r�ł��B�R�l�N�^�o�R�œd������������̂ŁA
-���̃R�l�N�^�𗬗p���邱�Ƃ��ł��܂��B<BR>
-�l�i�͂Ȃ�ƂT�W�O�~(��)�I<BR>
-�s��������̂��A1P,3P,6P,8P�݂̂ł��̂ŁAGND��1P�������g�p���A3P��8P�𔲂��āA
-7P��12P�Ɏh���΃������_�C�����p�̃R�l�N�^�ɗ��p�ł��܂��B<BR>
-�A���A�{���ʂ̗p�r�Ɏg�p������̂��A��������p����̂ŁA�H��ɍH�v���K�v�ł��B<BR>
-�y�⑫�z<BR>
-3P��GND�ł����V���A���p�ł͂Ȃ��̂�NC�ł����܂��܂���B<BR>
-�܂��A9P��1P�ƌg�ѓ����łȂ����Ă��邱�ƂɊ��҂���NC�Ƃ��Ă��܂��B<BR>
-������������ANG�ɂȂ�g�ѓd�b�����邩������܂���<BR>
+また、ＪＲの駅のＫＩＯＳＫで、ＴＯＰＬＡＮＤの「電話の電池」というものが売ってました。<BR>
+要は携帯電話の電池が切れた時に使用する使い捨ての電池です。コネクタ経由で電源を供給するので、
+このコネクタを流用することができます。<BR>
+値段はなんと５８０円(安)！<BR>
+ピンがあるのが、1P,3P,6P,8Pのみですので、GNDに1Pだけを使用し、3Pと8Pを抜いて、
+7Pと12Pに刺せばメモリダイヤル用のコネクタに流用できます。<BR>
+但し、本来別の用途に使用するものを、無理矢理流用するので、工作に工夫が必要です。<BR>
+【補足】<BR>
+3PはGNDですがシリアル用ではないのでNCでもかまいません。<BR>
+また、9Pは1Pと携帯内部でつながっていることに期待してNCとしています。<BR>
+もしかしたら、NGになる携帯電話もあるかもしれません<BR>
 
 
 <HR>
 <P>
 
-<H3><FONT COLOR="#3366FF">�g�ѓd�b�R�l�N�^�s���A�T�C��</FONT></H3><BR>
-<FONT COLOR=DARKRED>�y����:99/02/16�z</FONT><BR>
+<H3><FONT COLOR="#3366FF">携帯電話コネクタピンアサイン</FONT></H3><BR>
+<FONT COLOR=DARKRED>【改訂:99/02/16】</FONT><BR>
 <CENTER><IMG SRC="img/conector.gif"></CENTER><BR>
-�ڍׂ́ANTT-DoCoMo��<A HREF="http://docomo-web.nttdocomo.co.jp/ntt_docomo/ntt_car/html/2_3_1_2.html">2.3.1.2��</A>���Q�Ƃ��ĉ������B<BR>
+詳細は、NTT-DoCoMoの<A HREF="http://docomo-web.nttdocomo.co.jp/ntt_docomo/ntt_car/html/2_3_1_2.html">2.3.1.2項</A>を参照して下さい。<BR>
 <HR>
 <P>
 
 
-<H3><FONT COLOR="#3366FF">�o�b�ƌg�ѓd�b�̐ڑ�</FONT></H3>
-�@���͓����APC���ƌg�ѓd�b�̐M�����𒼌����Ă��܂������A���̂Ƃ��͑S�R�����܂���ł����B�o�b���͂q�r�|�Q�R�Q�b�K�i�ɉ����Ă܂����A�g�ѓd�b���́AC-MOS�̏o�͂��̂܂܂ɂȂ��Ă��邽�߂ł��B�M�����x�����Ⴄ���Ƃ͒m���Ă��āA��R�����܂��Ή��Ƃ��Ȃ邾�낤�Ǝv���Ă��̂ł����A�Ȃ�Ƃ��Ȃ�܂���ł����B�Ƃ������ƂŁA���x���ϊ�IC���g�p���܂��B<BR>
-�@�K���Ȃ��̂��g���Ă��܂��܂��񂪁A�����ł́A�A�i���O�f�o�C�Z�Y��<A HREF="http://products.analog.com/products/info.asp?product=ADM222">ADM232A</A>���g�p���܂��B�����<A HREF="http://202.220.160.150:80/AKIZUKI/">�i�L�j�H���ʏ�</A>��������l�i�œ���ł��܂��B<BR>
-<FONT COLOR=DARKRED>�y����:99/02/16�z</FONT><BR>
-�@�܂��AIC���g�p����ꍇ�AIC�p�̓d�����K�v�ɂȂ�܂��B�����PC���狟�����邱�Ƃɂ���ꍇ�́A�i�]�v�ȃR�l�N�^�͂������Ȃ��̂Łj���\�ł���RTS-CTS�[�q����d�����Ƃ�A<FONT COLOR=DARKRED>�_�C�I�[�h��ʂ��ă_�C���N�g��IC�̓d���Ƃ��܂�</FONT><FONT SIZE=-1>�i�����́A�TV�̂R�[�q���M�����[�^���g�p���Ă����̂ł���(v0.02���j�A���ꂾ�ƈꕔ�̌g�ѓd�b�Ńf�[�^�������������Ă��܂��܂����B������T���Ă݂���AIC�̓d���d���������łQ�u��ł����B���M�����[�^��ʂ����ɒ���������A�S�u��ɂȂ�A�f�[�^�����������ł��܂����j</FONT>�B<BR>
-�@�ȏ�̂��Ƃ��l������ƁA�ȉ��̂悤�Ȑڑ��ɂȂ�܂��B<BR><BR>
-<FONT COLOR=DARKRED>�y����:99/02/26�z</FONT><BR>
-<FONT COLOR=DARKBLUE>���d�v��<BR>
-�g�ё���6P��7P���t�ł����B�S�������Đ\����Ȃ��B<BR></FONT>
-<CENTER><IMG SRC="img/p2k.gif" WIDTH=504 HEIGHT=347><BR>�ڑ��}</CENTER>
+<H3><FONT COLOR="#3366FF">ＰＣと携帯電話の接続</FONT></H3>
+　私は当初、PC側と携帯電話の信号線を直結していましたが、このときは全然動きませんでした。ＰＣ側はＲＳ－２３２Ｃ規格に沿ってますが、携帯電話側は、C-MOSの出力そのままになっているためです。信号レベルが違うことは知っていて、抵抗をかませば何とかなるだろうと思ってたのですが、なんともなりませんでした。ということで、レベル変換ICを使用します。<BR>
+　適当なものを使ってかまいませんが、ここでは、アナログデバイセズの<A HREF="http://products.analog.com/products/info.asp?product=ADM222">ADM232A</A>を使用します。これは<A HREF="http://202.220.160.150:80/AKIZUKI/">（有）秋月通商</A>から安い値段で入手できます。<BR>
+<FONT COLOR=DARKRED>【改訂:99/02/16】</FONT><BR>
+　また、ICを使用する場合、IC用の電源が必要になります。これをPCから供給することにする場合は、（余計なコネクタはつけたくないので）乱暴ですがRTS-CTS端子から電源をとり、<FONT COLOR=DARKRED>ダイオードを通じてダイレクトにICの電源とします</FONT><FONT SIZE=-1>（当初は、５Vの３端子レギュレータを使用していたのですが(v0.02迄）、これだと一部の携帯電話でデータ化けをおこしてしまいました。原因を探ってみたら、ICの電源電圧が実測で２Ｖ台でした。レギュレータを通さずに直結したら、４Ｖ台になり、データ化けも解消できました）</FONT>。<BR>
+　以上のことを考慮すると、以下のような接続になります。<BR><BR>
+<FONT COLOR=DARKRED>【改訂:99/02/26】</FONT><BR>
+<FONT COLOR=DARKBLUE>●重要●<BR>
+携帯側の6Pと7Pが逆でした。全くもって申し訳なし。<BR></FONT>
+<CENTER><IMG SRC="img/p2k.gif" WIDTH=504 HEIGHT=347><BR>接続図</CENTER>
 
 <BR>
-<CENTER><IMG SRC="img/p2k_smpl.jpg" WIDTH=180 HEIGHT=192><BR>�쐬�����P�[�u��</CENTER>
+<CENTER><IMG SRC="img/p2k_smpl.jpg" WIDTH=180 HEIGHT=192><BR>作成したケーブル</CENTER>
 <BR>
 
- <FONT COLOR=DARKRED>�y����:99/01/04�z<BR>
-�P�[�^�C�E�G�f�B���g�p����ꍇ�́A�Ԏ��Ŏ����u�g�ы@���암����M���P�v��ڑ�����K�v������܂��B<BR>
-�������A�P�[�^�C�E�G�f�B�t���̃P�[�u���ƈقȂ�A�f�[�^�]����͕K����U�A�R�l�N�^���g�ѓd�b����O���K�v������܂��i�����Ȃ��ƁA���̓]�����󂯕t���܂���j�B<BR>
-�܂��A�u�g�ы@���암����M���P�v��ڑ������BBK���C�u����v0.001�ł͈ꕔ���삵�Ȃ��@�킪����܂��i�����n�j�B<BR>
+ <FONT COLOR=DARKRED>【改訂:99/01/04】<BR>
+ケータイ・エディを使用する場合は、赤字で示す「携帯機操作部制御信号１」を接続する必要があります。<BR>
+ただし、ケータイ・エディ付属のケーブルと異なり、データ転送後は必ず一旦、コネクタを携帯電話から外す必要があります（さもないと、次の転送を受け付けません）。<BR>
+また、「携帯機操作部制御信号１」を接続するとBBKライブラリv0.001では一部動作しない機種があります（松下系）。<BR>
 <BR>
-���̑��̃������_�C�����c�[���ɂ��ẮA�����Ă��Ȃ��̂ŕs���ł��B<BR>
+その他のメモリダイヤルツールについては、試していないので不明です。<BR>
 </FONT>
-��v0.02�ȍ~�́uBBK���C�u�����v�ł́A�K���u�g�ы@���암����M���P�v��ڑ�����K�v������܂��B<BR>
- <FONT COLOR=DARKRED>�y����:99/12/10�z</FONT><BR>
-��L��H�}���A�ȒP�ň������ȉ�H�}��AKIYAMA����苳���Ă����������̂ł��m�点���܂�<BR>
-<A HREF="http://wwwf.mvi.co.jp/Spot/cable_notice.html">�i���j���f�B�A���B�W�����@�����I�t�B�X�@������T�C�g http://wwwf.mvi.co.jp/Spot/cable_notice.html</A><BR>
+※v0.02以降の「BBKライブラリ」では、必ず「携帯機操作部制御信号１」を接続する必要があります。<BR>
+ <FONT COLOR=DARKRED>【改訂:99/12/10】</FONT><BR>
+上記回路図より、簡単で安そうな回路図をAKIYAMA氏より教えていただいたのでお知らせします<BR>
+<A HREF="http://wwwf.mvi.co.jp/Spot/cable_notice.html">（株）メディアヴィジョン　福岡オフィス　非公式サイト http://wwwf.mvi.co.jp/Spot/cable_notice.html</A><BR>
 
 <BR><BR>
 <HR>
-<H3><FONT COLOR="#3366FF">�ǉ����F�b�������n�����Ƃ̐ڑ�</FONT></H3>
+<H3><FONT COLOR="#3366FF">追加情報：ＣｄｍａＯｎｅとの接続</FONT></H3>
 <BR>
- <FONT COLOR=DARKRED>�y����:2000/11/25�z</FONT><BR>
-takecan������ACdmaOne�Ƃ̐ڑ��ɂ��ď����񂹂Ă��������܂����̂ŏЉ�܂��B<BR>
-��L�̉�H�̃R�l�N�^���̐ڑ����ȉ��̂悤�ɐڑ�����΂悢�Ƃ̂��Ƃł��B<BR>
-���̏��̓��e�ɂ��Ă͖����؂̂��߁A���������[�������̂܂܌f�ڒv���܂��B<BR><BR>
+ <FONT COLOR=DARKRED>【改訂:2000/11/25】</FONT><BR>
+takecan氏から、CdmaOneとの接続について情報を寄せていただきましたので紹介します。<BR>
+上記の回路のコネクタ部の接続を以下のように接続すればよいとのことです。<BR>
+この情報の内容については未検証のため、頂いたメールをそのまま掲載致します。<BR><BR>
 <TABLE  BORDER=1 cellspacing="0" bgcolor="#FFFFFF" >
 <TR><TD>
 <FONT SIZE=-1>
 (2000/11/12)<BR><BR>
-CdmaOne�̃R�l�N�^�����f�ڂ��ĉ������B <BR>
+CdmaOneのコネクタ情報も掲載して下さい。 <BR>
 <IMG SRC="img/cdma-one.jpg"><BR>
-�Q�l�ɂ����̂́A�[�d��Ɓu�P�[�^�C�}�X�^�[�Q�O�O�P For CdmaOne�v�t���̃P�[�u���ł��B<BR>
-�X�s���R�l�N�^�����ɉ�H������܂����B <BR>
-Rx�ATx��H�Ƀg�����W�X�^���e�P�A�d���͂V�E�W�s�����痬�p���Ă��܂��B <BR>
+参考にしたのは、充電器と「ケータイマスター２００１ For CdmaOne」付属のケーブルです。<BR>
+９ピンコネクタ内部に回路がありました。 <BR>
+Rx、Tx回路にトランジスタが各１、電源は７・８ピンから流用しています。 <BR>
 <BR>
-��͒�R�T�A�_�C�I�[�h�ւ���Tr���Q�̍\���ł��B <BR>
+後は抵抗５個、ダイオード替わりのTrが２個の構成です。 <BR>
 <BR>
-���̕����́A�u�n�[�h�E�G�A�ҁv�ɂ�����̂Ɠ����@�\�ł��傤�B <BR>
+この部分は、「ハードウエア編」にあるものと同じ機能でしょう。 <BR>
 <BR>
-�����@takecan <BR>
+ｂｙ　takecan <BR>
   <BR>
 <BR>
 </TD></TR>
 </TABLE>
 <BR>
-�y�⑫�z<BR>
+【補足】<BR>
 <BR>
-�E��L�u�X�s���R�l�N�^�����ɉ�H������܂����B�v�Ƃ́A<BR>
-�@�uPC��(9P)�V���A���R�l�N�^�̃P�[�X���ɉ�H���g�܂�Ă����v�Ƃ����Ӗ��ł��B<BR>
+・上記「９ピンコネクタ内部に回路がありました。」とは、<BR>
+　「PC側(9P)シリアルコネクタのケース内に回路が組まれていた」という意味です。<BR>
 <BR>
-�E��L���uRx�ATx��H�Ƀg�����W�X�^������v�Ƃ����L�q��<BR>
-�@Tx,Rx�͂��ꂼ�ꑗ�M�C��M�̈Ӗ��ł��B<BR>
-�@�����A����H�̌g�ё��R�l�N�^�V�s���C�U�s���ɑ�������Ǝv���܂��B<BR>
-�@�i���������Ȃ��悤�Ȃ�t�ɂ��Ă݂Ă��������j<BR>
+・上記中「Rx、Tx回路にトランジスタが･･･」という記述の<BR>
+　Tx,Rxはそれぞれ送信，受信の意味です。<BR>
+　多分、元回路の携帯側コネクタ７ピン，６ピンに相当すると思います。<BR>
+　（もし動かないようなら逆にしてみてください）<BR>
 <BR>
-�E��L�u����d���͂V�E�W�s�����痬�p���Ă��܂��B�v�Ƃ����L�q�́u�V�E�W�s���v�́A<BR>
-�@�o�b���R�l�N�^�̂V�s���C�W�s���Ƃ����Ӗ��ł��B<BR>
+・上記「･･･電源は７・８ピンから流用しています。」という記述の「７・８ピン」は、<BR>
+　ＰＣ側コネクタの７ピン，８ピンという意味です。<BR>
 <BR>
 <BR>
- <FONT COLOR=DARKRED>�y����:2000/11/31�z</FONT><BR>
-takecan�����A�X�ɏC�����𒸂��܂����B<BR>
-���̂܂܌f�ڂ����Ă��������܂��B<BR>
+ <FONT COLOR=DARKRED>【改訂:2000/11/31】</FONT><BR>
+takecan氏より、更に修正情報を頂きました。<BR>
+そのまま掲載させていただきます。<BR>
 <TABLE  BORDER=1 cellspacing="0" bgcolor="#FFFFFF" >
 <TR><TD>
 <FONT SIZE=-1>
 (2000/11/28)<BR><BR>
-����ɂ���B<BR>
+こんにちわ。<BR>
 <BR>
-�ڑ��s���̌�肪����������܂����̂ŁA���}�����m�点���܂��B<BR>
+接続ピンの誤りが昨日判明しましたので、取り急ぎお知らせします。<BR>
 <BR>
-�U�s���i�`�m�s������j�f�m�c�́A�W�Ԃ̊ԈႢ�ł����B<BR>
-�i�s�������������āA�����Ȃ����������܂����B�j<BR>
+６ピン（ＡＮＴ側から）ＧＮＤは、８番の間違いでした。<BR>
+（ピンを引き抜いて、数えなおし判明しました。）<BR>
 <BR>
-���Q�͂���܂���i�@�\��Q�͔F�߂��܂���ł����j���A�ڑ����Ȃ����A<BR>
-�W�ԃs���֐ڑ������Ă��������B<BR>
+実害はありません（機能障害は認められませんでした）が、接続しないか、<BR>
+８番ピンへ接続をしてください。<BR>
 <BR>
-���̂f�m�c�́A�O���d���ڑ���m�点�邽�߂̂��̂ŁA�ڑ����ɏƖ���<BR>
-�n�m�ɂ���@�\���Ɋ֌W���Ă��܂��B<BR>
+このＧＮＤは、外部電源接続を知らせるためのもので、接続時に照明を<BR>
+ＯＮにする機能等に関係しています。<BR>
 <BR>
-�͂񂾕t���̍ہA�������̕s����o�����܂����̂ŎQ�l�܂łɁD�D<BR>
-�P�D�s���͑S�Ĉ��������A�͂񂾕t���̂��Ɓi���k�`���[�u�ŃJ�o�[���āj�R�l�N�^�ɖ߂��D<BR>
-�Q�D�͂񂾂�����߂��Ȃ��悤�ɁA���ʂ̂͂񂾎g�p�ɗ��߂�B<BR>
+はんだ付けの際、いくつかの不具合を経験しましたので参考までに．．<BR>
+１．ピンは全て引き抜き、はんだ付けのあと（収縮チューブでカバーして）コネクタに戻す．<BR>
+２．はんだが流れ過ぎないように、少量のはんだ使用に留める。<BR>
 <BR>
-���������g�o�֋L�ڂ��Ē���������ŁA���݂܂���ł����B<BR>
+せっかくＨＰへ記載して頂いた直後で、すみませんでした。<BR>
 </TD></TR>
 </TABLE>
 <BR>
- <FONT COLOR=DARKRED>�y����:2000/12/22�z</FONT><BR>
-CdmaOne�̃R�l�N�^������肵�܂����̂Ōf�ڒv���܂��B<BR>
+ <FONT COLOR=DARKRED>【改訂:2000/12/22】</FONT><BR>
+CdmaOneのコネクタ情報を入手しましたので掲載致します。<BR>
 <table border="1" cellspacing="0" bgcolor="#FFFFFF" >
-    <tr><td>�s���ԍ�</td><td>�M����</td><td>����</td></tr>
-	<tr><td>�@�P</td><td>�ڒn</td><td>-</td></tr>
-	<tr><td>�@�Q</td><td>���M�����M��</td><td>�[��������A�i���O�����M������M���邽�߂̒[�q</td></tr>
-	<tr><td>�@�R</td><td>�b�b</td><td>�ړ��@���ڑ����ꂽ����[�����ɒʒm���邽�߂̒[�q</td></tr>
-	<tr><td>�@�S</td><td>������M�M��</td><td>�[�����ɃA�i���O�����M���𑗐M���邽�߂̒[�q</td></tr>
-	<tr><td>�@�T</td><td>�b�e</td><td>�f�[�^�ʐM���ɂo�o�o�Ċm�����Ȃ���΂Ȃ�Ȃ����Ƃ�[�����ɒm�点��[�q</td></tr>
-	<tr><td>�@�U</td><td>�a�`</td><td>�f�[�^�ʐM���ɏ��f�[�^����M����B�[�q�f�[�^�͔񓯊��i�����j�]��</td></tr>
-	<tr><td>�@�V</td><td>�b�a</td><td>�f�[�^�ʐM���ɏ��f�[�^�𐧌䂷��M���̑��M�[�q</td></tr>
-	<tr><td>�@�W</td><td>�g�ё��암����M���@</td><td>�[��������g�ё��암�𐧌䂷��M������M���邽�߂̒[�q</td></tr>
-	<tr><td>�@�X</td><td>�a�a</td><td>�f�[�^�ʐM���ɉ���f�[�^�𑗐M����B�[�q�f�[�^�͔񓯊��i�����j�]��</td></tr>
-	<tr><td>�P�O</td><td>�g�ё��암����M���A</td><td>�[��������g�ё��암�𐧌䂷��M������M���邽�߂̒[�q</td></tr>
-	<tr><td>�P�P</td><td>���V���A���M��</td><td>�[��������g�ы@�ɑ����Ă���V���A���M������M���邽�߂̒[�q</td></tr>
-	<tr><td>�P�Q</td><td>�b�d</td><td>�f�[�^�ʐM���ɂl�s���̐ڑ������o���邽�߂̒[�q</td></tr>
-	<tr><td>�P�R</td><td>����V���A���M��</td><td>�g�ы@����[�����ɂփV���A���M���𑗐M���邽�߂̒[�q</td></tr>
-	<tr><td>�P�S</td><td>�b�c</td><td>�f�[�^�ʐM�p�̂l�s���̐ڑ������o���邽�߂̐M������M���邽�߂̒[�q</td></tr>
-	<tr><td>�P�T</td><td>�\��</td><td>-</td></tr>
-	<tr><td>�P�U</td><td>�\��</td><td>-</td></tr>
-	<tr><td>�P�V</td><td>�b�i</td><td>�f�[�^�ʐM���ɉ���f�[�^�𐧌䂷��M������M���邽�߂̒[�q</td></tr>
-	<tr><td>�P�W</td><td>�ڒn</td><td>-</td></tr>
+    <tr><td>ピン番号</td><td>信号名</td><td>説明</td></tr>
+	<tr><td>　１</td><td>接地</td><td>-</td></tr>
+	<tr><td>　２</td><td>送信音声信号</td><td>端末等からアナログ音声信号を受信するための端子</td></tr>
+	<tr><td>　３</td><td>ＣＣ</td><td>移動機が接続された事を端末等に通知するための端子</td></tr>
+	<tr><td>　４</td><td>音声受信信号</td><td>端末等にアナログ音声信号を送信するための端子</td></tr>
+	<tr><td>　５</td><td>ＣＦ</td><td>データ通信時にＰＰＰ再確立しなければならないことを端末等に知らせる端子</td></tr>
+	<tr><td>　６</td><td>ＢＡ</td><td>データ通信時に上りデータを受信する。端子データは非同期（調歩）転送</td></tr>
+	<tr><td>　７</td><td>ＣＢ</td><td>データ通信時に上りデータを制御する信号の送信端子</td></tr>
+	<tr><td>　８</td><td>携帯操作部制御信号①</td><td>端末等から携帯操作部を制御する信号を受信するための端子</td></tr>
+	<tr><td>　９</td><td>ＢＢ</td><td>データ通信時に下りデータを送信する。端子データは非同期（調歩）転送</td></tr>
+	<tr><td>１０</td><td>携帯操作部制御信号②</td><td>端末等から携帯操作部を制御する信号を受信するための端子</td></tr>
+	<tr><td>１１</td><td>上りシリアル信号</td><td>端末等から携帯機に送られてくるシリアル信号を受信するための端子</td></tr>
+	<tr><td>１２</td><td>ＣＥ</td><td>データ通信時にＭＴｘの接続を検出するための端子</td></tr>
+	<tr><td>１３</td><td>下りシリアル信号</td><td>携帯機から端末等にへシリアル信号を送信するための端子</td></tr>
+	<tr><td>１４</td><td>ＣＤ</td><td>データ通信用のＭＴｘの接続を検出するための信号を受信するための端子</td></tr>
+	<tr><td>１５</td><td>予約</td><td>-</td></tr>
+	<tr><td>１６</td><td>予約</td><td>-</td></tr>
+	<tr><td>１７</td><td>ＣＪ</td><td>データ通信時に下りデータを制御する信号を受信するための端子</td></tr>
+	<tr><td>１８</td><td>接地</td><td>-</td></tr>
 </table>
 <BR>
 <HR>
-�y�����L�^�z<BR>
-1998/08/31�ŁF���J<BR>
-1999/01/04�ŁF��H�}�Ɂu�g�ы@���암����M���P�v��ǉ�<BR>
-1999/02/16�ŁF��H�}����R�[�q���M�����[�^78L05�폜,�g�ѓd�b�R�l�N�^�s���A�T�C���ǉ�<BR>
-1999/02/26�ŁF��H�}��L�C��<BR>
-1999/03/02�ŁF�R�l�N�^�����ǉ�<BR>
-1999/03/11�ŁF�R�l�N�^�����ǉ�<BR>
-1999/03/12�ŁF�R�l�N�^�����ǉ�<BR>
-1999/03/21�ŁF�R�l�N�^�����ǉ�<BR>
-1999/08/13�ŁF�R�l�N�^�����ǉ�<BR>
-1999/12/10�ŁF��H�}�����N�ǉ�<BR>
-2000/03/05�ŁF�R�l�N�^�����C��<BR>
-2000/11/25�ŁFCdmaOne�L���ǉ�<BR>
-2000/11/31�ŁFCdmaOne�C���L���ǉ�<BR>
-2000/12/22�ŁFCdmaOne�L���ǉ�<BR>
-<BR><A HREF="index.htm">�y���ǂ�z</A>
+【改訂記録】<BR>
+1998/08/31版：公開<BR>
+1999/01/04版：回路図に「携帯機操作部制御信号１」を追加<BR>
+1999/02/16版：回路図から３端子レギュレータ78L05削除,携帯電話コネクタピンアサイン追加<BR>
+1999/02/26版：回路図誤記修正<BR>
+1999/03/02版：コネクタ入手先追加<BR>
+1999/03/11版：コネクタ入手先追加<BR>
+1999/03/12版：コネクタ入手先追加<BR>
+1999/03/21版：コネクタ入手先追加<BR>
+1999/08/13版：コネクタ入手先追加<BR>
+1999/12/10版：回路図リンク追加<BR>
+2000/03/05版：コネクタ入手先修正<BR>
+2000/11/25版：CdmaOne記事追加<BR>
+2000/11/31版：CdmaOne修正記事追加<BR>
+2000/12/22版：CdmaOne記事追加<BR>
+<BR><A HREF="index.htm">【もどる】</A>
 <HR><FONT SIZE=-1>Copyright (c) 1997-2000, BearBeetle, Allrights reserved.</FONT>
 </BODY>
 </HTML>

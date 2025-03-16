@@ -1,334 +1,336 @@
+<!DOCTYPE html>
 <HTML>
 <HEAD>
+   <meta charset="UTF-8">
    <TITLE>BB Programming Lab.</TITLE>
 </HEAD>
 <BODY BACKGROUND="bcg_280.gif">
-<A NAME="TOP_TOP"></A><FONT SIZE=-1>���̃y�[�W��Netscape
-Navigator 2.0�ȍ~�y��Microsoft Internet Explorer 3.0�ȍ~�Ő���Ɍ����܂��B</FONT>
+<A NAME="TOP_TOP"></A><FONT SIZE=-1>このページはNetscape
+Navigator 2.0以降及びMicrosoft Internet Explorer 3.0以降で正常に見られます。</FONT>
 <BR><FONT SIZE=-2>Solly,Japanese only</FONT>
 <BR>
 <HR>
-<CENTER><BLINK><FONT COLOR="#3366FF"><FONT SIZE=-1>�� �a�a������ ��</FONT></FONT></BLINK></CENTER>
+<CENTER><BLINK><FONT COLOR="#3366FF"><FONT SIZE=-1>★ ＢＢ研究所 ★</FONT></FONT></BLINK></CENTER>
 
-<CENTER><FONT COLOR="#3366FF"><FONT SIZE=+2>Netscape �v���O�C���̍쐬�@�i�T�v�j</FONT></FONT></CENTER>
+<CENTER><FONT COLOR="#3366FF"><FONT SIZE=+2>Netscape プラグインの作成法（概要）</FONT></FONT></CENTER>
 
 <HR>
-<BR>�@Netscape�v���O�C���́ANetscape Navigator���g������o�C�i���ł��B
-Navigator�́A�f�[�^�^�C�v(MIME)�ɉ������A�v���O�C�����Ăяo���ANavigator�̃T�|�[�g���Ă��Ȃ��f�[�^���������Ƃ��ł���悤�ɂȂ�܂��B
-Netscape�v���O�C�����쐬���邽�߂ɂ́A�悸Netscape�Ѓz�[���y�[�W���v���O�C���K�C�h�Ƃr�c�j(Software
-Development Kit���\�t�g�E�F�A�J���L�b�g�j���_�E�����[�h����K�v������܂��B
+<BR>　Netscapeプラグインは、Netscape Navigatorを拡張するバイナリです。
+Navigatorは、データタイプ(MIME)に応じた、プラグインを呼び出し、Navigatorのサポートしていないデータを扱うことができるようになります。
+Netscapeプラグインを作成するためには、先ずNetscape社ホームページよりプラグインガイドとＳＤＫ(Software
+Development Kit＝ソフトウェア開発キット）をダウンロードする必要があります。
 <BR>
 <UL>
 <LI>
-�v���O�C���K�C�h<A HREF="http://developer.netscape.com/library/documentation/communicator/plugin/index.htm">http://developer.netscape.com/library/documentation/communicator/plugin/index.htm</A></LI>
+プラグインガイド<A HREF="http://developer.netscape.com/library/documentation/communicator/plugin/index.htm">http://developer.netscape.com/library/documentation/communicator/plugin/index.htm</A></LI>
 
 <LI>
-�v���O�C���K�C�h�iPDF�`���j�� �F<A HREF="http://developer.netscape.com/library/documentation/communicator/composer/plugin/guide.pdf">http://developer.netscape.com/library/documentation/communicator/composer/plugin/guide.pdf</A></LI>
+プラグインガイド（PDF形式）※ ：<A HREF="http://developer.netscape.com/library/documentation/communicator/composer/plugin/guide.pdf">http://developer.netscape.com/library/documentation/communicator/composer/plugin/guide.pdf</A></LI>
 
-<LI>�r�c�j�F<A HREF="http://home.netscape.com/comprod/development_partners/plugin_api/index.html">http://home.netscape.com/comprod/development_partners/plugin_api/index.html</A></LI>
+<LI>ＳＤＫ：<A HREF="http://home.netscape.com/comprod/development_partners/plugin_api/index.html">http://home.netscape.com/comprod/development_partners/plugin_api/index.html</A></LI>
 
 <BR>
 
-<P>��PDF�`�����Q�Ƃ��邽�߂ɂ́Aadobe�Ђ�<A HREF="http://www.adobe.co.jp/product/acrobat/readstep.html">Acrobat
-Reader�i�t���[�j</A>���C���X�g�[������K�v������܂��B</UL>
-�y���Ӂz�@
+<P>※PDF形式を参照するためには、adobe社の<A HREF="http://www.adobe.co.jp/product/acrobat/readstep.html">Acrobat
+Reader（フリー）</A>をインストールする必要があります。</UL>
+【注意】　
 <UL>
 <LI>
-����I�ȓ��e���������܂���̂ŁA�ڍׂ̓v���O�C���K�C�h���Q�Ƃ��ĉ������B�@</LI>
+入門的な内容しか扱いませんので、詳細はプラグインガイドを参照して下さい。　</LI>
 
 <LI>
-�v���O�C���́AWindows,MAC,UNIX�p�ɊJ�����邱�Ƃ��ł��܂����A�����ł�Windows�v���b�g�t�H�[���ł̓���̂݉�����܂��B</LI>
+プラグインは、Windows,MAC,UNIX用に開発することができますが、ここではWindowsプラットフォームでの動作のみ解説します。</LI>
 
-<BR>���v���O�C���K�C�h�ɂ͑S�Ẵv���b�g�t�H�[���ɂ��ċL�q����Ă��܂��B
+<BR>※プラグインガイドには全てのプラットフォームについて記述されています。
 <LI>
-<B>�\����Windows API�y��C����(VC++)�̒m���������Ă��邱�Ƃ�O��Ƃ��Ă��܂��B</B></LI>
-
-<LI>
-���o�[�W�����̂r�c�j�́ACommunicator�p��v4.0�ł��B���o�[�W�����r�c�j(v3.0)�͂��͂���肷�邱�Ƃ͂ł��܂��񂪁Av4.0�̒ǉ��@�\���g�p���Ȃ���΁ANetscape
-Navigator ver3.0�p�̃v���O�C�����J�����邱�Ƃ��ł��܂��B</LI>
+<B>十分なWindows API及びC言語(VC++)の知識を持っていることを前提としています。</B></LI>
 
 <LI>
-�ǉ��d�l�Ƃ��ẮAJava�Ƌ������������Window less��������܂����A�����ł͉�����s���܂���B</LI>
+現バージョンのＳＤＫは、Communicator用のv4.0です。旧バージョンＳＤＫ(v3.0)はもはや入手することはできませんが、v4.0の追加機能を使用しなければ、Netscape
+Navigator ver3.0用のプラグインも開発することができます。</LI>
+
+<LI>
+追加仕様としては、Javaと協調した動作やWindow less等がありますが、ここでは解説を行いません。</LI>
 </UL>
 
 <H3>
 
-<HR WIDTH="100%">�v���O�C���̓���</H3>
-�@�v���O�C���́ANavigator�̂`�o�h���g���āA�ȉ��̑�����s���܂��B
+<HR WIDTH="100%">プラグインの働き</H3>
+　プラグインは、NavigatorのＡＰＩを使って、以下の操作を行います。
 <UL>
 <LI>
-����͕�����MIME�^�C�v��o�^����</LI>
+一つ又は複数のMIMEタイプを登録する</LI>
 
 <LI>
-Navigator�̃E�B���h�E�̈ꕔ�ɕ`�悷��</LI>
+Navigatorのウィンドウの一部に描画する</LI>
 
 <LI>
-�L�[�{�[�h��}�E�X�̃C�x���g���擾����</LI>
+キーボードやマウスのイベントを取得する</LI>
 
 <LI>
-URL���g�p���ăl�b�g���[�N����f�[�^���擾����</LI>
+URLを使用してネットワークからデータを取得する</LI>
 
 <LI>
-URL�Ƀf�[�^���|�X�g�i�����݁j����</LI>
+URLにデータをポスト（書込み）する</LI>
 
 <LI>
-�V����URL�ւ̃����N�ւ̃n�C�p�[�����N���z�b�g�X�|�b�g��ǉ�����</LI>
+新しいURLへのリンクへのハイパーリンクかホットスポットを追加する</LI>
 
 <LI>
-�g�s�l�k�y�[�W��̃Z�N�V�����ɕ`�悷��</LI>
+ＨＴＭＬページ上のセクションに描画する</LI>
 </UL>
-�@���Ȃ����g�p���Ă���Navigator��Ńw���v���j���[�ɍs���A�u�v���O�C���ɂ��āv���N���b�N����ƁA�C���X�g�[������Ă���v���O�C���̈ꗗ���\������܂��B���̂Ƃ��A�Ή�����f�[�^��MIME�^�C�v�ƃt�@�C���g���q���ꏏ�ɕ\������܂��B
+　あなたが使用しているNavigator上でヘルプメニューに行き、「プラグインについて」をクリックすると、インストールされているプラグインの一覧が表示されます。このとき、対応するデータのMIMEタイプとファイル拡張子が一緒に表示されます。
 <H3>
 
-<HR WIDTH="100%">Navigator���̓���(�T�v)</H3>
-�@Navigator�́A�v���O�C���f�B���N�g�����`�F�b�N���v���O�C�����W���[����T���܂��B
-<BR>Web�y�[�W���I�[�v�������Ƃ��A���f�B�A�^�C�v�̃f�[�^���͂ߍ��܂�Ă����Ƃ��A�v���O�C�����Ăяo���܂��B
-<BR>���̂Ƃ��̃V�[�P���X�͈ȉ��̂悤�ɂȂ�܂��B
+<HR WIDTH="100%">Navigator側の動作(概要)</H3>
+　Navigatorは、プラグインディレクトリをチェックしプラグインモジュールを探します。
+<BR>Webページをオープンしたとき、メディアタイプのデータがはめ込まれていたとき、プラグインを呼び出します。
+<BR>そのときのシーケンスは以下のようになります。
 <UL>
 <LI>
-�Y������MIME�^�C�v�̃v���O�C�������邩�`�F�b�N����B</LI>
+該当するMIMEタイプのプラグインがあるかチェックする。</LI>
 
 <LI>
-�������[�Ƀv���O�C���R�[�h��ǂݍ���</LI>
+メモリーにプラグインコードを読み込む</LI>
 
 <LI>
-�v���O�C��������������</LI>
+プラグインを初期化する</LI>
 
 <LI>
-�v���O�C���̐V�����C���X�^���X�i�f�[�^�̂悤�Ȃ��́j�𐶐�����</LI>
+プラグインの新しいインスタンス（データのようなもの）を生成する</LI>
 </UL>
-�@Navigator�́A�����y�[�W��ʂ̃y�[�W�ɍS��炸�A�����v���O�C���ŕ����̃C���X�^���X���������Ƃ��ł��܂��B
-<BR>�ڍׂȓ���͎��͂Ő������܂��B
+　Navigatorは、同じページや別のページに拘わらず、同じプラグインで複数のインスタンスを扱うことができます。
+<BR>詳細な動作は次章で説明します。
 <H3>
 
-<HR WIDTH="100%">����(�ڍ�)</H3>
-�@�v���O�C���͈���͕�����MIME�^�C�v�Ɋ֘A�Â���ꂽ�A���I�R�[�h���W���[���ł��i�����ł����h���I(dynamic)�h�́ANavigator�̋N����Ƀ��W���[���̓Ǎ��݁A������ł��邱�Ƃ��w���܂��B������DLL�ł��j�B
-<BR>�@MIME�^�C�v��Windows�̏ꍇ�A�v���O�C���̃��\�[�X(VB�Ō����΁Aform?�j�ɋL�q���܂��B
-<BR>�@�ȉ��Ƀv���O�C���̃��[�h�i�Ǎ��݁j����A�����[�h�i����j�܂ł̈ꐶ�������܂��B
+<HR WIDTH="100%">動作(詳細)</H3>
+　プラグインは一つ又は複数のMIMEタイプに関連づけられた、動的コードモジュールです（ここでいう”動的(dynamic)”は、Navigatorの起動後にモジュールの読込み、解放ができることを指します。いわゆるDLLです）。
+<BR>　MIMEタイプはWindowsの場合、プラグインのリソース(VBで言えば、form?）に記述します。
+<BR>　以下にプラグインのロード（読込み）からアンロード（解放）までの一生を示します。
 <UL>
 <LI>
-Navigator��HTML���͂����ߒ��ɓo�^����Ă���v���O�C����MIME�^�C�v�̃f�[�^�ɏo��Ɓi�����EMBED�ƕʃt�@�C���̗��^�C�v�Ƃ����ʁj�A�Ή�����v���O�C�����W���[����Ǎ��݂܂��i���ɓǂݍ��܂�Ă���ꍇ�͏����j�B�����ăC���X�^���X�𐶐����܂��B</LI>
+NavigatorがHTML文章を解釈中に登録されているプラグインのMIMEタイプのデータに出会うと（これはEMBEDと別ファイルの両タイプとも共通）、対応するプラグインモジュールを読込みます（既に読み込まれている場合は除く）。そしてインスタンスを生成します。</LI>
 
-<BR>���̌�A�v���O�C����API�@ NPP_Initialize���Ăяo���܂��B
+<BR>この後、プラグインのAPI　 NPP_Initializeを呼び出します。
 <LI>
-Navigator�́A�C���X�^���X���쐬����Ƃ��Ƀv���O�C����API NPP_New���Ăяo���܂��B�����̃C���X�^���X�𐶐�����Ƃ��͂��̊֐���������Ăяo����܂��B</LI>
-
-<LI>
-�C���X�^���X��\�����Ă���y�[�W�𗣂��Ƃ��ɁANavigator�̓C���X�^���X��j�����܂��B����ɐ旧����NPP_Destroy���Ăяo���܂��B</LI>
+Navigatorは、インスタンスを作成するときにプラグインのAPI NPP_Newを呼び出します。複数のインスタンスを生成するときはこの関数が複数回呼び出されます。</LI>
 
 <LI>
-�����āA�Ō�̃C���X�^���X���j�����ꂽ��A�v���O�C��������������A�����[�h���܂��B����ɐ悾����NPP_Shutdown���Ăяo���܂��B</LI>
+インスタンスを表示しているページを離れるときに、Navigatorはインスタンスを破棄します。これに先立ってNPP_Destroyを呼び出します。</LI>
+
+<LI>
+そして、最後のインスタンスが破棄された後、プラグインをメモリからアンロードします。これに先だってNPP_Shutdownを呼び出します。</LI>
 </UL>
 
 <H3>
 
-<HR WIDTH="100%">�v���O�C���̏���</H3>
-Navigator��v���O�C���̏����͈ȉ��̂悤�Ɍ��肳��Ă��܂��i�|�[�����h�L���̂悤�Ȃ��̂ł��ˁj
-�B
+<HR WIDTH="100%">プラグインの書式</H3>
+Navigatorやプラグインの書式は以下のように決定されています（ポーランド記号のようなものですね）
+。
 <UL>
 <LI>
-�v���O�C�����\�b�h�A�i�v���O�C�����̊֐��j�́ANPP_�ł͂��܂�B��FNPP_New</LI>
+プラグインメソッド、（プラグイン内の関数）は、NPP_ではじまる。例：NPP_New</LI>
 
 <LI>
-Netscape���\�b�h�A�iNetscape��API�j�́ANPN_�ł͂��܂�B��FNPN_Write</LI>
+Netscapeメソッド、（NetscapeのAPI）は、NPN_ではじまる。例：NPN_Write</LI>
 
 <LI>
-�f�[�^�\���̂́ANP�ł͂��܂�B��FNPWindow</LI>
+データ構造体は、NPではじまる。例：NPWindow</LI>
 
 <LI>
-���W���[���̏���</LI>
+モジュールの書式</LI>
 
 <UL>
 <LI>
-NP�ł͂��܂�</LI>
+NPではじまる</LI>
 
 <LI>
-�g���q��DLL</LI>
+拡張子はDLL</LI>
 
 <LI>
-8.3����</LI>
+8.3文字</LI>
 </UL>
 </UL>
 
 <HR WIDTH="100%">
 <H3>
-�f�B�X�v���C���[�h</H3>
-�v���O�C���̕\�����@�̎�ށi�f�B�X�v���C���[�h�j�ɂ͈ȉ��̂R��ނ�����܂��B
+ディスプレイモード</H3>
+プラグインの表示方法の種類（ディスプレイモード）には以下の３種類があります。
 <UL>
 <LI>
-embed�i�͂ߍ��݁j�̕\��</LI>
+embed（はめ込み）の表示</LI>
 
 <LI>
-embed�̉B��</LI>
+embedの隠し</LI>
 
 <LI>
-�t���y�[�W</LI>
+フルページ</LI>
 </UL>
-�uembed�i�͂ߍ��݁j�̕\���v�́AHTML���͂̈ꕔ�̎w�肳�ꂽ���i���ɕ\������܂��B�}�N�����f�B�A�Ђ�ShowckWave�v���O�C��������ɓ�����܂��B����́A�g�s�l�k��������&lt;EMBRED>�^�O�ŕ\�L���܂��B�����ăf�[�^��SRC�����Ŏw�肵�A���ނ�HEIGHT��WIDTH�ŕ\���܂��B
-<BR>�y��z
+「embed（はめ込み）の表示」は、HTML文章の一部の指定された資格内に表示されます。マクロメディア社のShowckWaveプラグインがこれに当たります。これは、ＨＴＭＬ文書内に&lt;EMBRED>タグで表記します。そしてデータはSRC属性で指定し、ｻｲｽﾞはHEIGHTとWIDTHで表します。
+<BR>【例】
 <UL>&lt;EMBED SRC="newave.avi" WIDTH=320 HEIGHT=200
 <BR> AUTSTART=true LOOP=true></UL>
-�uembed�̉B���v�́AHIDDEN������ǉ����܂��B
-<BR>�y��z
+「embedの隠し」は、HIDDEN属性を追加します。
+<BR>【例】
 <UL>&lt;EMBED SRC="audiplay.aiff" TYPE="audio/x-aiff" HIDDEN></UL>
-�u�t���y�[�W�v�́AHTML�ł͂Ȃ��A���ڃf�[�^���w�肵�܂��BAdobe�Ђ�Acrobat
-Reader������ɂ�����܂��B
+「フルページ」は、HTMLではなく、直接データを指定します。Adobe社のAcrobat
+Readerがこれにあたります。
 <BR>
 <HR WIDTH="100%">
 <H3>
-�v���O�C���J���̗���</H3>
+プラグイン開発の流れ</H3>
 
 <OL>
 <LI>
-�J������v���O�C���ɕK�v�ȋ@�\�̃v�����𗧂Ă�B</LI>
+開発するプラグインに必要な機能のプランを立てる。</LI>
 
 <LI>
-MIME�^�C�v�ƃt�@�C���g���q�����肷��B</LI>
+MIMEタイプとファイル拡張子を決定する。</LI>
 
 <LI>
-SDK���_�E�����[�h����</LI>
+SDKをダウンロードする</LI>
 
 <LI>
-�v���O�C���v���W�F�N�g���쐬����B����́A�r�c�j�̃T���v���\�[�X�����ɍ쐬����̂��]�܂���</LI>
+プラグインプロジェクトを作成する。これは、ＳＤＫのサンプルソースを元に作成するのが望ましい</LI>
 
 <LI>
-�e���v���[�g����K�v�ȋ@�\�𐷂荞��ł���</LI>
+テンプレートから必要な機能を盛り込んでいく</LI>
 
 <LI>
-�r���g����</LI>
+ビルトする</LI>
 
 <LI>
-�C���X�g�[��������</LI>
+インストーラをつくる</LI>
 
 <LI>
-�e�X�g�E�f�o�b�N���s���B</LI>
+テスト・デバックを行う。</LI>
 </OL>
 
 <HR WIDTH="100%">
 <H3>
- �v���O�C���̓o�^</H3>
-�@Navigator�́AMIME�^�C�v���̓t�@�C���g���q����A�Ή�����v���O�C�������[�h���܂��B
-<BR>HTML�t�@�C���ł́AEMBED�^�O��TYPE������MIME�������w�肵�܂��B
-<BR>�y��z
+ プラグインの登録</H3>
+　Navigatorは、MIMEタイプ又はファイル拡張子から、対応するプラグインをロードします。
+<BR>HTMLファイルでは、EMBEDタグのTYPE属性でMIME属性を指定します。
+<BR>【例】
 <UL>&lt;EMBED SRC="audiplay.aiff" TYPE="audio/x-aiff"></UL>
-�@����MIME�^�C�v�̓��W���[�^�C�v�iapplication��image���j�ƃ}�C�i�[�^�C�v����\������܂��iimage/jpeg���j�B
-<BR>MIME�^�C�v��RFC 1521"MIME:Mechanisms for Specifying and Describing
-the Forms of Internet Message Bodies"��RFC 1590"Media Type Registration
-Procedure"�ŋK�肳��Ă��܂��B�����A���Ȃ����V����MIME�^�C�v���`�������ꍇ�́AIETF(Internet
-Engineering Task Force)�ɓo�^����K�v������A�o�^�����܂ł́A"x-"�𓪂ɕt���܂��B���Ƃ��΁A"image/x-nwin"���ł��B
+　このMIMEタイプはメジャータイプ（applicationやimage等）とマイナータイプから構成されます（image/jpeg等）。
+<BR>MIMEタイプはRFC 1521"MIME:Mechanisms for Specifying and Describing
+the Forms of Internet Message Bodies"とRFC 1590"Media Type Registration
+Procedure"で規定されています。もし、あなたが新しいMIMEタイプを定義したい場合は、IETF(Internet
+Engineering Task Force)に登録する必要があり、登録されるまでは、"x-"を頭に付けます。たとえば、"image/x-nwin"等です。
 
-<P>�@ Windows�ł́A�v���O�C����Navigator�A�v���P�[�V�����Ɠ����f�B���N�g���Ɋi�[���܂��B�����āu�v���O�C���̏����v�ŏq�ׂ��悤�ɁA�t�@�C���l�[���́A8.3�����CNP�ł͂��܂�,�g���q��DLL�ł���K�v������܂��B
-<BR>�@�܂��A�v���O�C����MIME�^�C�v�́A���\�[�X(*.rc�t�@�C��)�̃o�[�W�������Ɉȉ��̂Q�s��ǉ����܂��B
-<BR>�����\�[�X�G�f�B�^�ł͂��̂Q���ڂ͒ǉ��ł��Ȃ��̂ŁA�e�L�X�g�G�f�B�^�Œǉ�����K�v������܂��B
+<P>　 Windowsでは、プラグインはNavigatorアプリケーションと同じディレクトリに格納します。そして「プラグインの書式」で述べたように、ファイルネームは、8.3文字，NPではじまる,拡張子はDLLである必要があります。
+<BR>　また、プラグインのMIMEタイプは、リソース(*.rcファイル)のバージョン情報に以下の２行を追加します。
+<BR>※リソースエディタではこの２項目は追加できないので、テキストエディタで追加する必要があります。
 <BR>
 <UL>
 <LI>
-"File Extends" ... �t�@�C���g���̋L�q</LI>
+"File Extends" ... ファイル拡張の記述</LI>
 
 <LI>
-"MIME Types" ... MIME�^�C�v�̋L�q</LI>
+"MIME Types" ... MIMEタイプの記述</LI>
 </UL>
-������MIME�^�C�v���w�肵�����ꍇ�́A"|"�ŋ�؂���MIME�������ǉ����܂��B
-<BR>�y��z
+複数のMIMEタイプを指定したい場合は、"|"で区切ってMIME文字列を追加します。
+<BR>【例】
 <UL>video/quicktime|audio/aiff|image/jpeg</UL>
-���ڂ�����SDK�̃T���v�����Q�Ƃ��ĉ������B
+※詳しくはSDKのサンプルを参照して下さい。
 
-<P>���A�o�[�W�������ɂ͕K��Language���ڂ����邱�Ƃ��m�F���ĉ������B
+<P>尚、バージョン情報には必ずLanguage項目があることを確認して下さい。
 
 <P>
 <HR WIDTH="100%">
 <H3>
- �v���O�C���ɂ��`��ƃ������̃n���h�����O</H3>
-�@�v���O�C���͕`��O�ɁA�`��̂��߂̏���ݒ肵�A�X�ɍĕ`��Ȃǂ̃C�x���g�̃n���h�����s��Ȃ���΂Ȃ�܂���B
-<BR>���ׁ̈ANavigator�͈ȉ��̃v���O�C�����\�b�h���Ăяo���܂��B
+ プラグインによる描画とメモリのハンドリング</H3>
+　プラグインは描画前に、描画のための情報を設定し、更に再描画などのイベントのハンドルを行わなければなりません。
+<BR>その為、Navigatorは以下のプラグインメソッドを呼び出します。
 <UL>
 <LI>
-NPP_GetValue�F�v���O�C���̏����擾���郁�b�\�b�h</LI>
+NPP_GetValue：プラグインの情報を取得するメッソッド</LI>
 
 <LI>
-NPP_Print�F�C���X�^���X�̈��</LI>
+NPP_Print：インスタンスの印刷</LI>
 
 <LI>
-NPP_SetValue�FNavigator�̏��� �ݒ肷��</LI>
+NPP_SetValue：Navigatorの情報を 設定する</LI>
 
 <LI>
-NPP_SetWindow �F�v���O�C���ɕ`�悷��E�B���h�E���Z�b�g(Windows��SetWindow
-API�ɑ����j</LI>
+NPP_SetWindow ：プラグインに描画するウィンドウをセット(WindowsのSetWindow
+APIに相当）</LI>
 
 <LI>
-NPP_HandleEvent �F�C���X�^���X�̃C�x���g�n���h��</LI>
+NPP_HandleEvent ：インスタンスのイベントハンドル</LI>
 </UL>
-�v���O�C����Navigator�̏��擾�y�ѐݒ�ׂ̈�Netscape���\�b�h���Ăяo�����Ƃ��ł��܂��B
+プラグインはNavigatorの情報取得及び設定の為にNetscapeメソッドを呼び出すことができます。
 <UL>
 <LI>
-NPN_GetValue:Navigator�̏����擾����</LI>
+NPN_GetValue:Navigatorの情報を取得する</LI>
 
 <LI>
-NPN_SetValue:Navigator�Ƀv���O�C���̏���ݒ�</LI>
+NPN_SetValue:Navigatorにプラグインの情報を設定</LI>
 </UL>
-�v���O�C���Ń������̃A���P�[�V�������s���ꍇ�AWindows��API�ł͂Ȃ��ANavigator��API���g�p���Ȃ���΂Ȃ�܂���B
+プラグインでメモリのアロケーションを行う場合、WindowsのAPIではなく、NavigatorのAPIを使用しなければなりません。
 <UL>
 <LI>
-NPN_MemAllock�F�������̃A���P�[�V����</LI>
+NPN_MemAllock：メモリのアロケーション</LI>
 
 <LI>
-NPN_MemFree�FNPN_MemAllock�Ŋm�ۂ������������������</LI>
+NPN_MemFree：NPN_MemAllockで確保したメモリを解放する</LI>
 </UL>
 
 <HR WIDTH="100%">
 <H3>
-�X�g���[���̑���M</H3>
-�@�X�g���[���́AURL���狟�������f�[�^�ł��B�X�g���[���̓v���O�C���̃C���X�^���X�Ɗ֘A�Â����܂����A��̃C���X�^���X�ŕ����̃X�g���[�����������Ƃ��ł��܂��B�X�g���[����Navigator�ɂ���č쐬����ăv���O�C���C���X�^���X�ɂ������邩�A�v���O�C���C���X�^���X�ɂ��쐬�����Navigator�ɂ���ď����܂��B������̃X�g���[���t�H�[�}�b�g���A�֘A�Â���ꂽMIME�^�C�v�ɂ��w�肳��܂��B
-<BR>�@�X�g���[����Navigator���玩���I�ɐ�������ăv���O�C���ɑ�����ꍇ�ƃv���O�C���̗v���ɂ�著����ꍇ������܂��B�v���O�C���͈ȉ��̂Q�̓]�����[�h(transmission
-modes�j������I�Ԃ��Ƃ��ł��܂��B
+ストリームの送受信</H3>
+　ストリームは、URLから供給されるデータです。ストリームはプラグインのインスタンスと関連づけられますが、一つのインスタンスで複数のストリームを扱うことができます。ストリームはNavigatorによって作成されてプラグインインスタンスにより消費されるか、プラグインインスタンスにより作成されてNavigatorによって消費されます。いずれのストリームフォーマットも、関連づけられたMIMEタイプにより指定されます。
+<BR>　ストリームはNavigatorから自動的に生成されてプラグインに送られる場合とプラグインの要求により送られる場合があります。プラグインは以下の２つの転送モード(transmission
+modes）から一つを選ぶことができます。
 <UL>
 <LI>
-<B>�m�[�}�����[�h</B>�FNavigator�Ƀf�[�^���͂����Ƃ��ɁA���̂܂܃v���O�C���ɃV�[�P���V�����ɑ���܂��B</LI>
+<B>ノーマルモード</B>：Navigatorにデータが届いたときに、そのままプラグインにシーケンシャルに送ります。</LI>
 
 <LI>
-<B>�����_���A�N�Z�X���[�h</B>�F�v���O�C���ɂ��X�g���[���̔C�ӂ̃|�C���g�ւ̃W�����v�v�����T�|�[�g���܂��B���̏ꍇ�A�T�[�o���Ή��@�\���K�v�ɂȂ�܂��B</LI>
+<B>ランダムアクセスモード</B>：プラグインによるストリームの任意のポイントへのジャンプ要求をサポートします。この場合、サーバも対応機能が必要になります。</LI>
 
 <LI>
-<B>�t�@�C�����[�h�F</B>Navigator�́A�f�[�^�����[�J���L���b�V���ɃZ�[�u���A���̃t�@�C���p�X���v���O�C���ɓn���܂��B</LI>
+<B>ファイルモード：</B>Navigatorは、データをローカルキャッシュにセーブし、そのファイルパスをプラグインに渡します。</LI>
 </UL>
-�v���O�C���ō���Navigator�֓n�����X�g���[���́A�]�������������ď�L�̃m�[�}�����[�h�Ɏ��Ă��܂��B�m�[�}�����[�h�ł́ANavigator�̓X�g���[��������ƃv���O�C�����ďo���āA������v���O�C���֒ʒm���c��̃f�[�^�𑗂�܂��B�ΏƓI�Ƀv���O�C���ɂ���č��ꂽ�X�g���[���̏ꍇ�A�v���O�C���̓X�g���[�������邱�Ƃ�Navigator���Ăяo���ăf�[�^���������݁A���̌�f�[�^��j�����܂��B
+プラグインで作られNavigatorへ渡されるストリームは、転送方向を除いて上記のノーマルモードに似ています。ノーマルモードでは、Navigatorはストリームがあるとプラグインを呼出して、それをプラグインへ通知し残りのデータを送ります。対照的にプラグインによって作られたストリームの場合、プラグインはストリームがあることをNavigatorを呼び出してデータを書き込み、その後データを破棄します。
 <BR>
 <HR WIDTH="100%">
 <H3>
-�v���O�C���̃r���h</H3>
-Win32�̏ꍇ�v���O�C���r�c�j�́AVC++4.2�p�ɍ쐬����Ă��܂��B�ȉ��ɃT���v���̃r���h���@���L�q���܂��B
+プラグインのビルド</H3>
+Win32の場合プラグインＳＤＫは、VC++4.2用に作成されています。以下にサンプルのビルド方法を記述します。
 <UL>
 <LI>
-�܂��r�c�j(WinNPSDK.zip)��<A HREF="http://home.netscape.com/comprod/development_partners/plugin_api/index.html">�_�E�����[�h</A>���܂�</LI>
+まずＳＤＫ(WinNPSDK.zip)を<A HREF="http://home.netscape.com/comprod/development_partners/plugin_api/index.html">ダウンロード</A>します</LI>
 
 <LI>
-zip���[�e�B���e�B���g�p����WinNPSDK.zip���𓀂��܂��B�����A�r�c�j��ύX���Ȃ��ꍇ�̓��[�g�f�B���N�g���ŁApkunzip��-d�t���O�Ŏg�p�����\PluginSDK�f�B���N�g���ȉ��ɂr�c�j���쐬����܂��B</LI>
+zipユーティリティを使用してWinNPSDK.zipを解凍します。もし、ＳＤＫを変更しない場合はルートディレクトリで、pkunzipを-dフラグで使用すれば\PluginSDKディレクトリ以下にＳＤＫが作成されます。</LI>
 
 <LI>
-\Program Files\Examples\Simple\Windows\NPSimple32.mdp���I�[�v�����r���h���܂��B</LI>
+\Program Files\Examples\Simple\Windows\NPSimple32.mdpをオープンしビルドします。</LI>
 
 <LI>
-�ł����I�u�W�F�N�g���A\Program Files\Netscape\Navigator\Program\Plugins�փR�s�[���܂��B</LI>
+できたオブジェクトを、\Program Files\Netscape\Navigator\Program\Pluginsへコピーします。</LI>
 
 <LI>
-Java class�t�@�C���i\PluginSDK\Examples\Simple\Simple.class)���v���O�C���Ɠ����f�B���N�g���ɃR�s�[���܂��B</LI>
+Java classファイル（\PluginSDK\Examples\Simple\Simple.class)をプラグインと同じディレクトリにコピーします。</LI>
 
-<BR>������Java class�t�@�C����JavaScript�ւ̃C���^�t�F�[�X�ɂȂ�܂��B
+<BR>※このJava classファイルはJavaScriptへのインタフェースになります。
 <LI>
-�����ANavigator���N�����Ȃ��U�I�������ĉ������B</LI>
+もし、Navigatorが起動中なら一旦終了させて下さい。</LI>
 
 <LI>
-Navigator���N�����A�ȉ��̃t�@�C����ǂݍ���ŉ�����</LI>
+Navigatorを起動し、以下のファイルを読み込んで下さい</LI>
 
 <BR>\PluginSDK\Examples\Simple\Testing\SimpleExsample.html</UL>
 
 <HR WIDTH="100%">
 <H3>
-������</H3>
-���́A�R���̓v���O�C���K�C�h���E���ǂ݂��Ă܂Ƃ߂����̂Ȃ̂ŁA�����ǂ񂾂����ł́A�Ȃɂ��Ȃ񂾂��킩��Ȃ��Ǝv���܂��B
-<BR>���̎��K�Ŏ��ۂ̃v���O�C�����쐬���܂��B������ǂ߂΁A������x���������߂�悤�ɂȂ�Ǝv���܂��B
+おわりに</H3>
+実は、コレはプラグインガイドを拾い読みしてまとめたものなので、これを読んだだけでは、なにがなんだかわからないと思います。
+<BR>次の実習で実際のプラグインを作成します。両方を読めば、ある程度感じがつかめるようになると思います。
 
-<P><A HREF="index.htm">[�z�[���֖߂�n</A>
+<P><A HREF="index.htm">[ホームへ戻る］</A>
 <BR>
 <HR><FONT SIZE=-1>Copyright (c) 1997-1999, BearBeetle, Allrights reserved.</FONT>
 </BODY>

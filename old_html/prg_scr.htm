@@ -1,66 +1,68 @@
+<!DOCTYPE html>
 <HTML>
 <HEAD>
+   <meta charset="UTF-8">
    <TITLE>BB Programming Lab.</TITLE>
 </HEAD>
 <BODY BACKGROUND="bcg_280.gif">
-<A NAME="TOP_TOP"></A><FONT SIZE=-1>���̃y�[�W��NetscapeNavigator
-2.0�ȍ~�y��Microsoft Internet Exploler 3.0�ȍ~�Ő���Ɍ����܂��B</FONT>
+<A NAME="TOP_TOP"></A><FONT SIZE=-1>このページはNetscapeNavigator
+2.0以降及びMicrosoft Internet Exploler 3.0以降で正常に見られます。</FONT>
 <BR><FONT SIZE=-2>Solly,Japanese only</FONT>
 <BR>
 <HR>
-<CENTER><BLINK><FONT COLOR="#3366FF"><FONT SIZE=-1>�� �a�a������ ��</FONT></FONT></BLINK></CENTER>
-<CENTER><FONT COLOR="#3366FF"><FONT SIZE=+2>MFC�x�[�X�̃X�N���[���Z�[�o�[</FONT></FONT></CENTER>
-<H3><FONT COLOR="#3366FF">�P�D�͂��߂�</FONT></H3>
-�X�N���[���Z�[�o�[�ɂ��ẮA���\�������o�Ă���̂ō��܂ŐG��Ă��܂���ł������A���̂��ѐV��\�t�g�����ɂ�����A���̏����i�K���e���v���[�g�Ƃ��Ă܂Ƃ߂܂����̂ŁA�����Ō��J�������Ǝv���܂��B<BR>
+<CENTER><BLINK><FONT COLOR="#3366FF"><FONT SIZE=-1>★ ＢＢ研究所 ★</FONT></FONT></BLINK></CENTER>
+<CENTER><FONT COLOR="#3366FF"><FONT SIZE=+2>MFCベースのスクリーンセーバー</FONT></FONT></CENTER>
+<H3><FONT COLOR="#3366FF">１．はじめに</FONT></H3>
+スクリーンセーバーについては、結構資料が出ているので今まで触れていませんでしたが、このたび新作ソフトを作るにあたり、その初期段階をテンプレートとしてまとめましたので、ここで公開したいと思います。<BR>
 
-VB��Delphi���[�U�ɂ͑�ϐ\���󂠂�܂��񂪁A������܂��܂��CVisualC++(ver6.0)��ΏۂƂ��Ă��܂��B<BR>
+VBやDelphiユーザには大変申し訳ありませんが、今回もまたまた，VisualC++(ver6.0)を対象としています。<BR>
 <HR>
-<H3><FONT COLOR="#3366FF">�Q�D�X�N���[���Z�[�o�[�p���C�u����</FONT></H3>
-VisualC++�ŃX�N���[���Z�[�o�[�������ꍇ�A��p�̃��C�u����( Scrnsave.lib/Scrnsavw.lib )���p�ӂ���Ă��܂��B�����MFC���g�킸WIN32�ɒ��ڃA�N�Z�X����^�C�v�̃A�v���P�[�V�����p�ł��B<BR>
-�I�����C���w���v�iMSDN���C�u����)�ŁA�L�[���[�h(N)���uScreen Saver Library�v�ɂ��ăT�[�`����΁A�g�p���@���ڂ��Ă��܂��B<BR>
-�A���A�p���̂��߁A�p��̋��Ȑl�ɂ́i�����܂߁j������ƂƂ����ɂ�����������܂���B���̂悤�Ȑl�́A�̂�VisualC++(ver2.0)�̃w���v�ɓ��{��ŏ����Ă������̂ŁA�����Ă���l���炻�̕����������Ă��炤�̂���̎�ł��B<BR>
-�����̕��@�͎����g���\�C�ɓ����Ă��āA�ٍ�u���B�f�I�E�X�N���[���v�͂��̕��@�ō쐬���Ă��܂��B<BR>
+<H3><FONT COLOR="#3366FF">２．スクリーンセーバー用ライブラリ</FONT></H3>
+VisualC++でスクリーンセーバーを扱う場合、専用のライブラリ( Scrnsave.lib/Scrnsavw.lib )が用意されています。これはMFCを使わずWIN32に直接アクセスするタイプのアプリケーション用です。<BR>
+オンラインヘルプ（MSDNライブラリ)で、キーワード(N)を「Screen Saver Library」にしてサーチすれば、使用方法が載っています。<BR>
+但し、英文のため、英語の苦手な人には（私も含め）ちょっととっつきにくいかもしれません。そのような人は、昔のVisualC++(ver2.0)のヘルプに日本語で書いてあったので、持っている人からその部分を見せてもらうのも一つの手です。<BR>
+※この方法は私自身結構気に入っていて、拙作「ヴィデオ・スクリーン」はこの方法で作成しています。<BR>
 
 <HR>
-<H3><FONT COLOR="#3366FF">�R�D�l�e�b����X�N���[���Z�[�o�[���g�����@</FONT></H3>
-�l�e�b(Microsoft Foundation Classes�j�́A�����g���܂�D���ł͂Ȃ��̂ł����A�n�b�w���g���Ղ��A�e�탉�C�u�������l�e�b�p�ɍ쐬���ꂽ���̂������Ȃ��Ă����̂ŁA�ŋ߂͔����Ă͒ʂ�Ȃ��Ȃ��Ă��܂����B<BR>
-�g�����ɂ��ẮA�I�����C���w���v�iMSDN���C�u����)�́A<BR>
-�ȉ��̃y�[�W�ɋL�q����Ă��܂��B<BR>
+<H3><FONT COLOR="#3366FF">３．ＭＦＣからスクリーンセーバーを使う方法</FONT></H3>
+ＭＦＣ(Microsoft Foundation Classes）は、私自身あまり好きではないのですが、ＯＣＸが使い易く、各種ライブラリもＭＦＣ用に作成されたものが多くなってきたので、最近は避けては通れなくなってきました。<BR>
+使い方については、オンラインヘルプ（MSDNライブラリ)の、<BR>
+以下のページに記述されています。<BR>
 
-�{�Z�p����<BR>
-�@�{Tecnical Articles<BR>
-�@�@�{Windows Platform<BR>
-�@�@�@�{Windows Managiment<BR>
-�@�@�@�@�{Creating 32-Bit Screen Savers with Visual C++ and MFC<BR>
+＋技術文書<BR>
+　＋Tecnical Articles<BR>
+　　＋Windows Platform<BR>
+　　　＋Windows Managiment<BR>
+　　　　＋Creating 32-Bit Screen Savers with Visual C++ and MFC<BR>
 <BR>
-�����������ɍڂ��Ă���T���v���͗͋Z�I�ȂƂ��낪����A���܂����������܂���i���ɁAWindowProc���g���Ă��邠����j�B<BR>
-�܂��A����Ƃ͕ʂɂu�b�{�{�̂b�c�|�q�n�l�ɂ́A�l�e�b���g�����X�N���[���Z�[�o�[�̃T���v���\�[�X���܂܂�Ă��܂��B���̃\�[�X���Y��Ȃ̂ł����A���Ȃ芮���x�������A�܂��I���W�i���̕`��N���X��e�N���X�Ƃ��ăX�N���[���Z�[�o�N���X���쐬���Ă��邽�߁A���X���Â炭�Ȃ��Ă��܂��B<BR>
-���̃T���v���\�[�X���Q�l�ɁA�܂������V�K�Ƀe���v���[�g���쐬���܂����B<BR>
-���̃e���v���[�g�́A�V��\�t�g�����ɂ����肻�̏����i�K����ʓI�ɂ܂Ƃ߂����̂ł��B<BR>
+しかしここに載っているサンプルは力技的なところがあり、あまり美しくありません（特に、WindowProcを使っているあたり）。<BR>
+また、これとは別にＶＣ＋＋のＣＤ－ＲＯＭには、ＭＦＣを使ったスクリーンセーバーのサンプルソースも含まれています。このソースは綺麗なのですが、かなり完成度が高く、またオリジナルの描画クラスを親クラスとしてスクリーンセーバクラスを作成しているため、少々見づらくなっています。<BR>
+このサンプルソースを参考に、まったく新規にテンプレートを作成しました。<BR>
+このテンプレートは、新作ソフトを作るにあたりその初期段階を一般的にまとめたものです。<BR>
 <BR>
 <HR>
-<H3><FONT COLOR="#3366FF">�S�D�e���v���[�g�̐���</FONT></H3>
-�܂��e���v���[�g���A<A HREF="obj/ScrSampl.lzh">����</A>����_�E�����[�h���Ă��������B<BR>
+<H3><FONT COLOR="#3366FF">４．テンプレートの説明</FONT></H3>
+まずテンプレートを、<A HREF="obj/ScrSampl.lzh">ここ</A>からダウンロードしてください。<BR>
 
-�e���v���[�g�̐����̑O�ɁA�X�N���[���Z�[�o�N�����̃X�C�b�`�ɂ��Đ������܂��B<BR>
+テンプレートの説明の前に、スクリーンセーバ起動時のスイッチについて説明します。<BR>
 <BR>
 <TABLE BORDER>
-<TR><TD>/s, -s ,s</TD><TD>�X�N���[���Z�[�o�[</TD></TR>
-<TR><TD>/p, -p ,p</TD><TD>�v���r���[</TD></TR>
-<TR><TD>/c, -c ,c</TD><TD>�ݒ�_�C�A���O�\��(�e�E�B���h�E�̂���ꍇ<BR>���s�A�N�e�B�u�ȃE�B���h�E���e�E�B���h�E</TD></TR>
-<TR><TD>����     </TD><TD>�ݒ�_�C�A���O�\��(�e�E�B���h�E�̖����ꍇ�j</TD></TR>
+<TR><TD>/s, -s ,s</TD><TD>スクリーンセーバー</TD></TR>
+<TR><TD>/p, -p ,p</TD><TD>プレビュー</TD></TR>
+<TR><TD>/c, -c ,c</TD><TD>設定ダイアログ表示(親ウィンドウのある場合<BR>現行アクティブなウィンドウが親ウィンドウ</TD></TR>
+<TR><TD>無し     </TD><TD>設定ダイアログ表示(親ウィンドウの無い場合）</TD></TR>
 </TABLE>
-��L�X�C�b�`�́A"__argv[1]"�ɓn����܂��B<BR><BR>
+上記スイッチは、"__argv[1]"に渡されます。<BR><BR>
 
-���āA�e���v���[�g�̐����Ɉڂ�܂��B<BR>
-�_�E�����[�h�����t�@�C����W�J���āA�uDsScr.scr�v���u\windows\system�v�̉��ɃR�s�[���ĉ������B<BR>
-�����āu�v���r���[�v�Ŏ��s���Ă݂Ă�������<BR>
-���̃e���v���[�g�́A���Ԋu�i0.5�b�j�ŁA�Ԍn����n�܂�A�����ȐF�ŉ�ʑS�̂�h��Ԃ��X�N���[���Z�[�o�[�ɂȂ��Ă��܂��B<BR>
-MFC AppWizerd�ɂ��_�C�A���O�{�b�N�X�x�[�X�ō쐬���܂����B<BR>
-�{���쐬�����_�C�A���O�{�b�N�X�́A�X�N���[���Z�[�o�[�̐ݒ�p�_�C�A���O�Ɏg�p���܂����A���̃e���v���[�g�ł̓E�B�U�[�h���̂܂܂ŁA���ɉ�����ݒ�ł���킯�ł͂���܂���B<BR>
+さて、テンプレートの説明に移ります。<BR>
+ダウンロードしたファイルを展開して、「DsScr.scr」を「\windows\system」の下にコピーして下さい。<BR>
+そして「プレビュー」で実行してみてください<BR>
+このテンプレートは、一定間隔（0.5秒）で、赤系から始まり、いろんな色で画面全体を塗りつぶすスクリーンセーバーになっています。<BR>
+MFC AppWizerdによりダイアログボックスベースで作成しました。<BR>
+本来作成されるダイアログボックスは、スクリーンセーバーの設定用ダイアログに使用しますが、このテンプレートではウィザードそのままで、特に何かを設定できるわけではありません。<BR>
 <BR>
-�X�N���[���Z�[�o�[�ɂ́A��L�̂悤�ɁA�X�N���[���Z�[�o�[���[�h�̑��ɁA�ݒ莞�̏����ȉ�ʂɕ\�����邽�߂̃v���r���[�A�ݒ�_�C�A���O�\���i�e�E�B���h�E�L��^�����j�̂S��ނ�����܂��B���ꂼ��n�����N���X�C�b�`���قȂ�܂��B<BR>
-�e���v���[�g�ł́ACDsScrApp::InitInstance()�̕����ł�����s���Ă��܂��B<BR>
+スクリーンセーバーには、上記のように、スクリーンセーバーモードの他に、設定時の小さな画面に表示するためのプレビュー、設定ダイアログ表示（親ウィンドウ有り／無し）の４種類があります。それぞれ渡される起動スイッチが異なります。<BR>
+テンプレートでは、CDsScrApp::InitInstance()の部分でこれを行っています。<BR>
 <TABLE  BORDER=1 cellspacing="0" bgcolor="#C0C0E0" >
 <TR><TD>
 <FONT SIZE=-1>
@@ -77,15 +79,15 @@ BOOL MatchOption(LPTSTR lpsz, LPTSTR lpszOption)
 
 BOOL CDsScrApp::InitInstance()
 {
-	// �W���I�ȏ���������
-	// ���������̋@�\���g�p�����A���s�t�@�C���̃T�C�Y��������������
-	//  ��Έȉ��̓���̏��������[�`���̒�����s�K�v�Ȃ��̂��폜����
-	//  ���������B
+	// 標準的な初期化処理
+	// もしこれらの機能を使用せず、実行ファイルのサイズを小さくしたけ
+	//  れば以下の特定の初期化ルーチンの中から不必要なものを削除して
+	//  ください。
 
 #ifdef _AFXDLL
-	Enable3dControls();			// ���L DLL ���� MFC ���g���ꍇ�͂������R�[�����Ă��������B
+	Enable3dControls();			// 共有 DLL 内で MFC を使う場合はここをコールしてください。
 #else
-	Enable3dControlsStatic();	// MFC �ƐÓI�Ƀ����N����ꍇ�͂������R�[�����Ă��������B
+	Enable3dControlsStatic();	// MFC と静的にリンクする場合はここをコールしてください。
 #endif
 	if (__argc == 1 || MatchOption(__argv[1], _T("c"))){
 
@@ -95,26 +97,26 @@ BOOL CDsScrApp::InitInstance()
 		int nResponse = dlg.DoModal();
 		if (nResponse == IDOK)
 		{
-			// TODO: �_�C�A���O�� <OK> �ŏ����ꂽ���̃R�[�h��
-			//       �L�q���Ă��������B
+			// TODO: ダイアログが <OK> で消された時のコードを
+			//       記述してください。
 		}
 		else if (nResponse == IDCANCEL)
 		{
-			// TODO: �_�C�A���O�� <��ݾ�> �ŏ����ꂽ���̃R�[�h��
-			//       �L�q���Ă��������B
+			// TODO: ダイアログが <ｷｬﾝｾﾙ> で消された時のコードを
+			//       記述してください。
 		}
 	}
 	else if(MatchOption(__argv[1], _T("p"))){
-		// �v���r���[
+		// プレビュー
 
-		return TRUE;	// TRUE�Ŗ߂�炵��
+		return TRUE;	// TRUEで戻るらしい
 	}
 	else if (MatchOption(__argv[1], _T("s")))
 	{
 		CSaver* pWnd = new CSaver;
 		pWnd->CreateEx();
 		m_pMainWnd = pWnd;
-		return TRUE;	// TRUE�Ŗ߂�炵��
+		return TRUE;	// TRUEで戻るらしい
 	}
 	return FALSE;
 }
@@ -122,14 +124,14 @@ BOOL CDsScrApp::InitInstance()
 </FONT>
 </TD></TR>
 </TABLE>
-��L��CDsScrApp::MatchOption()����������r���镔���ł��B<BR>
-CDsScrApp::InitInstance()�ŁA������Ăяo���X�C�b�`�̐؂蕪�������Ă��܂�<BR>
-��L��ł́A�X�C�b�`�����y��"/c"�̂�����̂Ƃ����e�E�B���h�E�����Őݒ�_�C�A���O���쐬���Ă��܂����A��萳�m�������̂Ȃ�A"/c"�̏ꍇ�̂݁A�E�B���h�E�I�u�W�F�N�g�쐬���ɃA�N�e�B�u�E�B���h�E(CWnd::GetActiveWindow())���w�肵�č쐬����Ɨǂ��ł��傤�B<BR><BR>
-�ݒ�_�C�A���O�{�b�N�X�̍쐬�́A�ʏ�̃_�C�A���O�{�b�N�X�̍쐬�Ƃ܂����������ł��̂Ő������ȗ����܂�<BR><BR>
-�X�N���[���Z�[�o�E�B���h�E�́ACSaver�N���X(Saver.cpp)�ŋL�q���Ă��܂�<BR>
-���̓��e�ɂ��Ă��A�\�[�X�����Ă����������ƂŐ����͏ȗ����܂�<BR>
-�X�N���[���Z�[�o�[�̋@�\�Ƃ��ẮA��������ȃE�B���h�E���쐬���A�}�E�X�ړ����̃C�x���g������������A�E�B���h�E��j������悤�ɂȂ��Ă��܂��B<BR>
-���̃e���v���[�g�͂��ꂾ���ł͂��т����̂ŁA�ꉞ�^�C�}�[������āA�����Ԗ��ɉ�ʂ�h��Ԃ��Ȃ����Ă��܂��B<BR><BR>
+上記のCDsScrApp::MatchOption()が文字列を比較する部分です。<BR>
+CDsScrApp::InitInstance()で、これを呼び出しスイッチの切り分けをしています<BR>
+上記例では、スイッチ無し及び"/c"のいずれのときも親ウィンドウ無しで設定ダイアログを作成していますが、より正確を期すのなら、"/c"の場合のみ、ウィンドウオブジェクト作成時にアクティブウィンドウ(CWnd::GetActiveWindow())を指定して作成すると良いでしょう。<BR><BR>
+設定ダイアログボックスの作成は、通常のダイアログボックスの作成とまったく同じですので説明を省略します<BR><BR>
+スクリーンセーバウィンドウは、CSaverクラス(Saver.cpp)で記述しています<BR>
+この内容についても、ソースを見ていただくことで説明は省略します<BR>
+スクリーンセーバーの機能としては、少し特殊なウィンドウを作成し、マウス移動等のイベントが発生したら、ウィンドウを破棄するようになっています。<BR>
+このテンプレートはそれだけではさびしいので、一応タイマーを作って、一定期間毎に画面を塗りつぶしなおしています。<BR><BR>
 <TABLE  BORDER=1 cellspacing="0" bgcolor="#C0C0E0" >
 <TR><TD>
 <FONT SIZE=-1>
@@ -139,7 +141,7 @@ BOOL CSaver::CreateEx()
 	CRect rect(0, 0, ::GetSystemMetrics(SM_CXSCREEN),
 		::GetSystemMetrics(SM_CYSCREEN));
 
-	// �J�[�T�[��ݒ肹���ɃN���X��o�^���܂�
+	// カーサーを設定せずにクラスを登録します
 	if (m_lpszClassName == NULL)
 	{
     	m_lpszClassName = AfxRegisterWndClass(CS_HREDRAW|CS_VREDRAW,
@@ -151,41 +153,41 @@ BOOL CSaver::CreateEx()
 		rect.left, rect.top, rect.right - rect.left, rect.bottom - rect.top, 
 		NULL, NULL, NULL );
 
-	 SetTimer(1, 500, NULL);	// 500ms(0.5�b)���ɃC�x���g�̔�������^�C�}�[��ݒ�
+	 SetTimer(1, 500, NULL);	// 500ms(0.5秒)毎にイベントの発生するタイマーを設定
 
 	 return fRet;
 }
-�E�E�E
+・・・
 void CSaver::OnDestroy() 
 {
 	KillTimer(1);
 	PostQuitMessage(0);
 	CWnd::OnDestroy();
 }
-�E�E�E
+・・・
 void CSaver::OnPaint() 
 {
-	CPaintDC dc(this); // �`��p�̃f�o�C�X �R���e�L�X�g
+	CPaintDC dc(this); // 描画用のデバイス コンテキスト
 	
-	// TODO: ���̈ʒu�Ƀ��b�Z�[�W �n���h���p�̃R�[�h��ǉ����Ă�������
+	// TODO: この位置にメッセージ ハンドラ用のコードを追加してください
 
-	// �ȉ���ʂ�h��Ԃ����[�`��
+	// 以下画面を塗りつぶすルーチン
 	CRect rect;
 	GetClientRect(&rect);
 	dc.FillSolidRect(&rect,m_stBackColor);
 
-	// �`��p���b�Z�[�W�Ƃ��� CWnd::OnPaint() ���Ăяo���Ă͂����܂���
+	// 描画用メッセージとして CWnd::OnPaint() を呼び出してはいけません
 }
 
 void CSaver::OnTimer(UINT nIDEvent) 
 {
-	// TODO: ���̈ʒu�Ƀ��b�Z�[�W �n���h���p�̃R�[�h��ǉ����邩�܂��̓f�t�H���g�̏������Ăяo���Ă�������
+	// TODO: この位置にメッセージ ハンドラ用のコードを追加するかまたはデフォルトの処理を呼び出してください
 	if(nIDEvent){
-		// �w�i�F�������ȐF�ɐݒ肷��
+		// 背景色をいろんな色に設定する
 		m_stBackColor+=0x10;
 		if(m_stBackColor>0xffffff)
 			m_stBackColor=0;
-		// �w�i��h��Ԃ�
+		// 背景を塗りつぶす
 		CRect rect;
 		GetClientRect(&rect);
 		InvalidateRect(FALSE);
@@ -201,22 +203,22 @@ void CSaver::OnTimer(UINT nIDEvent)
 </TABLE>
 <BR>
 <BR>
-�y���Ӂz<BR>
-�v���W�F�N�g�̐ݒ�i�u�v���W�F�N�g(P)�v���u�ݒ�(S)�v�j�ŁA�u�f�o�b�N�v�^�u�́u�v���O�����̈����v�Ɂu/s�v������ƁA�X�N���[���Z�[�o�[���[�h�ŋN�������̂ŁA���̕����̃f�o�b�N�����邱�Ƃ��o���܂��B<BR>
-�������A�e���v���[�g���̂܂܂ł́A�X�N���[���Z�[�o�N�����̃f�o�b�N���o���܂���B<BR>
-�u���[�N�|�C���g�𒣂�ƁA���̑��s����ɃX�N���[���Z�[�o�[���I�����Ă܂�����ł��B<BR>
-�����������邽�߂ɂ́A�����R���p�C���Ƃ��āA�f�o�b�N����PostMessage(WM_CLOSE);�̍s���R���p�C�����Ȃ��悤�ɂ��܂��i�������A�S�Ă��R�����g�A�E�g����ƃv���O�������I�����Ȃ��Ȃ�̂ŁA CSaver::OnLButtonDown()���炢�͂��̂܂܂ɂ��Ă����܂��傤�j�B�܂��ACWnd::CreateWindowEx()�Ăяo������WS_EX_TOPMOST�w���0�ɂ���K�v������܂��B����̓X�N���[���Z�[�o�E�B���h�E���őO�ɗ���ƃu���[�N���Ă��AVisualC++�̉�ʂ��őO�ɂ���Ȃ�����ł��B<BR>
+【注意】<BR>
+プロジェクトの設定（「プロジェクト(P)」→「設定(S)」）で、「デバック」タブの「プログラムの引数」に「/s」を入れると、スクリーンセーバーモードで起動されるので、この部分のデバックをすることが出来ます。<BR>
+しかし、テンプレートそのままでは、スクリーンセーバ起動時のデバックが出来ません。<BR>
+ブレークポイントを張ると、その続行直後にスクリーンセーバーが終了してまうからです。<BR>
+これを回避するためには、条件コンパイルとして、デバック時はPostMessage(WM_CLOSE);の行をコンパイルしないようにします（しかし、全てをコメントアウトするとプログラムが終了しなくなるので、 CSaver::OnLButtonDown()くらいはそのままにしておきましょう）。また、CWnd::CreateWindowEx()呼び出し時のWS_EX_TOPMOST指定を0にする必要があります。これはスクリーンセーバウィンドウが最前に来るとブレークしても、VisualC++の画面が最前にこれないからです。<BR>
 <BR>
 <HR>
-<H3><FONT COLOR="#3366FF">�T�D������</FONT></H3>
-����A�e���v���[�g�̒񎦂����ŁA���܂�X�N���[���Z�[�o�[���g�ɂ��Ă͉�����Ă��܂���B<BR>
-�������A�|�C���g�͋N�����̃X�C�b�`�̐؂蕪���y�сA�e���v���[�g�ʂ�̃E�B���h�E���쐬�����΁A�w�Ǖ��ʂ̃E�B���h�E�\�t�g�Ɖ�����͑���܂���i�L�[���͂�}�E�X���͂��o���Ȃ��̂ŁA�^�C�}�[�C�x���g�ɂ��A�����I�ɓ��삳����K�v�͂���܂����c�j�B<BR>
-���́A�e���v���[�g�����ɖ��͎Q�l�ɂ��āA�I���W�i���̃X���[���Z�[�o�[���ǂ�ǂ�쐬���Ă����܂��傤�I<BR>
+<H3><FONT COLOR="#3366FF">５．おわりに</FONT></H3>
+今回、テンプレートの提示だけで、あまりスクリーンセーバー自身については解説していません。<BR>
+しかし、ポイントは起動時のスイッチの切り分け及び、テンプレート通りのウィンドウが作成されれば、殆ど普通のウィンドウソフトと何ら作りは代わりません（キー入力やマウス入力が出来ないので、タイマーイベントにより、自発的に動作させる必要はありますが…）。<BR>
+この、テンプレートを元に又は参考にして、オリジナルのスリーンセーバーをどんどん作成していきましょう！<BR>
 <HR>
-<P><A HREF="index.htm">[�z�[���֖߂�n</A>
+<P><A HREF="index.htm">[ホームへ戻る］</A>
 <BR>
-�y�����L�^�z<BR>
-2000/05/27�ŁF���J<BR>
+【改訂記録】<BR>
+2000/05/27版：公開<BR>
 <HR><FONT SIZE=-1>Copyright (c) 1997-2000, BearBeetle, Allrights reserved.</FONT>
 </BODY>
 </HTML>

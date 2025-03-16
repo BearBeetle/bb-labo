@@ -1,139 +1,141 @@
+<!DOCTYPE html>
 <HTML>
 <HEAD>
+   <meta charset="UTF-8">
    <TITLE>BB Programming Lab.</TITLE>
 </HEAD>
 <BODY BACKGROUND="bcg_280.gif">
-<A NAME="TOP_TOP"></A><FONT SIZE=-1>���̃y�[�W��NetscapeNavigator
-2.0�ȍ~�y��Microsoft Internet Exploler 3.0�ȍ~�Ő���Ɍ����܂��B</FONT>
+<A NAME="TOP_TOP"></A><FONT SIZE=-1>このページはNetscapeNavigator
+2.0以降及びMicrosoft Internet Exploler 3.0以降で正常に見られます。</FONT>
 <BR><FONT SIZE=-2>Solly,Japanese only</FONT>
 <BR>
 <HR>
-<CENTER><BLINK><FONT COLOR="#3366FF"><FONT SIZE=-1>�� �a�a������ ��</FONT></FONT></BLINK></CENTER>
-<CENTER><FONT COLOR="#3366FF"><FONT SIZE=+2>�A�C�f�A�W</FONT></FONT></CENTER>
+<CENTER><BLINK><FONT COLOR="#3366FF"><FONT SIZE=-1>★ ＢＢ研究所 ★</FONT></FONT></BLINK></CENTER>
+<CENTER><FONT COLOR="#3366FF"><FONT SIZE=+2>アイデア集</FONT></FONT></CENTER>
 <BR>
-�z�[���y�[�W�̎�|����͏����O��Ă��܂��܂����A����̓I�����C���\�t�g�̃A�C�f�A���Љ�����Ǝv���܂��B<BR>
-�����̃A�C�f�A�́A�����ȗ��R����A�쐬���������Ă�����̂ł��B<BR>
-�����ŁA�r�Ɋo���̂���F����ɁA�������Ă����������� �� �v�����J���܂����B<BR>
-�Ȃ��A�����̃\�t�g�̂Ȃ��Ɂu���łɂ����I�v�Ƃ������̂�����܂����炲��񉺂����B<BR>
-�������̃A�C�f�A�Ɋւ��钘�쌠���̌����͈�ؕ������܂��̂ŁA
-�@���S���Đ��i��(?)���Ă��������B<BR><BR>
+ホームページの趣旨からは少し外れてしまいますが、今回はオンラインソフトのアイデアを紹介したいと思います。<BR>
+これらのアイデアは、いろんな理由から、作成を見送っているものです。<BR>
+そこで、腕に覚えのある皆さんに、是非作っていただけたら と 思い公開しました。<BR>
+なお、これらのソフトのなかに「すでにあるよ！」というものがありましたらご一報下さい。<BR>
+※これらのアイデアに関する著作権等の権利は一切放棄しますので、
+　安心して製品化(?)してください。<BR><BR>
 <BR>
 <UL>
 <A NAME="TOP_TOP">
-�@�@�@�@�@�@�@�@�@���@�ڎ��@��<BR><BR>
+　　　　　　　　　◆　目次　◆<BR><BR>
 
-<A HREF="#NO1">�P�DDOS���@�J�����g�f�B���N�g���@�ȒP�ݒ�c�[��</A><BR>
-<A HREF="#NO2">�Q�D�Í������z�h���C�u</A><BR>
-<A HREF="#NO3">�R�DWindows�� tar</A><BR>
-<A HREF="#NO4">�S�D�s���̃��[�v��</A><BR>
-<A HREF="#NO5">�T�D�w���p�[�\�t�g�N���p�v���O�C��</A><BR>
-<A HREF="#NO6">�U�D���[��������</A>
+<A HREF="#NO1">１．DOS窓　カレントディレクトリ　簡単設定ツール</A><BR>
+<A HREF="#NO2">２．暗号化仮想ドライブ</A><BR>
+<A HREF="#NO3">３．Windows版 tar</A><BR>
+<A HREF="#NO4">４．行書体ワープロ</A><BR>
+<A HREF="#NO5">５．ヘルパーソフト起動用プラグイン</A><BR>
+<A HREF="#NO6">６．メールｆｔｐ</A>
 </UL>
 <BR>
 <P>
 <HR>
 <A NAME="NO1"></A>
-<H3><FONT COLOR="#3366FF">�P�DDOS���@�J�����g�f�B���N�g���@�ȒP�ݒ�c�[��</FONT></H3>
-�@MS-DOS���ォ��p�\�R���ɂȂ���ł���l��V�X�e���Ǘ������Ă���l�́AWindows���g�p���Ă��Ă��A�uMS-DOS�v�����v�g�v������DOS�������p���邱�Ƃ������Ǝv���܂��B<BR>
-�@�l��format��diskcopy�R�}���h�Ȃǂ́A����DOS���Ŏ��s���Ă��邵�Aping��net,WindowsNT��AT�R�}���h�ȂǁADOS�����炵�����s�ł��Ȃ��R�}���h������܂��B<BR>
-�@�����������s�ւɎv���̂́A��ƃf�B���N�g�����A�N�e�B�u�ɐݒ�ł��Ȃ����Ƃł��B�����A�v���p�e�B�Őݒ肳�ꂽ�p�X�i�f�t�H���g�ł́A\windows�j����A�uCD�v�ł��������ړI�̃f�B���N�g���Ɉڂ�Ȃ���΂Ȃ�Ȃ��Ƃ��낪�ʓ|�Ȃ̂ł��B<BR>
-�@�����ŁA���̂悤�ȔώG�����������邽�߂̃\�t�g���uDOS���@�J�����g�f�B���N�g���@�ȒP�ݒ�c�[���v�ł��B�G�N�X�v���[���ŊJ���Ă���t�H���_�̉E�N���b�N�|�b�v�A�b�v���́A�z�b�g�L�[�������ƁA�����̃t�H���_���J�����g�f�B���N�g���Ƃ���DOS�����N�������܂��B<BR>
-�@���̃\�t�g�͑����ȒP�ɍ���Ƃ͎v���܂��E�E�E�B<BR>
-<FONT COLOR=DARKRED>�y����z</FONT><BR>
-���ǎ�������Ă��܂��܂����D��<A HREF="http://www2s.biglobe.ne.jp/~img/download_free.htm#DOSMADO">DOS���I�[�v�i�[</A><BR><BR>
+<H3><FONT COLOR="#3366FF">１．DOS窓　カレントディレクトリ　簡単設定ツール</FONT></H3>
+　MS-DOS時代からパソコンになじんでいる人やシステム管理をしている人は、Windowsを使用していても、「MS-DOSプロンプト」いわゆるDOS窓を愛用することが多いと思います。<BR>
+　僕もformatやdiskcopyコマンドなどは、いつもDOS窓で実行しているし、pingやnet,WindowsNTのATコマンドなど、DOS窓からしか実行できないコマンドもあります。<BR>
+　しかしいつも不便に思うのは、作業ディレクトリをアクティブに設定できないことです。即ち、プロパティで設定されたパス（デフォルトでは、\windows）から、「CD」でいちいち目的のディレクトリに移らなければならないところが面倒なのです。<BR>
+　そこで、このような煩雑さを解決するためのソフトが「DOS窓　カレントディレクトリ　簡単設定ツール」です。エクスプローラで開いているフォルダの右クリックポップアップ又は、ホットキーを押すと、そこのフォルダをカレントディレクトリとするDOS窓を起動させます。<BR>
+　このソフトは多分簡単に作れるとは思います・・・。<BR>
+<FONT COLOR=DARKRED>【改定】</FONT><BR>
+結局私が作ってしまいました．→<A HREF="http://www2s.biglobe.ne.jp/~img/download_free.htm#DOSMADO">DOS窓オープナー</A><BR><BR>
 
-<A HREF="#TOP_TOP">[�ڎ���]</A>
+<A HREF="#TOP_TOP">[目次へ]</A>
 
 <HR>
 <A NAME="NO2"></A>
-<H3><FONT COLOR="#3366FF">�Q�D�Í������z�h���C�u</FONT></H3>
-�@�Z�L�����e�B�̖ʂ���A�Í����\�t�g�͐���������܂����A���܂����g���ɂ����Ǝv���܂��񂩁H<BR>
-�@�Í������ꂽ���ɂɁA�t�@�C�����i�[��������o�����肷���Ƃ��ώG���𔺂��܂��B<BR>
-�@���̔ώG�����ɗ͉������邽�߂̃\�t�g�ł��B<BR>
-�@HDD��̈ꕔ�̈�i���̓t�@�C���j�ɁA���z�h���C�u���쐬��OS����͂P�h���C�u�Ƃ��Ĉ�����悤�ɂ��܂��B�����uE:�h���C�u�v�Ƃ������`�Ō�����悤�ɂ��A��ʂ̃A�v���P�[�V������G�N�X�v���[�����玩�R�ɃA�N�Z�X�ł���悤�ɂ��܂��B�f�[�^�̃��C�g���[�h�́A��p�̃h���C�o���t�b�N���A���ۂ�HDD��ɏ������ނƂ��́A�Í������ꂽ�f�[�^�ɂ��܂��B<BR>
-�@���z�h���C�u�ɂ́u���v����������悤�ɂ��A������������͂������肷��ۂɂ́A�p�X���[�h��K�v�Ƃ���悤�ɂ��܂��B<BR>
-�@���̃\�t�g�́A�t�@�C���V�X�e���C�Í��C�h���C�o�ƍL���͈͂̒m����K�v�Ƃ��A������Win95/98/NT�Ǝd�l���قȂ邽�ߔ��ɍ쐬�ɂȓ�a����Ǝv���܂��B�������A���̔��ʂ�����x���z�ȃV�F�A�E�F�A�ɂ��Ă��\�����v������Ǝv���܂��B<BR>
-�@�����A�ȑO��낤�Ƃ��܂������A�uWindows2000�Ŏ����悤�Ȏd�g�݂��ł���v�Ƃ����\�𕷂����̂ŁA����ȗ���M����߂Ă��܂��܂����B�������AWindows95/98�nOS���������������[�X����Â���悤�ł��̂ŁA����������ɍ���Ă݂�Ɨǂ��Ǝv���܂��B
-<A HREF="#TOP_TOP">[�ڎ���]</A>
+<H3><FONT COLOR="#3366FF">２．暗号化仮想ドライブ</FONT></H3>
+　セキュリティの面から、暗号化ソフトは数多くありますが、いまいち使いにくいと思いませんか？<BR>
+　暗号化された書庫に、ファイルを格納したり取り出したりする作業が煩雑さを伴います。<BR>
+　この煩雑さを極力押さえるためのソフトです。<BR>
+　HDD上の一部領域（又はファイル）に、仮想ドライブを作成しOSからは１ドライブとして扱えるようにします。即ち「E:ドライブ」といった形で見えるようにし、一般のアプリケーションやエクスプローラから自由にアクセスできるようにします。データのライトリードは、専用のドライバがフックし、実際にHDD上に書きこむときは、暗号化されたデータにします。<BR>
+　仮想ドライブには「鍵」をかけられるようにし、鍵をかけたりはずしたりする際には、パスワードを必要とするようにします。<BR>
+　このソフトは、ファイルシステム，暗号，ドライバと広い範囲の知識を必要とし、しかもWin95/98/NTと仕様が異なるため非常に作成にな難渋すると思います。しかし、その反面ある程度高額なシェアウェアにしても十分需要があると思われます。<BR>
+　私も、以前作ろうとしましたが、「Windows2000で似たような仕組みができる」という噂を聞いたので、それ以来情熱が冷めてしまいました。しかし、Windows95/98系OSも引き続きリリースされつづけるようですので、こちら向けに作ってみると良いと思います。
+<A HREF="#TOP_TOP">[目次へ]</A>
 
 <HR>
 <A NAME="NO3"></A>
-<H3><FONT COLOR="#3366FF">�R�DWindows�� tar</FONT></H3>
-�@���̃\�t�g���l�I�ɂ͍���Ԃق����\�t�g�ł�.
-�@WindowsNT�����y����ȑO�́A�킽����UNIX(HP-UX��Solaris�j��ǂ��g�p���Ă��܂����B<BR>
-�܂��ALinux,Free-BSD�����߂Ƃ���PC�|UNIX���ŋ߂͐l�C������܂��B
-�@����UNIX�nOS�ł́Atar��cpio�Ƃ����A�[�J�C�u�\�t�g������A��e�ʃf�[�^�̎󂯓n���ɂ͔��ɕ֗��ł��B<BR>
-�@�Ƃ��낪�AWindowsNT(Windows2000)�ɂȂ�ƁA�Ǝ��̕W���t�H�[�}�b�g�͂���̂ł����AARCSERVE�Ȃǂ̗L�̓\�t�g�ł́A����ɋ@�\�g�����Ă��邽�߁A�݊������قƂ�ǂ���܂���B
-�@���̂��߁AWindows�ł́A�e�[�v���u�́A�w�ǃo�b�N�A�b�v�ɂ����g���Ȃ��Ȃ��Ă��܂����Ɗ����Ă��܂��B�܂��AUNIX�nOS�Ƃ̃f�[�^�������ȒP�ɂł��܂���B<BR>
-�@����Windows�ł�tar�t�@�C���ixxx.tar�t�@�C���j�ɂ��ẮAWinZip���ň������Ƃ��ł��܂����A�Ȃ������ڃe�[�v�f�o�C�X�ɏ������߂�\�t�g���o�܂���Ă��܂���B<BR>
-�@<STRIKE>���ׂĂ݂�ƕč��Ŏ኱�L���\�t�g�ŏo�Ă���ȊO�͂���܂���i���́ASYGNUS�iWin GNU)��TAR.EXE�����e�[�v�f�o�C�X�������Ȃ��͗l�ł��j�B</STRIKE><BR>
-�@�����ŁAWindows��œ��삳����tar������΂�����x�̎��v�������߂�Ǝv���܂��B<BR>
-�̐S��tar�{�̂́AGNU tar�̃\�[�X������΂킩��܂��B
-�@�������AGNU�\�[�X���������I�u�W�F�N�g�̍Ĕz�z�ɂ́A�u�I�[�v���\�[�X�v���O��ł��̂ŁA�����ɂ͂Ȃ�܂���B<BR>
-�@�܂��A�Z�p�I�ɂ̓e�[�v�f�o�C�X�̐���iASPI�CSCSI��CDB)��A���{��ϊ��iSJIS,JIS,EUC,UNICODE�j�������K�v������܂��B<BR>
-�@��Ԃ̖��͐��̒��ɏo�܂���Ă���e�[�v�f�o�C�X���ǂ��܂ŃT�|�[�g���邩�ł��B<BR>
-�����ݒ�t�@�C��������đΉ�������悤�ɂ���Ζ�薳���Ƃ͎v���܂��E�E�E�B<BR>
-<FONT COLOR=DARKRED>�y����z</FONT><BR>
-CYGWIN�ł̓e�[�v���u���Ȃ���tar�������܂����B<BR><BR>
-/dev/st0...�����߂�����<BR>
-/dev/nst0...�����߂��Ȃ�<BR>
+<H3><FONT COLOR="#3366FF">３．Windows版 tar</FONT></H3>
+　このソフトが個人的には今一番ほしいソフトです.
+　WindowsNTが普及する以前は、わたしもUNIX(HP-UXやSolaris）を良く使用していました。<BR>
+また、Linux,Free-BSDを初めとしたPC－UNIXも最近は人気があります。
+　このUNIX系OSでは、tarやcpioというアーカイブソフトがあり、大容量データの受け渡しには非常に便利です。<BR>
+　ところが、WindowsNT(Windows2000)になると、独自の標準フォーマットはあるのですが、ARCSERVEなどの有力ソフトでは、勝手に機能拡張しているため、互換性がほとんどありません。
+　このため、Windowsでは、テープ装置は、殆どバックアップにしか使われなくなってしまったと感じています。また、UNIX系OSとのデータ交換も簡単にできません。<BR>
+　実はWindowsでもtarファイル（xxx.tarファイル）については、WinZip等で扱うことができますが、なぜか直接テープデバイスに書きこめるソフトが出まわっていません。<BR>
+　<STRIKE>調べてみると米国で若干有料ソフトで出ている以外はありません（あの、SYGNUS（Win GNU)のTAR.EXEさえテープデバイスを扱えない模様です）。</STRIKE><BR>
+　そこで、Windows上で動作させるtarがあればある程度の需要が見込めると思います。<BR>
+肝心のtar本体は、GNU tarのソースを見ればわかります。
+　ただし、GNUソースをつかったオブジェクトの再配布には、「オープンソース」が前提ですので、商売にはなりません。<BR>
+　また、技術的にはテープデバイスの制御（ASPI，SCSIのCDB)や、日本語変換（SJIS,JIS,EUC,UNICODE）を扱う必要があります。<BR>
+　一番の問題は世の中に出まわっているテープデバイスをどこまでサポートするかです。<BR>
+多分設定ファイルを作って対応させるようにすれば問題無いとは思いまが・・・。<BR>
+<FONT COLOR=DARKRED>【改定】</FONT><BR>
+CYGWINではテープ装置をつないでtarが扱えました。<BR><BR>
+/dev/st0...巻き戻しあり<BR>
+/dev/nst0...巻き戻しなし<BR>
 <BR>
-�y��z<BR>
+【例】<BR>
 tar /dev/st0 tvf<BR><BR>
-<A HREF="#TOP_TOP">[�ڎ���]</A>
+<A HREF="#TOP_TOP">[目次へ]</A>
 <BR>
 
 <HR>
 <A NAME="NO4"></A>
-<H3><FONT COLOR="#3366FF">�S�D�s���̃��[�v��</FONT></H3>
-�@��ʂ̃��[�v���͂P�����P���������ꂽ�t�H���g���������܂���B<BR>
-���̂��߁A�����ƕ������A�����Ă���s���͈̂������Ƃ��ł��܂���B<BR><BR>
-�����ŁA�l�����̂��s���̃��[�v���ł��B<BR>
+<H3><FONT COLOR="#3366FF">４．行書体ワープロ</FONT></H3>
+　一般のワープロは１文字１文字が離れたフォントしか扱えません。<BR>
+このため、文字と文字が連続している行書体は扱うことができません。<BR><BR>
+そこで、考えたのが行書体ワープロです。<BR>
 
-�@�ʏ�A�E�g���C���t�H���g�́A<A HREF="http://www.cgarts.or.jp/dictionary/k29/k2965.htm">�x�W�F�Ȑ�</A>�ō\������܂��B���̃A�C�f�A�ł́A�O�̕����̍Ō�Ǝ��̕����̍ŏ��̃x�N�g���������I�ɂ��킹�āA���炩�ɂȂ���Ȑ�����邱�ƂŁA�s���̂�����������̂ł��B<BR>
-�@��ʏ�͒ʏ�̃t�H���g�ŕ\�����A������ɂ͉��z��ʂ�����Ă����ɕ`�悵�A���̃C���[�W���v�����^�֏o�͂���悤�ɂ��܂��B<BR>
-�@���p�Ƃ��āA�M�L�̃��[�v��������̂ł͂Ȃ��ł��傤���H<BR>
+　通常アウトラインフォントは、<A HREF="http://www.cgarts.or.jp/dictionary/k29/k2965.htm">ベジェ曲線</A>で構成されます。このアイデアでは、前の文字の最後と次の文字の最初のベクトルを自動的にあわせて、滑らかにつながる曲線を作ることで、行書体を実現するものです。<BR>
+　画面上は通常のフォントで表示し、印刷時には仮想画面を作ってそこに描画し、そのイメージをプリンタへ出力するようにします。<BR>
+　応用として、筆記体ワープロも作れるのではないでしょうか？<BR>
 
-<A HREF="#TOP_TOP">[�ڎ���]</A>
+<A HREF="#TOP_TOP">[目次へ]</A>
 <HR>
 
 <A NAME="NO5"></A>
-<H3><FONT COLOR="#3366FF">�T�D�w���p�[�\�t�g�N���p�v���O�C��</FONT></H3>
-�@�u���E�U�̉�ʏォ��ʃ\�t�g���N���������ꍇ�A�f�[�^�^�C�v�ɉ����ăw���p�[�\�t�g���N�����܂����A���������ċN���������ꍇ�i�Ⴆ��DB���w�肵�āA�m�[�c���N������Ȃǁj�A���̕��@������܂���B�܂��ABAT�t�@�C���̂悤�Ɉ�A�̑�������������ꍇ������܂��B�����ŁA�X�N���v�g�ɉ����ă\�t�g���N���C���삷��v���O�C��������΁A�֗��ł��B<BR>
-�@���̂悤�ȃ\�t�g�́A�Z�L�����e�B�̖�肪����܂����A������N���A����΃V�F�A�E�F�A�Ƃ��ďo�����Ƃ��ł���Ǝv���܂��B<BR>
-�@���ɃC���g���l�b�g�������Ă����ƂȂǂɈ�������������̂ł͂Ȃ��ł��傤���H<BR>
+<H3><FONT COLOR="#3366FF">５．ヘルパーソフト起動用プラグイン</FONT></H3>
+　ブラウザの画面上から別ソフトを起動したい場合、データタイプに応じてヘルパーソフトが起動しますが、引数をつけて起動したい場合（例えばDBを指定して、ノーツを起動するなど）、その方法がありません。また、BATファイルのように一連の操作をさせたい場合もあります。そこで、スクリプトに応じてソフトを起動，操作するプラグインがあれば、便利です。<BR>
+　このようなソフトは、セキュリティの問題がありますが、これをクリアすればシェアウェアとして出すこともできると思います。<BR>
+　特にイントラネットを持っている企業などに引き合いがあるのではないでしょうか？<BR>
 
-<A HREF="#TOP_TOP">[�ڎ���]</A>
+<A HREF="#TOP_TOP">[目次へ]</A>
 <HR>
 <A NAME="NO6"></A>
-�y����F2000/05/08�z<BR>
-<H3><FONT COLOR="#3366FF">�U�D���[��������</FONT></H3>
-�@���̃\�t�g�́A�v�v�v�T�[�o�Ƃ͕ʂɁA�Ƃɏ펞�ʓd���Ă���p�\�R����u���A���̏�œ��삵�܂��B<BR>
-���[���T�[�o�ɗ������[������莞�ԁi�����`�����ԁj���Ƀ`�F�b�N���A�����subject�̃��[�������A�p�\�R���ɂ�݂��݁A���[���̕��͂�Y�t�t�@�C����\�ߐݒ肳��Ă���v�v�v�T�[�o�ւ������ŃA�b�v���[�h������̂ł��B<BR><BR>
-�@�h�R����i-mode�̃q�b�g�ɂ��Ai-mode�����{�̃C���^�[�l�b�g�l���̂��Ȃ�̕������߂�悤�ɂȂ�܂����B<BR>
-�@����i-mode�͂ǂ�����ł��A�C���^�[�l�b�g��d���[���������ĂƂĂ��֗��Ȃ̂ł����A�p�\�R���ƈႢ�A��p�̃v���g�R���łȂ��ƁA�C���^�[�l�b�g�Ƀf�[�^���A�b�v���[�h�ł��܂���B<BR>
-���̂Ƃ��A���̃c�[�������ɗ����܂��B<BR>
-������ƍl���������ł��c<BR>
+【改定：2000/05/08】<BR>
+<H3><FONT COLOR="#3366FF">６．メールｆｔｐ</FONT></H3>
+　このソフトは、ＷＷＷサーバとは別に、家に常時通電しているパソコンを置き、その上で動作します。<BR>
+メールサーバに来たメールを一定時間（数分～数時間）毎にチェックし、特定のsubjectのメールだけ、パソコンによみこみ、メールの文章や添付ファイルを予め設定されているＷＷＷサーバへｆｔｐでアップロードするものです。<BR><BR>
+　ドコモのi-modeのヒットにより、i-modeが日本のインターネット人口のかなりの部分を占めるようになりました。<BR>
+　このi-modeはどこからでも、インターネットやＥメールが扱えてとても便利なのですが、パソコンと違い、専用のプロトコルでないと、インターネットにデータをアップロードできません。<BR>
+このとき、このツールが役に立ちます。<BR>
+ちょっと考えただけでも…<BR>
 <UL>
-<LI>���L
-<LI>�G�b�Z�C
-<LI>�\��\
-<LI>�`����
+<LI>日記
+<LI>エッセイ
+<LI>予定表
+<LI>伝言板
 </UL>
-����ɁAWCDMA��������̌g�тł͉f����������悤�ɂȂ�̂ŁA�����Ƃd���[���ɓY�t�ł���悤�ɂȂ�ł��傤�B<BR>
-��������΁A���������f�����z�[���y�[�W�ɍڂ��邱�Ƃ��o���܂��B<BR>
-�܂��A�p�\�R�����[�X�ł���M���[����������p�g�o�ɃA�b�v���[�h���āA�ǂ�����ł��`�F�b�N�ł���悤�ɂ�����A���[���z�M�̃j���[�X�̃o�b�N�A�b�v���g�o�ɂƂ����肷�邱�Ƃ��l�����܂��B
+それに、WCDMA等次世代の携帯では映像が扱えるようになるので、きっとＥメールに添付できるようになるでしょう。<BR>
+そうすれば、こういう映像もホームページに載せることが出来ます。<BR>
+また、パソコンユースでも受信メールを自分専用ＨＰにアップロードして、どこからでもチェックできるようにしたり、メール配信のニュースのバックアップをＨＰにとったりすることも考えられます。
 <BR>
-<A HREF="#TOP_TOP">[�ڎ���]</A>
+<A HREF="#TOP_TOP">[目次へ]</A>
 <BR>
 <HR>
-�y�����L�^�z<BR>
-1999/08/13�ŁF���J<BR>
-2000/04/18�ŁFDOS���I�[�v�i�[�L���ǉ�<BR>
-2000/05/08��:���[��ftp�L���ǉ�<BR>
-2003/06/29��:tar�L���C��<BR>
+【改訂記録】<BR>
+1999/08/13版：公開<BR>
+2000/04/18版：DOS窓オープナー記事追加<BR>
+2000/05/08版:メールftp記事追加<BR>
+2003/06/29版:tar記事修正<BR>
 <HR>
-<P><A HREF="index.htm">[�z�[���֖߂�n</A><BR>
+<P><A HREF="index.htm">[ホームへ戻る］</A><BR>
 <HR><FONT SIZE=-1>Copyright (c) 1997-2000, BearBeetle, Allrights reserved.</FONT>
 </BODY>
 </HTML>

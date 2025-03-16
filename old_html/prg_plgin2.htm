@@ -1,176 +1,178 @@
+<!DOCTYPE html>
 <HTML>
 <HEAD>
+   <meta charset="UTF-8">
    <TITLE>BB Programming Lab.</TITLE>
 </HEAD>
 <BODY BACKGROUND="bcg_280.gif">
-<A NAME="TOP_TOP"></A><FONT SIZE=-1>���̃y�[�W��NetscapeNavigator
-2.0�ȍ~�y��Microsoft Internet Exploler 3.0�ȍ~�Ő���Ɍ����܂��B</FONT>
+<A NAME="TOP_TOP"></A><FONT SIZE=-1>このページはNetscapeNavigator
+2.0以降及びMicrosoft Internet Exploler 3.0以降で正常に見られます。</FONT>
 <BR><FONT SIZE=-2>Solly,Japanese only</FONT>
 <BR>
 <HR>
-<CENTER><BLINK><FONT COLOR="#3366FF"><FONT SIZE=-1>�� �a�a������ ��</FONT></FONT></BLINK></CENTER>
-<CENTER><FONT COLOR="#3366FF"><FONT SIZE=+2>Netscape �v���O�C���̍쐬�@�i���K�j</FONT></FONT></CENTER>
+<CENTER><BLINK><FONT COLOR="#3366FF"><FONT SIZE=-1>★ ＢＢ研究所 ★</FONT></FONT></BLINK></CENTER>
+<CENTER><FONT COLOR="#3366FF"><FONT SIZE=+2>Netscape プラグインの作成法（実習）</FONT></FONT></CENTER>
 
 <HR>
-<BR>�@�u�T�v�v�ł́A�b�������Ȃ����������Ǝv���܂��B�����ł́AWindows95�p�̊ȒP�ȃv���O�C�����쐬���܂��B�����ŁA����̈�`�Ԃɂ��ė������A��蕡�G�ȃv���O�C���J���̒e�݂ɂ��܂��傤�B
+<BR>　「概要」では、話が見えない方が多いと思います。ここでは、Windows95用の簡単なプラグインを作成します。ここで、動作の一形態について理解し、より複雑なプラグイン開発の弾みにしましょう。
 
-<P>�@����ł́A���̍�����T���v���v���O�C���uBBTIF�v���A<A HREF="obj/BBTIF001.lzh">����</A>����_�E�����[�h���ĉ������B
-<BR>���̃v���O�C���́ATIFF�`���y�тa�l�o�`���̃t�@�C����\������@�\�������Ă��܂��B���ׂ̈ɁA�j���[�g���i���j�̂h���������j�����S�Ƃ����摜���C�u�������g�p���܂��B������w���i�艿�F�R�X�C�W�O�O�~�j���邩�A<A HREF="http://www.newtone.co.jp/">�j���[�g���i���j�̃z�[���y�[�W</A>�ɑ̌��ł�����̂ŁA������_�E�����[�h���Ďg�p���ĉ������B�v���O�C���𓮍삳���邾���ł�����ABBTIF001.LZH�ɕt���̂c�k�k�����łn�j�ł��B
+<P>　それでは、私の作ったサンプルプラグイン「BBTIF」を、<A HREF="obj/BBTIF001.lzh">ここ</A>からダウンロードして下さい。
+<BR>このプラグインは、TIFF形式及びＢＭＰ形式のファイルを表示する機能を持っています。その為に、ニュートン（株）のＩｍａｇｅＫｉｔ４という画像ライブラリを使用します。これを購入（定価：３９，８００円）するか、<A HREF="http://www.newtone.co.jp/">ニュートン（株）のホームページ</A>に体験版があるので、これをダウンロードして使用して下さい。プラグインを動作させるだけでしたら、BBTIF001.LZHに付属のＤＬＬだけでＯＫです。
 <BR>
 <HR>
-<H3><FONT COLOR="#3366FF">�܂��́A�������Ă݂܂��傤�I</FONT></H3>
+<H3><FONT COLOR="#3366FF">まずは、動かしてみましょう！</FONT></H3>
 
 <UL>
-<LI>�_�E�����[�h����BBTIF001.LZH���𓀂��ĉ������B<BR>
-����ƁANPBTiff�Ƃ����f�B���N�g�����쐬����܂��B���̃T�u�f�B���N�g����DLLs������܂��B
-<LI>DLLs�̒��́ANPBTiff.dll���uBBTIF�v���R���p�C�������I�u�W�F�N�g�ł��B������ANavigator����program\plugins�ɃR�s�[���ĉ������B
-<LI>�c���DLL�iImgKit4���C�u�����j���A\windows\system�ɃR�s�[���ĉ������B
-<LI>Sample�T�u�f�B���N�g�����ɂ���ASample.htm��Netscape�Ń��[�h���ĉ������B
+<LI>ダウンロードしたBBTIF001.LZHを解凍して下さい。<BR>
+すると、NPBTiffというディレクトリが作成されます。このサブディレクトリにDLLsがあります。
+<LI>DLLsの中の、NPBTiff.dllが「BBTIF」をコンパイルしたオブジェクトです。これを、Navigator内のprogram\pluginsにコピーして下さい。
+<LI>残りのDLL（ImgKit4ライブラリ）を、\windows\systemにコピーして下さい。
+<LI>Sampleサブディレクトリ内にある、Sample.htmをNetscapeでロードして下さい。
 </UL>
 
-TIFF�C���[�W�i���j�ƁABMP�C���[�W�iBB���S�j���\���ł����ł��傤���H<BR>
-����ł́A���̃v���O�C���̃\�[�X�ɂ��Đ������Ă����܂��B<BR>
+TIFFイメージ（鳥）と、BMPイメージ（BBロゴ）が表示できたでしょうか？<BR>
+それでは、このプラグインのソースについて説明していきます。<BR>
 <HR>
-<H3><FONT COLOR="#3366FF">�P�D�v���W�F�N�g�̍쐬</FONT></H3>
-�܂��AVisual C++ ver5.0���g�p���āA�v���W�F�N�g���쐬���܂��B
+<H3><FONT COLOR="#3366FF">１．プロジェクトの作成</FONT></H3>
+まず、Visual C++ ver5.0を使用して、プロジェクトを作成します。
 <BR>
 <UL>
-<LI>�t�@�C��(F)���V�K�쐬(N)����A�u�v���W�F�N�g�v�́uWin32 Dynamic-Link Library�v���w�肵�āA�uNPBTiff�v���쐬���܂��B<BR>
-���v���W�F�N�g�̖��O�́A�uNP�v�ł͂��܂�A�g�[�^���W�����ȓ��ɐݒ肵�܂��B
+<LI>ファイル(F)→新規作成(N)から、「プロジェクト」の「Win32 Dynamic-Link Library」を指定して、「NPBTiff」を作成します。<BR>
+※プロジェクトの名前は、「NP」ではじまり、トータル８文字以内に設定します。
 </UL>
 
 <HR>
-<H3><FONT COLOR="#3366FF">�Q�D�v���O�C���r�c�j����A�K�v�ȃt�@�C�����W�߂�</FONT></H3>
+<H3><FONT COLOR="#3366FF">２．プラグインＳＤＫから、必要なファイルを集める</FONT></H3>
 
-Netscape�Ђ̂r�c�j�i�ڍׂ́u�T�v�v�����Q�Ɖ������j����A�K�v�ȃw�b�_�t�@�C���ƁA�e���v���[�g���W�߂܂��B<BR>
-�ȉ��̃t�@�C�����A�v���W�F�N�g�̃f�B���N�g���ɃR�s�[���܂��B
+Netscape社のＳＤＫ（詳細は「概要」をご参照下さい）から、必要なヘッダファイルと、テンプレートを集めます。<BR>
+以下のファイルを、プロジェクトのディレクトリにコピーします。
 <UL>jri.h, jri_md.h, jritypes.h, npapi.h, npupp.h, Npwin.cpp</UL>
-�܂��A�e���v���[�g�t�@�C��Wintemp.c�����l�[�����āAWinCallBack.c���쐬���܂��B<BR>
-�����O�͉��ł����܂��܂���B<BR>
-�����̃t�@�C�����v���W�F�N�g�ɒǉ����܂��B
+また、テンプレートファイルWintemp.cをリネームして、WinCallBack.cを作成します。<BR>
+※名前は何でもかまいません。<BR>
+これらのファイルをプロジェクトに追加します。
 <BR>
 <P>
 <HR>
-<H3><FONT COLOR="#3366FF">�R�D���\�[�X�t�@�C�������</FONT></H3>
-���\�[�X�t�@�C���iNPBTiff.rc�j���쐬���A�v���W�F�N�g�ɒǉ����܂��B
+<H3><FONT COLOR="#3366FF">３．リソースファイルを作る</FONT></H3>
+リソースファイル（NPBTiff.rc）を作成し、プロジェクトに追加します。
 <UL>
-	<LI>���̃��\�[�X�Ƀo�[�W��������ǉ����܂��B<BR>
+	<LI>このリソースにバージョン情報を追加します。<BR>
 	<A NAME="ABOUT_RESOURCE">
-	�����̂Ƃ��A�uBlock Header�v�̃v���p�e�B���A�u�p��(U.S.)�v�y�сuWindows,��������v�Ɏw�肵�܂��B<BR>
-	<LI>�������U�N���[�Y���ANPBTiff.rc���e�L�X�g�G�f�B�^�ŊJ���A�ȉ��̂Q�s��ǉ����܂��B<BR>
+	※このとき、「Block Header」のプロパティを、「英語(U.S.)」及び「Windows,複数言語」に指定します。<BR>
+	<LI>これを一旦クローズし、NPBTiff.rcをテキストエディタで開き、以下の２行を追加します。<BR>
 	 VALUE "FileExtents", "tiff|tif|bmp|dib\0"<BR>
 	 VALUE "FileOpenName", "TIFF Image(*.tiff)|TIFF Image(*.tif)|BMP Image(*.bmp)|DIB Image(*.dib)\0"<BR>
 	 VALUE "MIMEType", "image/tiff|image/tif|image/bmp|image/dib\0"<BR>
-	<UL>�����̒l�́ANavigator���v���O�C���̏���m�邽�߂̂��̂ŁAFileExtents��FileOpenName�́A�v���O�C���̈����t�@�C���̊g���q�Ƃ��̐����AMIMEType��MIME�^�C�v���L�q���܂��B��̃v���O�C���������̃f�[�^�������ꍇ�́A�e�t�@�C���̊g���q��MIME�^�C�v��"|"�ŋ�؂��ċL�q���܂��B</UL>
+	<UL>これらの値は、Navigatorがプラグインの情報を知るためのもので、FileExtentsとFileOpenNameは、プラグインの扱うファイルの拡張子とその説明、MIMETypeはMIMEタイプを記述します。一つのプラグインが複数のデータを扱う場合は、各ファイルの拡張子とMIMEタイプを"|"で区切って記述します。</UL>
 </UL>
 <HR>
 
-<H3><FONT COLOR="#3366FF">�S�DImageKit4��API����������</FONT></H3>
-ImageKit4(�摜���C�u�����j�̃T���v�����Q�l�ɁAAPI������܂��iImgKitApi.c,ImgKitApi.h�j�BImgkdef.h��Imagekit.h�̓T���v�������̂܂ܗ��p���܂��B�����̐����ɂ��Ă͏ȗ����܂��B�ڂ����̓\�[�X�t�@�C�����Q�Ƃ��ĉ������B
-<BR>BBTIF�v���O�C���ł́A�ȉ��̊֐��̂ݎg�p���܂��B
+<H3><FONT COLOR="#3366FF">４．ImageKit4のAPIを実装する</FONT></H3>
+ImageKit4(画像ライブラリ）のサンプルを参考に、APIをつくります（ImgKitApi.c,ImgKitApi.h）。Imgkdef.hとImagekit.hはサンプルをそのまま利用します。これらの説明については省略します。詳しくはソースファイルを参照して下さい。
+<BR>BBTIFプラグインでは、以下の関数のみ使用します。
 <UL>
-	<LI>LoadImgKitDll()����������DLL�̃��[�h
-	<LI>UnLoadImgKitDll()��������DLL�̃A�����[�h
-	<LI>ImgKitFileLoad()����������t�@�C������C���[�W�����[�h
-	<LI>ImgKitMemFree()�����������C���[�W�̉��
-	<LI>ImgKitDisplay()�����������C���[�W�i�摜�j�̕`��
+	<LI>LoadImgKitDll()･･････････DLLのロード
+	<LI>UnLoadImgKitDll()････････DLLのアンロード
+	<LI>ImgKitFileLoad()･････････ファイルからイメージをリード
+	<LI>ImgKitMemFree()･･････････イメージの解放
+	<LI>ImgKitDisplay()･･････････イメージ（画像）の描画
 </UL>
-ImgKitApi.c���v���W�F�N�g�ɒǉ����āA�S�Ă̏����͐����܂����B���Ƃ́AWinCallBack.c��ҏW���ăv���O�C�������������邾���ł��B<BR>
+ImgKitApi.cをプロジェクトに追加して、全ての準備は整いました。あとは、WinCallBack.cを編集してプラグインを完成させるだけです。<BR>
 <HR>
-<H3><FONT COLOR="#3366FF">�T�D�v���O�C������������</FONT></H3>
-�T���v���\�[�X�ł́A�R�����g��a�󂵂Ă��܂����A�����I�ɕύX�����͈̂ȉ��̓��e�݂̂ł��B<BR>
+<H3><FONT COLOR="#3366FF">５．プラグインを実装する</FONT></H3>
+サンプルソースでは、コメントを和訳していますが、実質的に変更したのは以下の内容のみです。<BR>
 <UL>
-	<LI>�v���C�x�[�g�C���X�^���X���`���Ă���PluginInstance�\���̂ɁAImageKit4�̃n���h��hImgKit��ǉ����܂�</LI>
-	<LI>NPP_Initialize�ɁA�ȉ��̂R�s��ǉ����܂��B</LI>
+	<LI>プライベートインスタンスを定義しているPluginInstance構造体に、ImageKit4のハンドルhImgKitを追加します</LI>
+	<LI>NPP_Initializeに、以下の３行を追加します。</LI>
 	<UL>
-		// ImageKit�̃��[�h<BR>
+		// ImageKitのロード<BR>
 		if(LoadImgKitDll()==FALSE)
-		�@�@�@�@ return NPERR_GENERIC_ERROR;
+		　　　　 return NPERR_GENERIC_ERROR;
 	</UL>
-	<LI>NPP_Shutdown�ɁA�ȉ��̂Q�s��ǉ����܂��B
+	<LI>NPP_Shutdownに、以下の２行を追加します。
 	<UL>
-		// ImageKit�̃A�����[�h<BR>
+		// ImageKitのアンロード<BR>
 		UnLoadImgKitDll();
 </UL>
 
-<LI>NPP_Destroy�Ɉȉ��̂Q�s��ǉ����܂��B</LI>
+<LI>NPP_Destroyに以下の２行を追加します。</LI>
 <UL>
 	if (This->hImgKit != 0)<BR>
-	�@�@�@�@ ImgKitMemFree(This->hImgKit);</UL>
-	<LI>NPP_NewStream�Ɉȉ��̂Q�s��ǉ����܂��B
+	　　　　 ImgKitMemFree(This->hImgKit);</UL>
+	<LI>NPP_NewStreamに以下の２行を追加します。
 	<UL>
-	// File Only Mode�ɐݒ肷��<BR>
-	�@�@�@�@ *stype=NP_ASFILEONLY;</UL>
-	<LI>NPP_StreamAsFile�Ɉȉ��̍s��ǉ����܂��B
+	// File Only Modeに設定する<BR>
+	　　　　 *stype=NP_ASFILEONLY;</UL>
+	<LI>NPP_StreamAsFileに以下の行を追加します。
 	<UL>
-		// ImgKit�ɂ��t�@�C�����[�h<BR>
+		// ImgKitによりファイルロード<BR>
 		if (This->hImgKit != 0)<BR>
-		�@�@�@�@ ImgKitMemFree(This->hImgKit);<BR>
+		　　　　 ImgKitMemFree(This->hImgKit);<BR>
 		This->hImgKit = ImgKitFileLoad((char *)fname, "", "");<BR>
-		// �ĕ`��<BR>
+		// 再描画<BR>
 		InvalidateRect( This->fhWnd, NULL, TRUE );
 	</UL>
-	<LI>�E�B���h�E�v���V�[�W���iPlginWindowProc�j���ȉ��̂悤�ɏ��������܂��B
+	<LI>ウィンドウプロシージャ（PlginWindowProc）を以下のように書き換えます。
 	<UL>
 		PluginInstance* This = (PluginInstance*) GetProp(hWnd, gInstanceLookupString);<BR>
-		PAINT	STRUCT�@ps;<BR>
+		PAINT	STRUCT　ps;<BR>
 		switch( Msg ) {<BR>
-		�@�@�@�@ case WM_PAINT: {<BR>
-		�@�@�@�@ // �ĕ`��<BR>
-		�@�@�@�@ BeginPaint(hWnd, &amp;ps);<BR>
-		�@�@�@�@ if (This->hImgKit != 0)<BR>
-		�@�@�@�@ �@�@�@�@ ImgKitDisplay(hWnd, This->hImgKit, FALSE);<BR>
-		�@�@�@�@ else{<BR>
-		�@�@�@�@ �@�@�@�@ TextOut(hWnd,0,0,"Cannot Open Error",17);<BR>
-		�@�@�@�@ �@�@�@�@ EndPaint(hWnd, &amp;ps);<BR>
-		�@�@�@�@ �@�@�@�@ break;<BR>
-		�@�@�@�@ }<BR>
-		�@�@�@�@ default:<BR>
-		�@�@�@�@ �@�@�@�@ This->fDefaultWindowProc( hWnd, Msg, wParam, lParam);<BR>
+		　　　　 case WM_PAINT: {<BR>
+		　　　　 // 再描画<BR>
+		　　　　 BeginPaint(hWnd, &amp;ps);<BR>
+		　　　　 if (This->hImgKit != 0)<BR>
+		　　　　 　　　　 ImgKitDisplay(hWnd, This->hImgKit, FALSE);<BR>
+		　　　　 else{<BR>
+		　　　　 　　　　 TextOut(hWnd,0,0,"Cannot Open Error",17);<BR>
+		　　　　 　　　　 EndPaint(hWnd, &amp;ps);<BR>
+		　　　　 　　　　 break;<BR>
+		　　　　 }<BR>
+		　　　　 default:<BR>
+		　　　　 　　　　 This->fDefaultWindowProc( hWnd, Msg, wParam, lParam);<BR>
 		}<BR>
 		return 0;
 	</UL>
 	<BR>
-	�ύX�_�͂��ꂾ���ł��B<BR>
-	���Ƃ̓r���h����Ί����ł��B
+	変更点はこれだけです。<BR>
+	あとはビルドすれば完成です。
 </UL>
 
-<HR><H3><FONT COLOR="#3366FF">�U�D����̐���</FONT></H3>
+<HR><H3><FONT COLOR="#3366FF">６．動作の説明</FONT></H3>
 <FONT COLOR="#000000">
-�@���̃v���O�C���́A�t�@�C�����[�h�ō쐬���Ă��邽�ߔ��ɃV���v���ɂȂ��Ă��܂��B�t�@�C�����[�h�́ANetscape��URL����_�E�����[�h�����f�[�^�����ׂă��[�J���E�L���b�V���Ƀ_�E�����[�h���āA���̌�A</FONT>
-NPP_StreamAsFile���ďo���A�L���b�V���t�@�C���ւ̃p�X���v���O�C���ɓn���܂��B
-<BR>�@�S�̗̂���͈ȉ��̂悤�ɂȂ�܂��B
+　このプラグインは、ファイルモードで作成しているため非常にシンプルになっています。ファイルモードは、NetscapeがURLからダウンロードしたデータをすべてローカル・キャッシュにダウンロードして、その後、</FONT>
+NPP_StreamAsFileを呼出し、キャッシュファイルへのパスをプラグインに渡します。
+<BR>　全体の流れは以下のようになります。
 <BR>
 <UL>
-	<LI>�v���O�C�������[�h�����ƁA�܂�NPP_Initialize���Ăяo�����B���̂Ƃ��ALoadImgKitDll()���Ăяo����ImageKit4���C�u���������[�h����B</LI>
-	<LI>���ɁA�摜�f�[�^�ɑΉ����ăC���X�^���X���쐬����ANPP_New���Ăяo����܂��B�����ł́A�e���v���[�g�̏����݂̂ŁA�ύX�͍s���Ă��܂���B</LI>
-	<LI>�Â��ĉ摜�f�[�^�\���A�X�g���[�����쐬����ANPP_NewStream���Ăяo����܂��B���̂Ƃ��A�X�g���[���̏������[�h��ݒ�ł��܂��̂ŁA�t�@�C�����[�h�ɂ��邽�߁A�X�^�C���i*stype�j��NP_ASFILEONLY�ɐݒ肵�܂��B</LI>
-	<LI>�X�g���[���i�摜�f�[�^�j���S�ă��[�J���L���b�V���ɓǂݍ��܂��ƁANPP_StreamAsFile���Ăяo����܂��B</LI>
-	<BR>�����ŁAImageKit4��ImgKitFileLoad���ďo���A�摜�f�[�^���摜���C�u�����ɓǂݍ��݂܂��B
-	<LI>���̒���ANPP_DestroyStream���ďo���A���̌�X�g���[�����j������܂��B���̂Ƃ��́A�e���v���[�g�̏����̂܂܂ŁA�ύX�͉����܂���B�i�X�g���[�����S�ăv���O�C���ɑ�����ƁANavigator�̓X�g���[����j�����܂��B���̈׃C���X�^���X�̃v���C�x�[�g�f�[�^�ɃX�g���[���̓��e���X�g�b�N���Ă����K�v������܂��j�B</LI>
-	<LI>�E�B���h�E�C�x���g����������Ɛ����A�E�B���h�E�v���V�[�W���iPlginWindowProc�j���Ăяo����܂��B����쐬�����v���O�C���ł́A�`��iWM_PAINT�j�̂݃n���h�����AImgKitDisplay���g���čĕ`����s���Ă��܂��B</LI>
-	<LI>�E�B���h�E���N���[�Y����Ƃ��ɂ́ANPP_Destroy���Ăяo����܂��B���̂Ƃ��ɁAImageKit�i�摜���C�u�����j�̃�������������A�摜�f�[�^��j�����܂��B</LI>
-	<LI>�Ō�Ƀv���O�C�����A�����[�h�����Ƃ��ɁANPP_Shutdown���Ăяo����܂��B���̂Ƃ��AUnLoadImgKitDll()����т����āAImageKit4���A�����[�h���܂��B</LI>
+	<LI>プラグインがロードされると、まずNPP_Initializeが呼び出される。このとき、LoadImgKitDll()を呼び出してImageKit4ライブラリをロードする。</LI>
+	<LI>つぎに、画像データに対応してインスタンスが作成され、NPP_Newが呼び出されます。ここでは、テンプレートの処理のみで、変更は行っていません。</LI>
+	<LI>つづいて画像データ表す、ストリームが作成され、NPP_NewStreamが呼び出されます。このとき、ストリームの処理モードを設定できますので、ファイルモードにするため、スタイル（*stype）をNP_ASFILEONLYに設定します。</LI>
+	<LI>ストリーム（画像データ）が全てローカルキャッシュに読み込まれると、NPP_StreamAsFileが呼び出されます。</LI>
+	<BR>ここで、ImageKit4のImgKitFileLoadを呼出し、画像データを画像ライブラリに読み込みます。
+	<LI>この直後、NPP_DestroyStreamを呼出し、その後ストリームが破棄されます。このときは、テンプレートの処理のままで、変更は加えません。（ストリームが全てプラグインに送られると、Navigatorはストリームを破棄します。この為インスタンスのプライベートデータにストリームの内容をストックしておく必要があります）。</LI>
+	<LI>ウィンドウイベントが発生すると随時、ウィンドウプロシージャ（PlginWindowProc）が呼び出されます。今回作成したプラグインでは、描画（WM_PAINT）のみハンドルし、ImgKitDisplayを使って再描画を行っています。</LI>
+	<LI>ウィンドウをクローズするときには、NPP_Destroyが呼び出されます。このときに、ImageKit（画像ライブラリ）のメモリを解放し、画像データを破棄します。</LI>
+	<LI>最後にプラグインがアンロードされるときに、NPP_Shutdownが呼び出されます。このとき、UnLoadImgKitDll()をよびだして、ImageKit4をアンロードします。</LI>
 </UL>
 
 <HR>
-<H3><FONT COLOR="#3366FF">�V�D�I����</FONT></H3>
-�i�����ō�����j�ȒP�ȃv���O�C����ʂ��āA�v���O�C���̊�{�ɂ��Đ������܂����B�����g�A���܂̂Ƃ���m���͂��̒��x���������Ă��܂��񂪁A
-���ƈ���⃁�j���[���T�|�[�g���邱�Ƃɂ�藧�h�ȃv���O�C���ɂȂ�Ǝv���܂��B<BR>
+<H3><FONT COLOR="#3366FF">７．終わりに</FONT></H3>
+（半日で作った）簡単なプラグインを通じて、プラグインの基本について説明しました。私自身、いまのところ知識はこの程度しか持っていませんが、
+あと印刷やメニューをサポートすることにより立派なプラグインになると思います。<BR>
 <A NAME="FOR_IE">
-�@���h�d�́AActiveX�̎d�l����ʓI�ł����A�ꉞNetscape v.2�̃v���O�C���ɂ��Ή����Ă��܂��B<BR>
-���ׁ̈A����쐬�����v���O�C���̏ꍇ�ANPP_NewStream��*stype=NP_ASFILEONLY;�ɂ͑Ή����Ă��Ȃ�(v.3�@�\�̂��߁j�̂ŁA<BR>
-�������A*stype=NP_ASFILE;�ɂ���΁A�h�d�R�ł����삷��͂��ł��i�����Ă͂��܂���j�B
+　尚ＩＥは、ActiveXの仕様が一般的ですが、一応Netscape v.2のプラグインにも対応しています。<BR>
+この為、今回作成したプラグインの場合、NPP_NewStreamで*stype=NP_ASFILEONLY;には対応していない(v.3機能のため）ので、<BR>
+ここを、*stype=NP_ASFILE;にすれば、ＩＥ３でも動作するはずです（試してはいません）。
 <P>
 <HR>
-�y�����L�^�z<BR>
-98/04/05�ŁF���J<BR>
-98/04/20�ŁF<UL>
-�u�R�D���\�[�X�t�@�C�������v��<A HREF="#ABOUT_RESOURCE">���\�[�X�̌���ɂ��Ă̋L�q</A>�ǉ�<BR>
-�u�V�D�I���Ɂv��<A HREF="#FOR_IE">�h�d�ɂ��Ă̋L�q</A>�ǉ�<BR>
+【改訂記録】<BR>
+98/04/05版：公開<BR>
+98/04/20版：<UL>
+「３．リソースファイルを作る」に<A HREF="#ABOUT_RESOURCE">リソースの言語についての記述</A>追加<BR>
+「７．終わりに」に<A HREF="#FOR_IE">ＩＥについての記述</A>追加<BR>
 </UL>
 <HR>
-<P><A HREF="index.htm">[�z�[���֖߂�n</A>
+<P><A HREF="index.htm">[ホームへ戻る］</A>
 <HR><FONT SIZE=-1>Copyright (c) 1997-1999, BearBeetle, Allrights reserved.</FONT>
 </BODY>
 </HTML>

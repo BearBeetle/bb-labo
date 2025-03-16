@@ -1,226 +1,228 @@
+<!DOCTYPE html>
 <HTML>
 <HEAD>
+   <meta charset="UTF-8">
    <TITLE>BB Lab, HELP File</TITLE>
 </HEAD>
 <BODY BACKGROUND="bcg_280.gif">
-<A NAME="TOP_TOP"></A><FONT SIZE=-1>���̃y�[�W��Netscape
-Navigator 2.0�ȍ~�y��Microsoft Internet Explorer 3.0�ȍ~�Ő���Ɍ����܂��B</FONT>
+<A NAME="TOP_TOP"></A><FONT SIZE=-1>このページはNetscape
+Navigator 2.0以降及びMicrosoft Internet Explorer 3.0以降で正常に見られます。</FONT>
 <BR><FONT SIZE=-2>Solly,Japanese only</FONT>
 <BR>
 <HR>
-<CENTER><BLINK><FONT COLOR="#3366FF"><FONT SIZE=-1>�� �a�a������ ��</FONT></FONT></BLINK></CENTER>
-<CENTER><FONT COLOR="#3366FF"><FONT SIZE=+2>�g�d�k�o�t�@�C������</FONT></FONT></CENTER>
+<CENTER><BLINK><FONT COLOR="#3366FF"><FONT SIZE=-1>★ ＢＢ研究所 ★</FONT></FONT></BLINK></CENTER>
+<CENTER><FONT COLOR="#3366FF"><FONT SIZE=+2>ＨＥＬＰファイル入門</FONT></FONT></CENTER>
 <P>
-&nbsp;�@�g�d�k�o�t�@�C���́A�g���q���A.HLP�̃t�@�C���ŁA�\�t�g�̎���Ȃǂ��y�[�p���X�ōs�����̂ł��B<BR>
-�ŋ߂͂g�s�l�k�Z�p�̔��B�ɂ��AMicrosoft�Ђ�HELP��HTML�ɕύX������j�̂悤�ł����A�y������R���p�N�g���ł́AHELP�t�@�C���̕����܂��g����Ǝv���܂��B<BR>
-�@�����ł́A�g�d�k�o�t�@�C���̓���I�ȕ����݂̂ӂ�܂��B�ڍׂɂ��ẮA�A�X�L�[�o�ł��ǂ���������o�Ă���悤�ł��B<BR>
-�����g�A���̉��������肵�����̂ł����A�����񂹂񖼑O���킩��Ȃ��̂œ���ł��܂���(T_T)�B<BR>
-�@����ł͂܂��ȉ��̃c�[����p�ӂ��ĉ������B
+&nbsp;　ＨＥＬＰファイルは、拡張子が、.HLPのファイルで、ソフトの取説などをペーパレスで行うものです。<BR>
+最近はＨＴＭＬ技術の発達により、Microsoft社もHELPをHTMLに変更する方針のようですが、軽快さやコンパクトさでは、HELPファイルの方がまだ使えると思います。<BR>
+　ここでは、ＨＥＬＰファイルの入門的な部分のみふれます。詳細については、アスキー出版より良い解説書が出ているようです。<BR>
+私自身、この解説書を入手したいのですが、いかんせん名前がわからないので入手できません(T_T)。<BR>
+　それではまず以下のツールを用意して下さい。
 
 <UL>
-<LI>Word�i�q�s�e�t�@�C���𐶐��ł���A�G�f�B�^�j</LI>
+<LI>Word（ＲＴＦファイルを生成できる、エディタ）</LI>
 <LI>Microsoft Help Workshop</LI>
 <BR>
-VC++/VB���̊J���c�[���ɓY�t����Ă��܂����A�ŋ߃t���[�������̂ŁA<A HREF="ftp://ftp.microsoft.com/softlib/MSLFILES/hcwsetup.EXE">��������</A>�_�E���[�h�ł��܂��B<BR>
-��WORD 97����A�q�s�e�̏������ς�����悤�ŁA�Â��o�[�W������Help Workshop�͑Ή��ł��Ȃ��Ȃ�܂����B<BR>�@���̏ꍇ��<A HREF="ftp://ftp.microsoft.com/softlib/MSLFILES/hcwsetup.EXE">��������</A>�_�E�����[�h���ĉ������B</UL>
+VC++/VB等の開発ツールに添付されていますが、最近フリー化したので、<A HREF="ftp://ftp.microsoft.com/softlib/MSLFILES/hcwsetup.EXE">ここから</A>ダウンードできます。<BR>
+※WORD 97から、ＲＴＦの書式が変わったようで、古いバージョンのHelp Workshopは対応できなくなりました。<BR>　この場合も<A HREF="ftp://ftp.microsoft.com/softlib/MSLFILES/hcwsetup.EXE">ここから</A>ダウンロードして下さい。</UL>
 
 <HR>
-<H2><FONT COLOR="#000000">�P�D�܂��́A�ȒP�Ȃg�d�k�o�t�@�C��������Ă݂܂��傤�I</FONT></H2>
-<H3><FONT COLOR="#000000">�P�D�P�D�q�s�e�t�@�C�������</FONT></H3>
+<H2><FONT COLOR="#000000">１．まずは、簡単なＨＥＬＰファイルを作ってみましょう！</FONT></H2>
+<H3><FONT COLOR="#000000">１．１．ＲＴＦファイルを作る</FONT></H3>
 
-<FONT COLOR="#000000">�@�v�������𗧂��グ�ĉ������B</FONT><BR>
-<FONT COLOR="#000000">�@�v�������ŁA�܂��ȉ��̕��͂�����ĉ������B</FONT>
+<FONT COLOR="#000000">　Ｗｏｒｄを立ち上げて下さい。</FONT><BR>
+<FONT COLOR="#000000">　Ｗｏｒｄで、まず以下の文章を作って下さい。</FONT>
 <BR>
 <BR>
 <TABLE  BORDER=1 WIDTH=500 cellspacing="0" bgcolor="#C0C0E0" >
-<TR><TD>����́A�w���v�t�@�C���ł��B
-<P>�悤�����I</TD></TR>
+<TR><TD>これは、ヘルプファイルです。
+<P>ようこそ！</TD></TR>
 </TABLE>
 
-�u���O��t���ĕۑ�(A)�v�ŁA�ۑ����ĉ������B���̂Ƃ��A�u�t�@�C���̎��(T)�v���u���b�`�e�L�X�g�`���i�q�s�e�j�v�ɂ��ĉ������B
-<BR>�t�@�C�����͓K���ɕt���Ă��܂��܂���B����́A�uTEST1.RTF�v�ɂ��܂��B
+「名前を付けて保存(A)」で、保存して下さい。このとき、「ファイルの種類(T)」を「リッチテキスト形式（ＲＴＦ）」にして下さい。
+<BR>ファイル名は適当に付けてかまいません。今回は、「TEST1.RTF」にします。
 <BR>
 
-<H3>�P�D�Q�D�w���v�v���W�F�N�g�����</H3>
+<H3>１．２．ヘルププロジェクトを作る</H3>
 
 <UL>
 
-<LI>Help Workshop�𗧂��グ�ĉ������B</LI>
-<LI>�uFile�v���uNew�v��I�т܂��B</LI>
+<LI>Help Workshopを立ち上げて下さい。</LI>
+<LI>「File」→「New」を選びます。</LI>
 
 <UL>
-<LI>�uHelp Project�v��I�т܂��B</LI>
-<LI>RTF�t�@�C���Ɠ����f�B���N�g���i�t�H���_�j�Ɉړ����āA�utest.hlp�v�Ƃ����t�@�C�����ɂ��ĉ������B</LI>
-<LI>�utest.hpj�v�E�B���h�E���쐬����܂��B</LI>
+<LI>「Help Project」を選びます。</LI>
+<LI>RTFファイルと同じディレクトリ（フォルダ）に移動して、「test.hlp」というファイル名にして下さい。</LI>
+<LI>「test.hpj」ウィンドウが作成されます。</LI>
 </UL>
 
-<LI>�uFiles...�v���N���b�N���܂�</LI>
-<LI>�uAdd...�v���N���b�N���܂��B</LI>
+<LI>「Files...」をクリックします</LI>
+<LI>「Add...」をクリックします。</LI>
 
 <UL>
-<LI>�utest.rtf�v��I�т܂��B</LI>
-<LI>�uOK�v���N���b�N���܂��B</LI>
+<LI>「test.rtf」を選びます。</LI>
+<LI>「OK」をクリックします。</LI>
 </UL>
 
-<LI>�uSave and Complile�v��I�т܂��B</LI>
+<LI>「Save and Complile」を選びます。</LI>
 
 </UL>
 
-�ȏ�ŁAHELP�t�@�C�����쐬����܂��B
+以上で、HELPファイルが作成されます。
 
 <P>
-HELP�t�@�C���utest1.hlp�v���N�����Ă݂܂��傤�B<BR>�����ƕ\������܂������H<BR>
-���̂悤�ɊȒP�Ƀw���v�t�@�C���͍쐬�ł��܂��B�����āA����������ƌ��ڂ̂悢�w���v�t�@�C��������Ă݂܂��傤�I
+HELPファイル「test1.hlp」を起動してみましょう。<BR>ちゃんと表示されましたか？<BR>
+このように簡単にヘルプファイルは作成できます。続いて、もうちょっと見目のよいヘルプファイルを作ってみましょう！
 <P>
 
 <HR>
 
-<H2>�Q�D�ڎ��t���̂g�s�l�k�t�@�C�������܂��傤�I</H2>
+<H2>２．目次付きのＨＴＭＬファイルを作りましょう！</H2>
 
-<H3><FONT COLOR="#000000">�Q�D�P�D�q�s�e�t�@�C�������</FONT></H3>
+<H3><FONT COLOR="#000000">２．１．ＲＴＦファイルを作る</FONT></H3>
 
 <UL>
-<LI><FONT COLOR="#000000">�@�@�܂��v�������ŁA�ȉ��̕��͂�����ĉ������B</FONT></LI>
+<LI><FONT COLOR="#000000">　　まずＷｏｒｄで、以下の文章を作って下さい。</FONT></LI>
 <BR>&nbsp;
 
 <TABLE  BORDER=1 WIDTH=500 cellspacing="0" bgcolor="#C0C0E0" >
 <TR><TD>
-<H3>#�^�C�g���i��P�́j
-�@<FONT SIZE=+0>(���P�s�ڂɏ����j</FONT></H3>
-��P�̖͂{��
+<H3>#タイトル（第１章）
+　<FONT SIZE=+0>(←１行目に書く）</FONT></H3>
+第１章の本文
 <H3>
-------------------- <FONT SIZE=+0>(���y�[�W��}���j</FONT></H3>
+------------------- <FONT SIZE=+0>(改ページを挿入）</FONT></H3>
 
 <H3>
-#�^�C�g���i��Q�́j �@�@�@<FONT SIZE=+0>(���P�s�ڂɏ����j</FONT></H3>
-��Q�̖͂{��</TD>
+#タイトル（第２章） 　　　<FONT SIZE=+0>(←１行目に書く）</FONT></H3>
+第２章の本文</TD>
 </TR>
 </TABLE>
 
-���^�C�g���P�̑O�ɃJ�[�\���������Ă����A�u�}��(I)�v���u����(N)�v���i�C�ӂ̒��ߔԍ��j�ɁA��������āA�u�n�j�v���N���b�N���ĉ������B
-<BR>�@�����āA�i���߃E�B���h�E�j�ɁA�uID_TITLE1�v�Ɠ��͂��ĉ������B
-<BR>�@�^�C�g���Q�����l�ɁuID_TITLE2�v����͂��ĉ������B
+※タイトル１の前にカーソルを持っていき、「挿入(I)」→「注釈(N)」→（任意の注釈番号）に、＃をいれて、「ＯＫ」をクリックして下さい。
+<BR>　そして、（注釈ウィンドウ）に、「ID_TITLE1」と入力して下さい。
+<BR>　タイトル２も同様に「ID_TITLE2」を入力して下さい。
 <BR>
 <LI>
-�t�@�C�����A�uTEST2.RTF�v�ŕۑ����ĉ������B</LI>
+ファイル名、「TEST2.RTF」で保存して下さい。</LI>
 </UL>
 
-<H3>�Q�D�Q�D�w���v�v���W�F�N�g�����</H3>
+<H3>２．２．ヘルププロジェクトを作る</H3>
 
 <UL>
-<LI>Help Workshop�𗧂��グ�ĉ������B</LI>
-<LI>�uFile�v���uNew�v��I�т܂��B</LI>
+<LI>Help Workshopを立ち上げて下さい。</LI>
+<LI>「File」→「New」を選びます。</LI>
 <UL>
-<LI>�uHelp Project�v��I�т܂��B</LI>
-<LI>RTF�t�@�C���Ɠ����f�B���N�g���i�t�H���_�j�Ɉړ����āA�utest2.hlp�v�Ƃ����t�@�C�����ɂ��ĉ������B</LI>
-<LI>�utest2.hpj�v�E�B���h�E���쐬����܂��B</LI>
+<LI>「Help Project」を選びます。</LI>
+<LI>RTFファイルと同じディレクトリ（フォルダ）に移動して、「test2.hlp」というファイル名にして下さい。</LI>
+<LI>「test2.hpj」ウィンドウが作成されます。</LI>
 </UL>
-<LI>�uFiles...�v���N���b�N���܂�</LI>
-<LI>�uAdd...�v���N���b�N���܂��B</LI>
+<LI>「Files...」をクリックします</LI>
+<LI>「Add...」をクリックします。</LI>
 <UL>
-<LI>�utest2.rtf�v��I�т܂��B</LI>
-<LI>�uOK�v���N���b�N���܂��B</LI>
+<LI>「test2.rtf」を選びます。</LI>
+<LI>「OK」をクリックします。</LI>
 </UL>
-<LI>�uFile�v���uNew�v��I�т܂��B</LI>
+<LI>「File」→「New」を選びます。</LI>
 <UL>
-<LI>�uHelp Contents�v��I�т܂��B</LI>
-<LI>�uDefault fileame(and window)�v�ɁA�utest2�v�Ɠ��͂��܂��B</LI>
-<LI>�uDefault title�v�ɁA�u�e�X�g�Q�v�Ɠ��͂��܂��B</LI>
-<LI>�uAdd Above...�v���N���b�N���܂��B</LI>
+<LI>「Help Contents」を選びます。</LI>
+<LI>「Default fileame(and window)」に、「test2」と入力します。</LI>
+<LI>「Default title」に、「テスト２」と入力します。</LI>
+<LI>「Add Above...」をクリックします。</LI>
 <UL>
-<LI>�uTitle�v�Ɂu�^�C�g��(��P�́j�v�Ɠ��͂��܂��B</LI>
-<LI>�uTopic ID�v�ɁuID_TITLE1�v�Ɠ��͂��܂��B</LI>
+<LI>「Title」に「タイトル(第１章）」と入力します。</LI>
+<LI>「Topic ID」に「ID_TITLE1」と入力します。</LI>
 </UL>
 
-<LI>�uAdd Below..�v���N���b�N���܂��B</LI>
+<LI>「Add Below..」をクリックします。</LI>
 <UL>
-<LI>�uTitle�v�Ɂu�^�C�g��(��Q�́j�v�Ɠ��͂��܂��B</LI>
-<LI>�uTopic ID�v�ɁuID_TITLE2�v�Ɠ��͂��܂��B</LI>
+<LI>「Title」に「タイトル(第２章）」と入力します。</LI>
+<LI>「Topic ID」に「ID_TITLE2」と入力します。</LI>
 </UL>
 </UL>
 
-<LI>�uFile�v���uSave As...�v��I�����A�R���e���c�t�@�C�����Ɂutest2.cnt�v���w�肵�ăZ�[�u���܂��B</LI>
-<LI>�utest2.hpj�v�E�B���h�E��I������B</LI>
-<LI>�uSave and Complile�v��I�т܂��B</LI>
+<LI>「File」→「Save As...」を選択し、コンテンツファイル名に「test2.cnt」を指定してセーブします。</LI>
+<LI>「test2.hpj」ウィンドウを選択する。</LI>
+<LI>「Save and Complile」を選びます。</LI>
 </UL>
-�ȏ�ŁAHELP�t�@�C�����쐬����܂��B
+以上で、HELPファイルが作成されます。
 
-<P>HELP�t�@�C���utest1.hlp�v���N�����Ă݂܂��傤�B<BR>
-���x�́A�ڎ����\�������n�Y�ł��B�����ƕ\������܂������H<BR>
-���̂悤�ɖڎ����쐬���邱�Ƃ��ł��܂��B<BR>
-�܂��ARTF�t�@�C�����ɁA���߁u#�v��}�����AID_XXX�Ɩ��t���邱�Ƃɂ��A���̕����ɖڎ�����邱�Ƃ��ł��܂��B
+<P>HELPファイル「test1.hlp」を起動してみましょう。<BR>
+今度は、目次が表示されるハズです。ちゃんと表示されましたか？<BR>
+このように目次を作成することができます。<BR>
+また、RTFファイル中に、注釈「#」を挿入し、ID_XXXと名付けることにより、その部分に目次を作ることができます。
 <BR>
 <HR>
-<H2>�R�D�{�����Ƀ����N�𒣂�܂��傤�B</H2>
-�����N�𒣂�̂́A�q�s�e�t�@�C���̕ύX�����ł��݂܂��BTEST2.RTF�Ɉȉ��̂悤�ɂP�s�ǉ����܂��傤�B
+<H2>３．本文中にリンクを張りましょう。</H2>
+リンクを張るのは、ＲＴＦファイルの変更だけですみます。TEST2.RTFに以下のように１行追加しましょう。
 <BR>
 <TABLE  BORDER=1 WIDTH=500 cellspacing="0" bgcolor="#C0C0E0" >
 <TR>
 <TD>
 <H3>
-#�^�C�g���i��P�́j�@�@
-�@<FONT SIZE=+0>(���P�s�ڂɏ����j</FONT></H3>
-��P�̖͂{��&nbsp;
-<BR>�����N�𒣂邼�[�F<U><FONT COLOR="#003300">�������N���b�N</FONT><FONT COLOR="#990000">I</FONT></U><FONT COLOR="#990000">D_TEST2</FONT>&nbsp;
+#タイトル（第１章）　　
+　<FONT SIZE=+0>(←１行目に書く）</FONT></H3>
+第１章の本文&nbsp;
+<BR>リンクを張るぞー：<U><FONT COLOR="#003300">ここをクリック</FONT><FONT COLOR="#990000">I</FONT></U><FONT COLOR="#990000">D_TEST2</FONT>&nbsp;
 <H3>
-------------------- <FONT SIZE=+0>(���y�[�W��}���j</FONT></H3>
+------------------- <FONT SIZE=+0>(改ページを挿入）</FONT></H3>
 
 <H3>
-#�^�C�g���i��Q�́j �@�@�@<FONT SIZE=+0>(���P�s�ڂɏ����j</FONT></H3>
-��Q�̖͂{��</TD>
+#タイトル（第２章） 　　　<FONT SIZE=+0>(←１行目に書く）</FONT></H3>
+第２章の本文</TD>
 </TR>
 </TABLE>
-<U><FONT COLOR="#003300">�������N���b�N�F</FONT></U><FONT COLOR="#000000">�����N�𒣂肽���͈͂��A�����i�Q�d�j�ɂ��ĉ������B</FONT>
-<BR><FONT COLOR="#990000"><U>I</U>D_TEST2</FONT><FONT COLOR="#000000">�F�����N��̂h�c���B�������ŋL�q���܂��B���Q�d�����̂��ƂɊԂ��������ɋL�q���Ȃ���΂Ȃ�܂���B</FONT>
+<U><FONT COLOR="#003300">ここをクリック：</FONT></U><FONT COLOR="#000000">リンクを張りたい範囲を、下線（２重）にして下さい。</FONT>
+<BR><FONT COLOR="#990000"><U>I</U>D_TEST2</FONT><FONT COLOR="#000000">：リンク先のＩＤを隠し文字で記述します。※２重下線のあとに間をあけずに記述しなければなりません。</FONT>
 
-<P>������AHelp Workshop�ɂ��R���p�C������ƁA�����N�𒣂邱�Ƃ��ł��܂��B
+<P>これを、Help Workshopによりコンパイルすると、リンクを張ることができます。
 
 <P>
 <HR WIDTH="100%">
 <H2>
-�R�D����������܂��傤�B</H2>
-�����̍쐬���A�q�s�e�t�@�C���̕ύX�����ł��݂܂��BTEST2.RTF�ɂ���Ɉȉ��̂悤�ɂP�s�ǉ����܂��傤�B
+３．索引をつくりましょう。</H2>
+索引の作成も、ＲＴＦファイルの変更だけですみます。TEST2.RTFにさらに以下のように１行追加しましょう。
 <BR>
 <TABLE  BORDER=1 WIDTH=500 cellspacing="0" bgcolor="#C0C0E0" >
 
 <TR>
 <TD>
 <H3>
-#�^�C�g���i��P�́j�@�@�@<FONT SIZE=+0>(���P�s�ڂɏ����j</FONT></H3>
-��P�̖͂{��
-<BR>�����N�𒣂邼�[�F<FONT COLOR="#000000"><U>�������N���b�NI</U>D_TEST2</FONT>&nbsp;
+#タイトル（第１章）　　　<FONT SIZE=+0>(←１行目に書く）</FONT></H3>
+第１章の本文
+<BR>リンクを張るぞー：<FONT COLOR="#000000"><U>ここをクリックI</U>D_TEST2</FONT>&nbsp;
 
-<P><B>K</B>��s�@�́A����ԏ�蕨�ł��B
+<P><B>K</B>飛行機は、空を飛ぶ乗り物です。
 <H3>
-------------------- <FONT SIZE=+0>(���y�[�W��}���j</FONT></H3>
+------------------- <FONT SIZE=+0>(改ページを挿入）</FONT></H3>
 
 <H3>
-#�^�C�g���i��Q�́j �@�@�@<FONT SIZE=+0>(���P�s�ڂɏ����j</FONT></H3>
-��Q�̖͂{��</TD>
+#タイトル（第２章） 　　　<FONT SIZE=+0>(←１行目に書く）</FONT></H3>
+第２章の本文</TD>
 </TR>
 </TABLE>
-�u��s�@�v�̑O�ɁA�J�[�\���������Ă����A�u�}��(I)�v���u����(N)�v���i�C�ӂ̒��ߔԍ��j�ɁA�j������āA�u�n�j�v���N���b�N���ĉ������B
-<BR>�@�����āA�i���߃E�B���h�E�j�ɁA�u��s�@�v�Ɠ���ĉ������B
+「飛行機」の前に、カーソルを持っていき、「挿入(I)」→「注釈(N)」→（任意の注釈番号）に、Ｋをいれて、「ＯＫ」をクリックして下さい。
+<BR>　そして、（注釈ウィンドウ）に、「飛行機」と入れて下さい。
 
-<P>���̂q�s�e��Help Workshop�ɂ��R���p�C�����ĉ������B
+<P>このＲＴＦをHelp Workshopによりコンパイルして下さい。
 
-<P>�����ɁA�u��s�@�v���ł���͂��ł��B���܂������܂������H
-
-<P>
-<HR WIDTH="100%">
-<H2>�S�D������</H2>
-�@����������݂̂ŁA���ۂ̈Ӗ������ɂ��Ă͂قƂ�ǐG��܂���ł������A�����݂Ȃ��񗝉��ł���Ǝv���܂��B
-<BR>�@�����̃e�N��m���Ă���ƁA���\�܂Ƃ��ȃw���v�t�@�C�������܂��i���̏ꍇ�A�قƂ�ǂ��ꂵ���m��Ȃ�(^ ^;�B����ɁA�A�v���P�[�V�����Ƃ̘A�g�Ƃ�����܂����A������ӂ̓E�B�U�[�h���g���Ă���ƊȒP�Ȃ悤�ł��B
-<BR>�@�܂��A�g�d�k�o�t�@�C���쐬�x���\�t�g������܂��B������x�ȏ��K�͂�HELP�t�@�C���ɂȂ�ƁA�����̃c�[�����g�������������I�ł��傤�B
+<P>索引に、「飛行機」ができるはずです。うまくいきましたか？
 
 <P>
 <HR WIDTH="100%">
-�y�����L�^�z<BR>
-98/04/05�ŁF���J<BR>
-98/04/30�ŁF��L�C��<BR>
-99/01/04�ŁF�\���C���i���₷���j<BR>
+<H2>４．おわりに</H2>
+　例を挙げたのみで、実際の意味合いについてはほとんど触れませんでしたが、多分みなさん理解できると思います。
+<BR>　これらのテクを知っていると、結構まともなヘルプファイルが作れます（私の場合、ほとんどこれしか知らない(^ ^;。さらに、アプリケーションとの連携とかありますが、そこら辺はウィザードを使ってつくると簡単なようです。
+<BR>　また、ＨＥＬＰファイル作成支援ソフトもあります。ある程度以上大規模なHELPファイルになると、これらのツールを使った方が効率的でしょう。
+
+<P>
+<HR WIDTH="100%">
+【改訂記録】<BR>
+98/04/05版：公開<BR>
+98/04/30版：誤記修正<BR>
+99/01/04版：構成修正（見やすく）<BR>
 <HR>
-<BR><A HREF="index.htm">�y���ǂ�z</A>
+<BR><A HREF="index.htm">【もどる】</A>
 <HR><FONT SIZE=-1>Copyright (c) 1997-1999, BearBeetle, Allrights reserved.</FONT>
 </BODY>
 </HTML>

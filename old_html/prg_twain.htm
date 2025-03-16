@@ -1,67 +1,69 @@
+<!DOCTYPE html>
 <HTML>
 <HEAD>
+   <meta charset="UTF-8">
    <TITLE>BB Programming Lab.</TITLE>
 </HEAD>
 <BODY BACKGROUND="bcg_280.gif">
-<A NAME="TOP_TOP"></A><FONT SIZE=-1>���̃y�[�W��NetscapeNavigator
-2.0�ȍ~�y��Microsoft Internet Exploler 3.0�ȍ~�Ő���Ɍ����܂��B</FONT>
+<A NAME="TOP_TOP"></A><FONT SIZE=-1>このページはNetscapeNavigator
+2.0以降及びMicrosoft Internet Exploler 3.0以降で正常に見られます。</FONT>
 <BR><FONT SIZE=-2>Solly,Japanese only</FONT>
 <BR>
 <HR>
-<CENTER><BLINK><FONT COLOR="#3366FF"><FONT SIZE=-1>�� �a�a������ ��</FONT></FONT></BLINK></CENTER>
+<CENTER><BLINK><FONT COLOR="#3366FF"><FONT SIZE=-1>★ ＢＢ研究所 ★</FONT></FONT></BLINK></CENTER>
 <CENTER><FONT COLOR="#3366FF"><FONT SIZE=+2>TWAIN</FONT></FONT></CENTER>
-<H3><FONT COLOR="#3366FF">�P�D�͂��߂�</FONT></H3>
-TWAIN��<A HREF="http://www.twain.org/">TWAIN Working Group</A>�Ƃ����c�̂��W���������A��ɃX�L���i���^�[�Q�b�g�ɂ����\�t�g�E�F�A�C���^�t�F�[�X�̋K�i�ł��B<BR>
-Windows2000����́AMicrosoft���Ǝ��̐V�K�i���Ă��Ă��܂����A
-TWAIN�����������T�|�[�g�����悤�ł��B<BR>
-����TWAIN�́A�l�I�ɂ͂��܂肫�ꂢ�ȋK�i�Ƃ͎v���܂���B<BR>
-���ׂ̈��A�s�̂̉摜���C�u�����ɂ�TWAIN���ȒP��
-��������@�\�������Ă�����̂�����������܂��B<BR>
-�܂��A������Windows95�������āAWindows�W���̃c�[���ƂȂ��Ă���A�C���[�W���O��OCX�ł�TWAIN�������܂��B<BR>
-�ȒP�ɃX�L���i�[���g�������̂Ȃ�A�������g�����Ƃ������߂��܂��B<BR>
-�������A�ׂ��Ȑݒ蓙���s���̂Ȃ��͂�TWAIN�𒼐ڃA�N�Z�X����K�v������܂��B<BR><BR>
-TWAIN�A�v���̊J���ɍۂ��ẮA<A HREF="http://www.twain.org/">TWAIN Working Group</A>����
-�K�v�ȃc�[���L�b�g�����J����Ă��܂��B���̃c�[���L�b�g���ɂ̓T���v���\�[�X���܂܂�Ă���̂ł����A
-���ׂĂ̑��삪�s���邽�߁A���Ȃ蕡�G�ȍ\�������Ă��܂��i�����ăo�O���Ă܂��j�B<BR><BR>
-�����ŁA����͓Ǝ��̃T���v���������Ȃ���TWAIN�̓�����������܂��B<BR>
+<H3><FONT COLOR="#3366FF">１．はじめに</FONT></H3>
+TWAINは<A HREF="http://www.twain.org/">TWAIN Working Group</A>という団体が標準化した、主にスキャナをターゲットにしたソフトウェアインタフェースの規格です。<BR>
+Windows2000からは、Microsoftが独自の新規格を提案していますが、
+TWAINも引き続きサポートされるようです。<BR>
+このTWAINは、個人的にはあまりきれいな規格とは思いません。<BR>
+その為か、市販の画像ライブラリにはTWAINを簡単に
+あつかえる機能を持っているものが数多くあります。<BR>
+また、初期のWindows95を除いて、Windows標準のツールとなっている、イメージングのOCXでもTWAINを扱えます。<BR>
+簡単にスキャナーを使いたいのなら、これらを使うことをお勧めします。<BR>
+しかし、細かな設定等を行うのならやはりTWAINを直接アクセスする必要があります。<BR><BR>
+TWAINアプリの開発に際しては、<A HREF="http://www.twain.org/">TWAIN Working Group</A>から
+必要なツールキットが公開されています。このツールキット内にはサンプルソースも含まれているのですが、
+すべての操作が行えるため、かなり複雑な構造をしています（そしてバグってます）。<BR><BR>
+そこで、今回は独自のサンプルを示しながらTWAINの導入を説明します。<BR>
 <BR>
-TWAIN�͎��MAC�p��Windows�p���p�ӂ���Ă��܂����A�����ł�Windows(WIN32)��O��ɘb��i�߂܂��B<BR>
-�ȉ��̂��̂��A�p�ӂ��Ă�������<BR>
+TWAINは主にMAC用とWindows用が用意されていますが、ここではWindows(WIN32)を前提に話を進めます。<BR>
+以下のものを、用意してください<BR>
 <UL>
-<LI>VisualC++ (ver4�ȍ~)
-<LI>�d�l���i�����j�F<A HREF="http://www.twain.org/download.htm">TWAIN Specification </A>
-<LI>�J���c�[���L�b�g�F<A HREF="http://www.twain.org/devfiles/twainkit.exe">TWAIN Developer Toolkit</A>
-<LI>�X�L���i�i�J���c�[���L�b�g�ɃG�~�����[�^�͂��Ă��܂����A�������������ق������֗��ł��j
+<LI>VisualC++ (ver4以降)
+<LI>仕様書（原文）：<A HREF="http://www.twain.org/download.htm">TWAIN Specification </A>
+<LI>開発ツールキット：<A HREF="http://www.twain.org/devfiles/twainkit.exe">TWAIN Developer Toolkit</A>
+<LI>スキャナ（開発ツールキットにエミュレータはついていますが、実物があったほうがより便利です）
 </UL>
-�\�[�X�ɂ́A�w�b�_�t�@�C��TWAIN.H���C���N���[�h���ĉ������B<BR>
-�܂��A�c�[���L�b�g�ɂ�TWAIN.LIB�͊܂܂�Ă��Ȃ����߁ALoadLibrary()���g�p���܂��B<BR>
-���ڂ����͂V�����Q�Ƃ��Ă��������B<BR>
-����ł́ATWAIN�̐������͂��߂܂��B<BR>
+ソースには、ヘッダファイルTWAIN.Hをインクルードして下さい。<BR>
+また、ツールキットにはTWAIN.LIBは含まれていないため、LoadLibrary()を使用します。<BR>
+※詳しくは７項を参照してください。<BR>
+それでは、TWAINの説明をはじめます。<BR>
 <HR>
-<H3><FONT COLOR="#3366FF">�Q�DTWAIN�̍\��</FONT></H3>
-TWAIN�́A�ȉ��̂R�̑w�ō\������Ă��܂�<BR>
+<H3><FONT COLOR="#3366FF">２．TWAINの構成</FONT></H3>
+TWAINは、以下の３つの層で構成されています<BR>
 </PRE>
 <BR>
 <TABLE  BORDER=1 cellspacing="0" bgcolor="#C0C0E0" >
-<TR><TD>�A�v���P�[�V����</TD></TR>
-<TR><TD>�\�[�X�}�l�[�W��</TD></TR>
-<TR><TD><CENTER>�\�[�X</CENTER></TD></TR>
+<TR><TD>アプリケーション</TD></TR>
+<TR><TD>ソースマネージャ</TD></TR>
+<TR><TD><CENTER>ソース</CENTER></TD></TR>
 </TABLE>
 <BR>
-�@�����Ō����u�A�v���P�[�V�����v��TWAIN�𑀍삷��A�v���P�[�V�����̂��Ƃ��w���܂��B<BR>
-�v�͂��ꂩ�玄��������낤�Ƃ��Ă��镔���ł��B<BR>
-�@�u�\�[�X�}�l�[�W���v�́A�A�v���P�[�V�����ƃ\�[�X�̋��n�������镔���ł��B<BR>
-�@�u�\�[�X�v�́A�A�v���P�[�V��������݂āA�X�L���i������s�������ɂȂ�܂��B<BR>
-�A�v���P�[�V�����͍ŏI�I�Ƀ\�[�X��ʂ��ăX�L���i�𐧌䂵�����̂ł����A<BR>
-���̂��߂ɂ͕K���\�[�X�}�l�[�W�����Ăяo�����ƂɂȂ�܂��B<BR>
-�\�[�X�}�l�[�W���Ƃ̃C���^�t�F�[�X��DSM_Entry()�Ƃ����֐��݂̂��g�p���܂��B<BR>
-�A�v���P�[�V������DSM_Entry()�ɂ����Ȉ������w�肵�āA�\�[�X�ɖ��߂��o���܂��B<BR>
+　ここで言う「アプリケーション」はTWAINを操作するアプリケーションのことを指します。<BR>
+要はこれから私たちが作ろうとしている部分です。<BR>
+　「ソースマネージャ」は、アプリケーションとソースの橋渡しをする部分です。<BR>
+　「ソース」は、アプリケーションからみて、スキャナ制御を行う部分になります。<BR>
+アプリケーションは最終的にソースを通じてスキャナを制御したいのですが、<BR>
+そのためには必ずソースマネージャを呼び出すことになります。<BR>
+ソースマネージャとのインタフェースはDSM_Entry()という関数のみを使用します。<BR>
+アプリケーションはDSM_Entry()にいろんな引数を指定して、ソースに命令を出します。<BR>
 <BR>
 <HR>
 
-<H3><FONT COLOR="#3366FF">�R�DDSM_Entry()</FONT></H3>
-�A�v���P�[�V������TWAIN�ɔ��s����S�ẴR�}���h�́ADSM_Entry()��ʂ��čs���܂��B<BR>
-DSM_Entry()�͈ȉ��̂悤�ɒ�`����Ă��܂��B<BR>
+<H3><FONT COLOR="#3366FF">３．DSM_Entry()</FONT></H3>
+アプリケーションがTWAINに発行する全てのコマンドは、DSM_Entry()を通じて行われます。<BR>
+DSM_Entry()は以下のように定義されています。<BR>
 <BR>
 <TABLE  BORDER=1 cellspacing="0" bgcolor="#C0C0E0" >
 <TR><TD>
@@ -80,21 +82,21 @@ TW_UNIT16 FAR PASCAL DSM_Entry
 </TD></TR>
 </TABLE>
 <BR>
-pOrigin,pDest��TW_IDENTITY�\���̂ւ̃|�C���^�ł��ꂼ�ꖽ�߂̔��s���ƈ����\���L�q�q�̂悤�Ȃ��̂ł��B<BR>
-�����Ŕ��s���Ƃ́A�A�v���P�[�V�����A����̓\�[�X�}�l�[�W�����̓\�[�X�ɂȂ�܂��B<BR>
-DG/DAT/MSG�͂��ꂼ��f�[�^�O���[�v�^�f�[�^�����^�C�v�^���b�Z�[�W��\���Ă��܂��B<BR>
-�܂������̒l�̓}�N����`����Ă���A���ꂼ��DG_/DAT_/MES_�ł͂��܂�܂��B<BR>
-TWAIN�R�}���h�͂��̂R�̒l�Ō��肷�邽��TWAIN Specification�ł́A
-TWAIN�R�}���h��DG_XXX/DAT_XXX/MES_XXXX�Ƃ����`�ŕ\�����Ă��܂��B<BR>
+pOrigin,pDestはTW_IDENTITY構造体へのポインタでそれぞれ命令の発行元と宛先を表す記述子のようなものです。<BR>
+ここで発行元とは、アプリケーション、宛先はソースマネージャ又はソースになります。<BR>
+DG/DAT/MSGはそれぞれデータグループ／データ引数タイプ／メッセージを表しています。<BR>
+またこれらの値はマクロ定義されており、それぞれDG_/DAT_/MES_ではじまります。<BR>
+TWAINコマンドはこの３つの値で決定するためTWAIN Specificationでは、
+TWAINコマンドをDG_XXX/DAT_XXX/MES_XXXXという形で表現しています。<BR>
 <BR>
-pData�͈����f�[�^�ւ̃|�C���^�ł��B<BR>
-TWAIN�̃p�����[�^�ݒ�ł���ADG_CONTROL�^DAT_CAPABILITY�^MSG_GET�y��
-DG_CONTROL/DAT_CAPABILITY/MSG_SET�ł́ApData�̃f�[�^�^���������̃t�H�[�}�b�g�i�\���́j�ɕW�������Ă���A
-������f�[�^�̓��ꕨ�Ƃ����Ӗ��ŃR���e�i�ƌĂ�ł��܂��B<BR>
+pDataは引数データへのポインタです。<BR>
+TWAINのパラメータ設定である、DG_CONTROL／DAT_CAPABILITY／MSG_GET及び
+DG_CONTROL/DAT_CAPABILITY/MSG_SETでは、pDataのデータ型をいくつかのフォーマット（構造体）に標準化しており、
+それをデータの入れ物という意味でコンテナと呼んでいます。<BR>
 
-�߂�l�́A���ʂ��i�[����܂��B���b�Z�[�W�iDG_/DAT_/MES_�j�̎�ނɂ���ĈقȂ�܂����A
-���TWRC_SUCCESS�i�����j,TWRC_CANCEL�i�L�����Z���j,TWRC_FAILURE�i���s�j���߂���܂��B<BR>
-�X�ɏڍׂȃG���[���擾����ɂ́ADG_CONTROL/DAT_STATUS/MSG_GET���g�p���܂��B<BR>
+戻り値は、結果が格納されます。メッセージ（DG_/DAT_/MES_）の種類によって異なりますが、
+主にTWRC_SUCCESS（成功）,TWRC_CANCEL（キャンセル）,TWRC_FAILURE（失敗）が戻されます。<BR>
+更に詳細なエラーを取得するには、DG_CONTROL/DAT_STATUS/MSG_GETを使用します。<BR>
 <BR>
 <TABLE  BORDER=1 cellspacing="0" bgcolor="#C0C0E0" >
 <TR><TD>
@@ -108,29 +110,29 @@ rc = lpfnDSM_Entry(pAppId,pSourceId,DG_CONTROL,DAT_STATUS,MSG_GET,&twStatus);
 
 switch (twStatus.ConditionCode){
 	case TWCC_BADCAP:
-�@�@�@�@�@�@�@�@�E�E�E
+　　　　　　　　・・・
 		break;
 	case TWCC_CAPUNSUPPORTED:
-�@�@�@�@�@�@�@�@�E�E�E
+　　　　　　　　・・・
 		break;
 	case TWCC_CAPBADOPERATION:
-�@�@�@�@�@�@�@�@�E�E�E
+　　　　　　　　・・・
 		break;
 	case TWCC_CAPSEQERROR:
-�@�@�@�@�@�@�@�@�E�E�E
+　　　　　　　　・・・
 		break;
 	case TWCC_BADDEST:
-�@�@�@�@�@�@�@�@�E�E�E
+　　　　　　　　・・・
 		break;
 	case TWCC_BADVALUE:
-�@�@�@�@�@�@�@�@�E�E�E
+　　　　　　　　・・・
 		break;
 	case TWCC_SEQERROR:
-�@�@�@�@�@�@�@�@�E�E�E
+　　　　　　　　・・・
 		break;
 	default:
 		//Unknown Error
-�@�@�@�@�@�@�@�@�E�E�E
+　　　　　　　　・・・
 		break;
 }
 </PRE>
@@ -139,12 +141,12 @@ switch (twStatus.ConditionCode){
 <BR>
 <HR>
 
-<H3><FONT COLOR="#3366FF">�S�D�s�v�`�h�m�̃f�[�^�^</FONT></H3>
-Twain.h�ł́A�e�f�[�^�^��TW_xxx�Ƃ����`���ŕ\�����Ă��܂��B<BR>
-�w�ǂ̃f�[�^�^�͂��̂܂܁AC����̌^��u�����������̂ł����A
-�����^��TW_FIX32�^��C�����float�^�Ƃ͈قȂ�̂Œ��ӂ��K�v�ł��B<BR>
+<H3><FONT COLOR="#3366FF">４．ＴＷＡＩＮのデータ型</FONT></H3>
+Twain.hでは、各データ型をTW_xxxという形式で表現しています。<BR>
+殆どのデータ型はそのまま、C言語の型を置き換えたものですが、
+実数型のTW_FIX32型はC言語のfloat型とは異なるので注意が必要です。<BR>
 <BR>
-TW_FIX32�^��float�^�̕ϊ��͈ȉ��̊֐����g�p���܂��B<BR>
+TW_FIX32型とfloat型の変換は以下の関数を使用します。<BR>
 <BR>
 <TABLE  BORDER=1 cellspacing="0" bgcolor="#C0C0E0" >
 <TR><TD>
@@ -172,19 +174,19 @@ TW_FIX32 FloatToFix32 (float floater)
 <BR>
 <HR>
 
-<H3><FONT COLOR="#3366FF">�T�D�s�v�`�h�m����̃C�x���g����</FONT></H3>
+<H3><FONT COLOR="#3366FF">５．ＴＷＡＩＮからのイベント処理</FONT></H3>
 
 <BR>
-TWAIN�\�[�X����̏�ԕω����̊e��C�x���g�ʒm����܂��B<BR>
-���̒ʒm�́A�E�B���h�E�̃C�x���g���[�v�Ŏ擾���邱�Ƃ��o���܂��B<BR>
-�ȉ��ɁA���̕������L�q���܂��B<BR><BR>
-�y���z<BR>
+TWAINソースからの状態変化等の各種イベント通知されます。<BR>
+この通知は、ウィンドウのイベントループで取得することが出来ます。<BR>
+以下に、その部分を記述します。<BR><BR>
+【注】<BR>
 <UL>
-<LI>�ȉ��̃\�[�X�ł�DSM_Entry()��lpfnDSM_Entry()�ƕ\�����Ă��܂����A�V���ɍ��킹�����߂ł��B
-<LI>���̕����́A�w��TWAIN Specification���R�s�[�������̂ł����A���̂܂܂ł͓��삵�܂���B<BR>
-�@�U���Ő��������ԂS�`�V�ŗL���ł��B<BR>
-�@if�����ɂ��A��ԂP�`�Q�ł�DG_CONTROL/DAT_EVENT/MSG_PROCESSEVENT�Ƃ��̊֘A�������s��Ȃ��悤�ɂ��ĉ������B
-<LI>���L�̗�́A�T�v�ł��B�S�ẴC�x���g�������s���Ă���킯�ł͂���܂���B
+<LI>以下のソースではDSM_Entry()をlpfnDSM_Entry()と表現していますが、７項に合わせたためです。
+<LI>この部分は、殆どTWAIN Specificationをコピーしたものですが、そのままでは動作しません。<BR>
+　６項で説明する状態４～７で有効です。<BR>
+　if文等により、状態１～２ではDG_CONTROL/DAT_EVENT/MSG_PROCESSEVENTとその関連処理を行わないようにして下さい。
+<LI>下記の例は、概要です。全てのイベント処理を行っているわけではありません。
 </UL>
 <BR>
 <BR>
@@ -195,29 +197,29 @@ TWAIN�\�[�X����̏�ԕω����̊e��C�x���g�ʒm����܂��B<BR>
 TW_EVENT twEvent;
 TW_INT16 rc;
 while (GetMessage ( (LPMSG) &msg, NULL, 0, 0) ){
-	// �����\�[�X���C�l�[�u���̏ꍇ�ȉ������s
-	// �����ۂɂ�if�����ŃC�l�[�u�����������s������悤�ɂ��ĉ�����
+	// もしソースがイネーブルの場合以下を実行
+	// ※実際にはif文等でイネーブル時だけ実行させるようにして下さい
 	twEvent.pEvent = (TW_MEMREF)&msg;
 	twEvent.TWMessage = MSG_NULL;
 	rc = lpfnDSM_Entry(pAppId,pSourceId,
 		DG_CONTROL,DAT_EVENT,MSG_PROCESSEVENT,
 		(TW_MEMREF)&twEvent);
-	// �\�[�X����̃��b�Z�[�W�擾
+	// ソースからのメッセージ取得
 	switch (twEvent.TWMessage){
 		case MSG_XFERREADY:
-			// TWAIN�����f�B�i��ԂU�j�ɂȂ���
+			// TWAINがレディ（状態６）になった
 			SetupAndTransferImage(NULL);
 			break;
 		case MSG_CLOSEDSREQ:
-			// ���[�U�w����TWAIN����
-			// �\�[�X�̃f�B�Z�[�u�����N���[�Y�v��������
+			// ユーザ指示でTWAINから
+			// ソースのディセーブル＆クローズ要求が来た
 			DisableAndCloseSource(NULL);
 			break;
 		case MSG_NULL:
-			// �\�[�X���烁�b�Z�[�W�͗��Ă��Ȃ�
+			// ソースからメッセージは来ていない
 			break;
 	}
-	// �ȉ��͒ʏ�́iTWAIN�ȊO�́j�E�B���h�E�C�x���g
+	// 以下は通常の（TWAIN以外の）ウィンドウイベント
 	if (rc == TWRC_NOTDSEVENT){
 		TranslateMessage( (LPMSG) &msg);
 		DispatchMessage( (LPMSG) &msg);
@@ -230,57 +232,57 @@ while (GetMessage ( (LPMSG) &msg, NULL, 0, 0) ){
 <BR>
 <HR>
 
-<H3><FONT COLOR="#3366FF">�U�DTWAIN�̏��</FONT></H3>
+<H3><FONT COLOR="#3366FF">６．TWAINの状態</FONT></H3>
 <BR>
-TWAIN�ɂ͈ȉ��̂V��Ԃ�����܂��B<BR>
-�e��ԂŁA�ł��邱�Ƃ��قȂ��Ă��܂�<BR>
+TWAINには以下の７状態があります。<BR>
+各状態で、できることが異なってきます<BR>
 <BR>
 <TABLE  BORDER=1 cellspacing="0" bgcolor="#C0C0E0" >
-<TR><TD>�P�DPre-Session�i��ƑO�j</TD><TD>�\�[�X�}�l�[�W���̓��[�h����Ă��Ȃ�</TD></TR>
-<TR><TD>�Q�DSource Manager Loaded�i�\�[�X�}�l�[�W�����[�h�ς݁j</TD><TD>�A�v���F�G���g���|�C���g�̎擾</TD></TR>
-<TR><TD>�R�DSource Manager Opened�i�\�[�X�}�l�[�W���I�[�v���ς݁j</TD><TD>���[�U�F�\�[�X�̃Z���N�g</TD></TR>
-<TR><TD>�S�DSource Open�i�\�[�X�I�[�v���j</TD><TD>�\�͂̒����i�l�S�j</TD></TR>
-<TR><TD>�T�DSource Enable�i�\�[�X�C�l�[�u���j</TD><TD>�\�[�X�F���[�U�C���^�t�F�[�X�̒�</TD></TR>
-<TR><TD>�U�DTransfer Ready �i �]�������ς݁j</TD><TD>�A�v���F�摜�i�I�[�f�B�I�j���̗v���@</TD></TR>
-<TR><TD>�V�DTransferring �i�]�����j</TD><TD> �f�[�^�̓]��</TD></TR>
+<TR><TD>１．Pre-Session（作業前）</TD><TD>ソースマネージャはロードされていない</TD></TR>
+<TR><TD>２．Source Manager Loaded（ソースマネージャロード済み）</TD><TD>アプリ：エントリポイントの取得</TD></TR>
+<TR><TD>３．Source Manager Opened（ソースマネージャオープン済み）</TD><TD>ユーザ：ソースのセレクト</TD></TR>
+<TR><TD>４．Source Open（ソースオープン）</TD><TD>能力の調整（ネゴ）</TD></TR>
+<TR><TD>５．Source Enable（ソースイネーブル）</TD><TD>ソース：ユーザインタフェースの提示</TD></TR>
+<TR><TD>６．Transfer Ready （ 転送準備済み）</TD><TD>アプリ：画像（オーディオ）情報の要求　</TD></TR>
+<TR><TD>７．Transferring （転送中）</TD><TD> データの転送</TD></TR>
 </TABLE>
 <BR>
-�A�v���P�[�V�����̋N�����͏�ԂP�ɂȂ��Ă��܂��B<BR>
-TWAIN����f�[�^���擾���邽�߂ɂ́A��ԂP����ŏI�I�ɏ�ԂV�܂őJ�ڂ�����K�v������܂��B<BR>
-��L�̏�Ԃ̑J�ڏ������ȉ��Ɏ����܂��B<BR>
+アプリケーションの起動時は状態１になっています。<BR>
+TWAINからデータを取得するためには、状態１から最終的に状態７まで遷移させる必要があります。<BR>
+上記の状態の遷移条件を以下に示します。<BR>
 <BR>
 <TABLE  BORDER=1 cellspacing="0" bgcolor="#C0C0E0" >
-<TR><TD>�P���Q</TD><TD>�A�v���F�\�[�X�}�l�[�W���̃��[�h</TD></TR>
-<TR><TD>�P���Q</TD><TD>�A�v���F�\�[�X�}�l�[�W���̃A�����[�h</TD></TR>
-<TR><TD>�Q���R</TD><TD>�A�v���F�\�[�X�}�l�[�W���̃I�[�v��</TD></TR>
-<TR><TD>�Q���R</TD><TD>�A�v���F�\�[�X�}�l�[�W���̃N���[�Y</TD></TR>
-<TR><TD>�R���S</TD><TD>�A�v���F�\�[�X�̃I�[�v��</TD></TR>
-<TR><TD>�R���S</TD><TD>�A�v���F�\�[�X�̃N���[�Y</TD></TR>
-<TR><TD>�S���T</TD><TD>�A�v���F�\�[�X���C�l�[�u���ɂ���</TD></TR>
-<TR><TD>�S���T</TD><TD>�\�[�X�F�]���f�B�Z�[�u�����A�v���ɒʒm or �A�v���F�\�[�X���f�B�Z�[�u���ɂ���</TD></TR>
-<TR><TD>�T���U</TD><TD>�\�[�X�F�A�v���P�[�V�����ɓ]�����������������Ƃ�ʒm</TD></TR>
-<TR><TD>�T���U</TD><TD>�\�[�X�F�]���ۗ����̉摜�������������Ƃ��A�v���ɒʒm</TD></TR>
-<TR><TD>�U���V</TD><TD>�A�v���F�]�����\�[�X�Ɏw��</TD></TR>
-<TR><TD>�U���V</TD><TD>�A�v���F�]���I���ɉ���</TD></TR>
+<TR><TD>１→２</TD><TD>アプリ：ソースマネージャのロード</TD></TR>
+<TR><TD>１←２</TD><TD>アプリ：ソースマネージャのアンロード</TD></TR>
+<TR><TD>２→３</TD><TD>アプリ：ソースマネージャのオープン</TD></TR>
+<TR><TD>２←３</TD><TD>アプリ：ソースマネージャのクローズ</TD></TR>
+<TR><TD>３→４</TD><TD>アプリ：ソースのオープン</TD></TR>
+<TR><TD>３←４</TD><TD>アプリ：ソースのクローズ</TD></TR>
+<TR><TD>４→５</TD><TD>アプリ：ソースをイネーブルにする</TD></TR>
+<TR><TD>４←５</TD><TD>ソース：転送ディセーブルをアプリに通知 or アプリ：ソースをディセーブルにする</TD></TR>
+<TR><TD>５→６</TD><TD>ソース：アプリケーションに転送準備が整ったことを通知</TD></TR>
+<TR><TD>５←６</TD><TD>ソース：転送保留分の画像がもう無いことをアプリに通知</TD></TR>
+<TR><TD>６→７</TD><TD>アプリ：転送をソースに指示</TD></TR>
+<TR><TD>６←７</TD><TD>アプリ：転送終了に応答</TD></TR>
 </TABLE>
 <BR>
 <HR>
 
-<H3><FONT COLOR="#3366FF">�V�DTWAIN���C�u�����̃��[�h�i��ԂP���Q�j�^�A�����[�h�i��ԂP���Q�j</FONT></H3>
+<H3><FONT COLOR="#3366FF">７．TWAINライブラリのロード（状態１→２）／アンロード（状態１←２）</FONT></H3>
 <BR>
-�A�v���P�[�V��������TWAIN�i�}�l�[�W�����\�[�X�j�ɃR�}���h���o�����߂ɂ́ATWAIN���C�u������DSM_Entry()���g�p���܂��B<BR>
-TWAIN���C�u�����́AWin32(Windows95/98/NT/2000/Me��)�ł́ATwain_32.dll���g�p���܂��B<BR>
-�ʏ�DLL�̎g�p�ɂ������Ă͑Ή�����w�b�_�t�@�C��Twain.h��
-�X�^�e�B�b�N�����N���C�u����(.lib)���K�v�ɂȂ�܂��B<BR>
-�������ATWAIN�̏ꍇ�ATwain.h��TWAIN�c�[���L�b�g�Ɋ܂܂�Ă�����̂́A
-.lib���܂܂�Ă��܂���B���̂��߁A���I�ɂc�k�k�����[�h���ADSM_Entry()�̃|�C���^���擾����K�v������܂��B<BR>
+アプリケーションからTWAIN（マネージャ＆ソース）にコマンドを出すためには、TWAINライブラリのDSM_Entry()を使用します。<BR>
+TWAINライブラリは、Win32(Windows95/98/NT/2000/Me等)では、Twain_32.dllを使用します。<BR>
+通常DLLの使用にあたっては対応するヘッダファイルTwain.hと
+スタティックリンクライブラリ(.lib)が必要になります。<BR>
+しかし、TWAINの場合、Twain.hはTWAINツールキットに含まれているものの、
+.libが含まれていません。このため、動的にＤＬＬをロードし、DSM_Entry()のポインタを取得する必要があります。<BR>
 <BR>
-DLL�����[�h�^�A�����[�h��LoadLibrary()���g�p���܂��B<BR>
-�܂�DLL������G���g���[�i�֐��j�̃|�C���^���擾����ɂ́AGetProcAddress()���g�p���܂��B<BR>
-������WIN32 API�̎g������VisualC++�̃I�����C���w���v���Œ��ׂĉ������B<BR>
+DLLをロード／アンロードはLoadLibrary()を使用します。<BR>
+またDLL内からエントリー（関数）のポインタを取得するには、GetProcAddress()を使用します。<BR>
+これらのWIN32 APIの使い方はVisualC++のオンラインヘルプ等で調べて下さい。<BR>
 <BR>
-DLL�̃��[�h�^�A�����[�h��́uTWAIN Specification�v�ɋL�q����Ă��܂����A
-������ƔώG�Ȃ̂ŁA���������ȒP�ɂ������̂��ȉ��Ɏ����܂��B<BR>
+DLLのロード／アンロード例は「TWAIN Specification」に記述されていますが、
+ちょっと煩雑なので、もう少し簡単にしたものを以下に示します。<BR>
 <BR>
 
 <TABLE  BORDER=1 cellspacing="0" bgcolor="#C0C0E0" >
@@ -289,29 +291,29 @@ DLL�̃��[�h�^�A�����[�h��́uTWAIN Specification�v�ɋL�q����Ă��܂����A
 
 DSMENTRYPROC	lpfnDSM_Entry;
 HMODULE		hDSMDLL;
-�E�E�E
+・・・
 
 BOOL LoadDLL()
 {
 	char szDllFile[MAX_PATH];
 	OFSTRUCT of;
 	
-	// DLL�p�X�̍쐬
+	// DLLパスの作成
 	GetWindowsDirectory (szDllFile, sizeof(szDllFile));
 	if (szDllFile [(lstrlen (szDllFile) - 1)] != '\\'){
 		lstrcat( szDllFile, "\\" );
 	}
 	lstrcat( szDllFile, "TWAIN_32.DLL" );
 
-	// DLL�t�@�C���̊m�F
+	// DLLファイルの確認
 	if (OpenFile(szDllFile, &of, OF_EXIST) == -1)
 		return FALSE;
 
-	// DLL�̃��[�h
+	// DLLのロード
 	if ( (hDSMDLL = LoadLibrary(szDllFile)) == NULL)
 		return FALSE;
 
-	// �|�C���^�̎擾
+	// ポインタの取得
 	if( (lpfnDSM_Entry = (DSMENTRYPROC)GetProcAddress(hDSMDLL,"DSM_Entry")) == NULL){
 		UnLoadDLL();
 		return FALSE;
@@ -331,38 +333,38 @@ BOOL UnLoadDLL()
 </TD></TR>
 </TABLE>
 <BR>
-��L�̗�ł́A�|�C���^lpfnDSM_Entry�ɃG���g���|�C���^���擾���܂����B<BR>
-�������邱�Ƃɂ��AlpfnDSM_Entry(...);�Ƃ����`����DSM_Entry()���Ăяo�����Ƃ��o����悤�ɂȂ�܂��B<BR>
+上記の例では、ポインタlpfnDSM_Entryにエントリポインタを取得しました。<BR>
+こうすることにより、lpfnDSM_Entry(...);という形式でDSM_Entry()を呼び出すことが出来るようになります。<BR>
 <BR>
 <HR>
 
-<H3><FONT COLOR="#3366FF">�W�D�\�[�X�}�l�[�W���̃I�[�v���i��ԂQ���R�j�^�N���[�Y�i��ԂQ���R�j</FONT></H3>
+<H3><FONT COLOR="#3366FF">８．ソースマネージャのオープン（状態２→３）／クローズ（状態２←３）</FONT></H3>
 <BR>
-�\�[�X�}�l�[�W���̃I�[�v���́ADG_CONTROL/DAT_PARENT/MSG_OPENDSM���߂Ŏ��{���܂��B<BR>
-���̂Ƃ��̑�1�����ipAppId)��TW_IDENTITY�^�\���̂ւ̃|�C���^�ŁA�A�v���P�[�V�����̑������L�q���܂��B<BR>
-���ۂɂ͈ȉ��̂悤�ɏ��������āADSM_Entry()���Ăяo���܂��B<BR>
+ソースマネージャのオープンは、DG_CONTROL/DAT_PARENT/MSG_OPENDSM命令で実施します。<BR>
+このときの第1引数（pAppId)はTW_IDENTITY型構造体へのポインタで、アプリケーションの属性を記述します。<BR>
+実際には以下のように初期化して、DSM_Entry()を呼び出します。<BR>
 <BR>
 <TABLE  BORDER=1 cellspacing="0" bgcolor="#C0C0E0" >
 <TR><TD>
 <PRE>
 
-TW_UINT16 rc;		// �ߒl
+TW_UINT16 rc;		// 戻値
 
-// �A�v���P�[�V�����h�c�̏�����
-pAppId->Id = 0;		// 0�ɂ���
-pAppId->Version.MajorNum = 0;	// �A�v���P�[�V�����̃o�[�W�������W���[�ԍ�
-pAppId->Version.MinorNum = 1;	// �A�v���P�[�V�����̃o�[�W�����}�C�i�[�ԍ�
-pAppId->Version.Language = TWLG_JAPANESE;// ����
-pAppId->Version.Country = TWCY_JAPAN;	// ��
-lstrcpy (pAppId->Version.Info, "0.1");	// �o�[�W����������
+// アプリケーションＩＤの初期化
+pAppId->Id = 0;		// 0にする
+pAppId->Version.MajorNum = 0;	// アプリケーションのバージョンメジャー番号
+pAppId->Version.MinorNum = 1;	// アプリケーションのバージョンマイナー番号
+pAppId->Version.Language = TWLG_JAPANESE;// 言語
+pAppId->Version.Country = TWCY_JAPAN;	// 国
+lstrcpy (pAppId->Version.Info, "0.1");	// バージョン文字列
 pAppId->ProtocolMajor = TWON_PROTOCOLMAJOR;
 pAppId->ProtocolMinor = TWON_PROTOCOLMINOR;
 pAppId->SupportedGroups = DG_IMAGE | DG_CONTROL;
-lstrcpy (pAppId->Manufacturer, "BearBeetle");	//�A�v���̃��[�J�[
-lstrcpy (pAppId->ProductFamily, "BB LAB");	//�A�v���̐��i�t�@�~���[
-lstrcpy (pAppId->ProductName, "BB TWAIN SAMPLE");//�A�v���̐��i��
+lstrcpy (pAppId->Manufacturer, "BearBeetle");	//アプリのメーカー
+lstrcpy (pAppId->ProductFamily, "BB LAB");	//アプリの製品ファミリー
+lstrcpy (pAppId->ProductName, "BB TWAIN SAMPLE");//アプリの製品名
 
-// �\�[�X�}�l�[�W���̃I�[�v��
+// ソースマネージャのオープン
 rc=lpfnDSM_Entry(pAppId,NULL,DG_CONTROL,DAT_PARENT,MSG_OPENDSM,(TW_MEMREF)&hWnd);
 
 if(rc != TWRC_SUCCESS)
@@ -374,14 +376,14 @@ return TRUE;
 </TD></TR>
 </TABLE>
 <BR>
-�\�[�X�}�l�[�W���̃N���[�Y��DG_CONTROL/DAT_PARENT/MSG_CLOSEDSM���߂Ŏ��{���܂��B<BR>
-�����́A�I�[�v���Ƃ܂����������ł��B<BR>
+ソースマネージャのクローズはDG_CONTROL/DAT_PARENT/MSG_CLOSEDSM命令で実施します。<BR>
+引数は、オープンとまったく同じです。<BR>
 <BR>
 <TABLE  BORDER=1 cellspacing="0" bgcolor="#C0C0E0" >
 <TR><TD>
 <PRE>
 
-�E�E�E
+・・・
 rc=lpfnDSM_Entry(pAppId,NULL,DG_CONTROL,DAT_PARENT,MSG_CLOSEDSM,(TW_MEMREF)&hWnd);
 
 if(rc != TWRC_SUCCESS)
@@ -395,18 +397,18 @@ return TRUE;
 <BR>
 <HR>
 
-<H3><FONT COLOR="#3366FF">�X�D�\�[�X�̃I�[�v���i��ԂR���S�j�^�N���[�Y�i��ԂR���S�j</FONT></H3>
+<H3><FONT COLOR="#3366FF">９．ソースのオープン（状態３→４）／クローズ（状態３←４）</FONT></H3>
 <BR>
-�\�[�X�}�l�[�W���̃I�[�v���́ADG_CONTROL/DAT_PARENT/MSG_OPENDS���߂Ŏ��{���܂��B<BR>
-���̂Ƃ��̑�1�����ipAppId)�͂W���Ɠ������̂��g�p���܂��B<BR>
-pData�ɂ́ATW_IDENTITY�^�\���̂��ȉ���pSourceId�̂悤�ɏ��������܂��B<BR>
+ソースマネージャのオープンは、DG_CONTROL/DAT_PARENT/MSG_OPENDS命令で実施します。<BR>
+このときの第1引数（pAppId)は８項と同じものを使用します。<BR>
+pDataには、TW_IDENTITY型構造体を以下のpSourceIdのように初期化します。<BR>
 <BR>
 <TABLE  BORDER=1 cellspacing="0" bgcolor="#C0C0E0" >
 <TR><TD>
 <PRE>
 
-�E�E�E
-// �f�[�^�\�[�X�h�c�̓V�X�e���f�t�H���g�l�ɂ���ꍇ
+・・・
+// データソースＩＤはシステムデフォルト値にする場合
 pSourceId->ProductName[0]='\0';
 pSourceId->Id=0;
 
@@ -415,9 +417,9 @@ pSourceId->Id=0;
 </TABLE>
 <BR>
 
-�܂��́ADG_CONTROL / DAT_IDENTITY / MSG_USERSELECT���߂��g�p����ƁA
-�\�[�X��I������_�C�A���O�{�b�N�X���\������A���[�U���\�[�X��I���ł��܂��B<BR>
-���̂Ƃ��̎擾����pData�̒l��pSourceId�ɂ��邱�Ƃ��ł��܂��B<BR>
+または、DG_CONTROL / DAT_IDENTITY / MSG_USERSELECT命令を使用すると、
+ソースを選択するダイアログボックスが表示され、ユーザがソースを選択できます。<BR>
+このときの取得したpDataの値をpSourceIdにすることもできます。<BR>
 <BR>
 <TABLE  BORDER=1 cellspacing="0" bgcolor="#C0C0E0" >
 <TR><TD>
@@ -428,13 +430,13 @@ if(rc != TWRC_SUCCESS)
 	return FALSE;
 
 return TRUE;
-�@�E�E�E
+　・・・
 </PRE>
 </TD></TR>
 </TABLE>
 <BR>
-�\�[�X�}�l�[�W���̃N���[�Y��DG_CONTROL/DAT_PARENT/MSG_CLOSEDS���߂Ŏ��{���܂��B<BR>
-�����́A�I�[�v���Ƃ܂����������ł��B<BR>
+ソースマネージャのクローズはDG_CONTROL/DAT_PARENT/MSG_CLOSEDS命令で実施します。<BR>
+引数は、オープンとまったく同じです。<BR>
 <BR>
 <TABLE  BORDER=1 cellspacing="0" bgcolor="#C0C0E0" >
 <TR><TD>
@@ -443,23 +445,23 @@ return TRUE;
 rc=lpfnDSM_Entry(pAppId,NULL,DG_CONTROL,DAT_IDENTITY,MSG_CLOSEDS,pSourceId);
 
 if(rc != TWRC_SUCCESS)
-	�G���[����
+	エラー処理
 </PRE>
 </TD></TR>
 </TABLE>
 <HR>
 <BR>
-<H3><FONT COLOR="#3366FF">�P�O�D�ݒ�̎擾�ƕύX�i��ԂS�j</FONT></H3>
+<H3><FONT COLOR="#3366FF">１０．設定の取得と変更（状態４）</FONT></H3>
 <BR>
-�@�摜��荞�ݎ��̊e��ݒ�̎擾�^�ύX�͏�ԂS�iSource Open�j�ōs���܂��B<BR>
-�@�����̐ݒ��DG_CONTROL/DAT_CAPABILITY/MSG_GET ���� DG_CONTROL/DAT_CAPABILITY/MSG_SET�ōs���܂��B<BR>
-�@���̎��A�R���e�i��TW_CAPABILITY�^�̍\���̂��g�p���܂��B<BR>
-�@���̍\���̂�Cap�t�B�[���h�擾�^�ݒ肵�������e���w�肵�܂��B<BR>
-Cap�t�B�[���h�Ɏw�肷��l�̓}�N����`����Ă���ICAP_�ł͂��܂�܂��B<BR>
-�Ⴆ�΁ACap�t�B�[���h��ICAP_PHYSICALWIDTH���w�肷��ƁA
-�X�L�����ł��镝���擾���邱�Ƃ��o���܂��B<BR>
+　画像取り込み時の各種設定の取得／変更は状態４（Source Open）で行います。<BR>
+　これらの設定はDG_CONTROL/DAT_CAPABILITY/MSG_GET 又は DG_CONTROL/DAT_CAPABILITY/MSG_SETで行います。<BR>
+　この時、コンテナにTW_CAPABILITY型の構造体を使用します。<BR>
+　この構造体のCapフィールド取得／設定したい内容を指定します。<BR>
+Capフィールドに指定する値はマクロ定義されておりICAP_ではじまります。<BR>
+例えば、CapフィールドにICAP_PHYSICALWIDTHを指定すると、
+スキャンできる幅を取得することが出来ます。<BR>
 <BR>
-�@DG_CONTROL/DAT_CAPABILITY/MSG_SET�Œl���擾����Ƃ��͈ȉ��̂悤�ȃ��[�`���ɂȂ�܂��B<BR>
+　DG_CONTROL/DAT_CAPABILITY/MSG_SETで値を取得するときは以下のようなルーチンになります。<BR>
 <BR>
 <TABLE  BORDER=1 cellspacing="0" bgcolor="#C0C0E0" >
 <TR><TD>
@@ -469,9 +471,9 @@ TW_CAPABILITY	twCapability;
 TW_UINT16	rc;
 float		flPhysWidth;
 
-twCapability.Cap=ICAP_PHYSICALWIDTH;	// �ݒ���e��ICAP_XXX�Ŏw�肷��
-twCapability.ConType = TWON_ONEVALUE;	// �R���e�i�̃^�C�v���w�肷��
-twCapability.hContainer = NULL;		// NULL���w�肷��
+twCapability.Cap=ICAP_PHYSICALWIDTH;	// 設定内容をICAP_XXXで指定する
+twCapability.ConType = TWON_ONEVALUE;	// コンテナのタイプを指定する
+twCapability.hContainer = NULL;		// NULLを指定する
 
 rc=lpfnDSM_Entry(pAppId,pSourceId,DG_CONTROL,DAT_CAPABILITY,MSG_GET,(TW_MEMREF)&twCapability);
 
@@ -483,22 +485,22 @@ if(twCapability.hContainer){
 }
 
 if(rc != TWRC_SUCCESS){
-	�G���[����
+	エラー処理
 }
 
 </PRE>
 </TD></TR>
 </TABLE>
 <BR>
-�����ŁA���ӂ��K�v�Ȃ̂́A�擾�����R���e�i��hContainer�t�B�[���h�̎w���̈��
-ConType�t�B�[���h�Ŏw�肵���^�̃f�[�^��TWAIN����GlobalAlloc()�ɂ��m�ہ^�i�[����Ă��邱�Ƃł��B<BR>
-��L��ł�TW_ONEVALUE�^�̃f�[�^��hContainer�t�B�[���h�̎w���̈�Ɋi�[����Ă��܂��B<BR>
-�A�v���P�[�V������GlobalLock()���g���ă|�C���^���擾���A���̃f�[�^�ɎQ�Ƃ��܂��B<BR>
-�����āA�Q�Ƃ��Ȃ��Ȃ�����GlobalUnlock()/GlobalFree()���g�p���ė̈��������Ȃ���΂Ȃ�܂���B<BR>
+ここで、注意が必要なのは、取得したコンテナのhContainerフィールドの指す領域に
+ConTypeフィールドで指定した型のデータがTWAIN内でGlobalAlloc()により確保／格納されていることです。<BR>
+上記例ではTW_ONEVALUE型のデータがhContainerフィールドの指す領域に格納されています。<BR>
+アプリケーションはGlobalLock()を使ってポインタを取得し、そのデータに参照します。<BR>
+そして、参照しなくなったらGlobalUnlock()/GlobalFree()を使用して領域を解放しなければなりません。<BR>
 <BR>
-�t��DG_CONTROL/DAT_CAPABILITY/MSG_SET�Œl��ݒ肷��ꍇ�́A�A�v���P�[�V�����͕K�v�ȃf�[�^�̈��
-GlobalAlloc()���g�p���Ċm�ہ^�ݒ肵�A���̃n���h����hContainer�t�B�[���h�Ɋi�[���Ȃ���΂Ȃ�܂���B<BR>
-�ȉ��̗�́A�𑜓x�̐ݒ�ł��B<BR>
+逆にDG_CONTROL/DAT_CAPABILITY/MSG_SETで値を設定する場合は、アプリケーションは必要なデータ領域を
+GlobalAlloc()を使用して確保／設定し、このハンドルをhContainerフィールドに格納しなければなりません。<BR>
+以下の例は、解像度の設定です。<BR>
 <BR>
 <TABLE  BORDER=1 cellspacing="0" bgcolor="#C0C0E0" >
 <TR><TD>
@@ -507,26 +509,26 @@ GlobalAlloc()���g�p���Ċm�ہ^�ݒ肵�A���̃n���h����hContainer�t�B�[���h�Ɋi�[���
 TW_FIX32	tw;
 float		fReso;
 
-// fReso�ɉ𑜓x��ݒ肷��
+// fResoに解像度を設定する
 fReso = xxx.0;
 
-// �R���e�i�m��
+// コンテナ確保
 twCapability.hContainer = GlobalAlloc(GHND,sizeof(TW_ONEVALUE));
 ptwOneValue = (pTW_ONEVALUE)GlobalLock(twCapability.hContainer);
 
-// OneValue�̒l��ݒ肷��
+// OneValueの値を設定する
 ptwOneValue->ItemType=TWTY_FIX32;	
 tw=FloatToFix32(flReso);
 memcpy((void*)&ptwOneValue->Item,(void *)&tw,sizeof(TW_FIX32));
 
-// �R���e�i��ݒ肷��
-twCapability.Cap=ICAP_YRESOLUTION;	// �ݒ���e��ICAP_XXX�Ŏw�肷��
-twCapability.ConType = TWON_ONEVALUE;	// �R���e�i�̃^�C�v���w�肷��
+// コンテナを設定する
+twCapability.Cap=ICAP_YRESOLUTION;	// 設定内容をICAP_XXXで指定する
+twCapability.ConType = TWON_ONEVALUE;	// コンテナのタイプを指定する
 
-// �R�}���h
+// コマンド
 rc=lpfnDSM_Entry(pAppId,pSourceId,DG_CONTROL,DAT_CAPABILITY,MSG_SET,(TW_MEMREF)&twCapability);
 
-// �R���e�i�J��
+// コンテナ開放
 GlobalUnlock(twCapability.hContainer);
 GlobalFree(twCapability.hContainer);
 
@@ -537,54 +539,54 @@ GlobalFree(twCapability.hContainer);
 
 <HR>
 
-<H3><FONT COLOR="#3366FF">�P�P�D�C�l�[�u���i��ԂS����ԂT����ԂU�j�^�f�B�Z�[�u���i��ԂS����ԂT�j</FONT></H3>
+<H3><FONT COLOR="#3366FF">１１．イネーブル（状態４→状態５→状態６）／ディセーブル（状態４←状態５）</FONT></H3>
 
 <BR>
-�@TWAIN���C�l�[�u���ɂ���ɂ́ADG_CONTROL/DAT_USERINTERFACE/MSG_ENABLED���g�p���܂��B<BR>
+　TWAINをイネーブルにするには、DG_CONTROL/DAT_USERINTERFACE/MSG_ENABLEDを使用します。<BR>
 <BR>
 <TABLE  BORDER=1 cellspacing="0" bgcolor="#C0C0E0" >
 <TR><TD>
 <PRE>
 
-TW_UINT16 rc;				// �ߒl
+TW_UINT16 rc;				// 戻値
 TW_USERINTERFACE ui;
 
 ui.ShowUI=FALSE;
 ui.ModalUI=FALSE;
-ui.hParent=�e�E�B���h�E�iShowUI=TRUE�̎��͕K�{�j
+ui.hParent=親ウィンドウ（ShowUI=TRUEの時は必須）
 
 rc=lpfnDSM_Entry(pAppId,pSourceId,DG_CONTROL,DAT_USERINTERFACE,MSG_ENABLEDS,&ui);
 
 if(rc != TWRC_SUCCESS){
-	�G���[����
+	エラー処理
 }
 </PRE>
 </TD></TR>
 </TABLE>
 <BR>
-���̎��Aui.ShowUI�y��ui.ModalUI��TRUE�ɂ���ƁA
-�G���h���[�U���璼�ڊe��ݒ�y�ѓ]���܂Ŏ��s�ł���_�C�A���O�{�b�N�X���\������܂��B<BR>
-���̃_�C�A���O�{�b�N�X�̓\�[�X���쐬���܂��B<BR>
-�C�l�[�u���𔭍s���ď�ԂT�iSource Enable�j�ɂ���ƁA�\�[�X�͓]�������ɂ�����B<BR>
-�����������ƃ\�[�X�̓C�x���g�iMSG_XFERREADY�j�𔭐�������ԂU�iTransfer Ready�j�Ɉڂ�܂��B<BR>
+この時、ui.ShowUI及びui.ModalUIをTRUEにすると、
+エンドユーザから直接各種設定及び転送まで実行できるダイアログボックスが表示されます。<BR>
+このダイアログボックスはソースが作成します。<BR>
+イネーブルを発行して状態５（Source Enable）にすると、ソースは転送準備にかかる。<BR>
+準備が整うとソースはイベント（MSG_XFERREADY）を発生させ状態６（Transfer Ready）に移ります。<BR>
 <BR>
-�f�B�Z�[�u���ɂ���ɂ́ADG_CONTROL/AT_USERINTERFACE/MSG_DISABLEDS���g�p���܂�<BR>
+ディセーブルにするには、DG_CONTROL/AT_USERINTERFACE/MSG_DISABLEDSを使用します<BR>
 <BR>
 <TABLE  BORDER=1 cellspacing="0" bgcolor="#C0C0E0" >
 <TR><TD>
 <PRE>
 
-TW_UINT16 rc;				// �ߒl
+TW_UINT16 rc;				// 戻値
 TW_USERINTERFACE ui;
 
 ui.ShowUI=FALSE;
 ui.ModalUI=FALSE;
-ui.hParent=�e�E�B���h�E(�v��Ȃ���������Ȃ��j
+ui.hParent=親ウィンドウ(要らないかもしれない）
 
 rc=lpfnDSM_Entry(pAppId,pSourceId,DG_CONTROL,DAT_USERINTERFACE,MSG_DISABLEDS,&ui);
 
 if(rc != TWRC_SUCCESS){
-	�G���[����
+	エラー処理
 }
 
 </PRE>
@@ -593,11 +595,11 @@ if(rc != TWRC_SUCCESS){
 <BR>
 <HR>
 
-<H3><FONT COLOR="#3366FF">�P�Q�D�f�[�^�]���i��ԂT������ԂU�j</FONT></H3>
+<H3><FONT COLOR="#3366FF">１２．データ転送（状態５←→状態６）</FONT></H3>
 <BR>
-�\�[�X����C�x���g�iMSG_XFERREADY�j���󂯎��ƃf�[�^�]�����s�����Ƃ��o���܂��B<BR>
-�i�C�x���g�̎����͂T�����Q�Ƃ��ĉ������j<BR>
-�f�[�^�]���́ADG_IMAGE/DAT_IMAGENATIVEXFER/MSG_GET���g�p���܂��B<BR>
+ソースからイベント（MSG_XFERREADY）を受け取るとデータ転送を行うことが出来ます。<BR>
+（イベントの取り方は５項を参照して下さい）<BR>
+データ転送は、DG_IMAGE/DAT_IMAGENATIVEXFER/MSG_GETを使用します。<BR>
 <BR>
 <TABLE  BORDER=1 cellspacing="0" bgcolor="#C0C0E0" >
 <TR><TD>
@@ -609,28 +611,28 @@ TW_BOOL PendingXfers = TRUE;
 LPBITMAPINFOHEADER	lpDib;
 
 
-// �摜�]��
+// 画像転送
 hBitmap = NULL;
 rc = lpfnDSM_Entry(pAppId,pSourceId,DG_IMAGE,DAT_IMAGENATIVEXFER,MSG_GET,(TW_MEMREF)&hBitmap);
 
 lpDib = (LPBITMAPINFOHEADER)GlobalLock((void*)hBitmap);
 
-// �ߒl�̃`�F�b�N
+// 戻値のチェック
 switch(rc){
 	case TWRC_XFERDONE:
 		if(lpDib!=NULL){
-			// DIB�I�u�W�F�N�g���擾�ł��܂���
-			�E�E�E�E
+			// DIBオブジェクトを取得できました
+			・・・・
 		}
 		break;
 		case TWRC_CANCEL:
-		// ���[�U�ɂ���ăL�����Z������܂���
-		�E�E�E
+		// ユーザによってキャンセルされました
+		・・・
 		break;
 
 	case TWRC_FAILURE:
-		// �]�����ɃG���[���������܂���
-		�E�E�E
+		// 転送中にエラーが発生しました
+		・・・
 		break;
 }
 if(lpdib!=NULL){
@@ -642,30 +644,30 @@ if(lpdib!=NULL){
 </TD></TR>
 </TABLE>
 <BR>
-�����Ŏ擾����lpDib���r�b�g�}�b�v�I�u�W�F�N�g�ɂȂ�̂ŁA�f�B�X�v���C�ɕ\������Ȃ�A
-�t�@�C���ɕۑ�����Ȃ肷�邱�Ƃ��o���܂��B<BR>
-�X�L���i���A�I�[�g�t�B�[�_�������Ă���ꍇ�A�]���y���f�B���O����
-�ʒm�����悤�ł����A�����g�����܂Œ��ׂĂ��Ȃ��̂ł悭������܂���B<BR>
-�����K�v�ł�����A�e���Œ��ׂĂ݂ĉ������B<BR>
-���A�]���I���́ADG_CONTROL/DAT_PENDINGXFERS/MSG_ENDXFER,
-�y���f�B���O���Z�b�g��DG_CONTROL/DAT_PENDINGXFERS/MSG_RESET���g�p���܂��B<BR>
+ここで取得したlpDibがビットマップオブジェクトになるので、ディスプレイに表示するなり、
+ファイルに保存するなりすることが出来ます。<BR>
+スキャナが、オートフィーダを持っている場合、転送ペンディング分が
+通知されるようですが、私自身ここまで調べていないのでよく分かりません。<BR>
+もし必要でしたら、各自で調べてみて下さい。<BR>
+尚、転送終了は、DG_CONTROL/DAT_PENDINGXFERS/MSG_ENDXFER,
+ペンディングリセットはDG_CONTROL/DAT_PENDINGXFERS/MSG_RESETを使用します。<BR>
 <BR>
 
 <HR>
-<H3><FONT COLOR="#3366FF">�P�R�D������</FONT></H3>
+<H3><FONT COLOR="#3366FF">１３．おわりに</FONT></H3>
 <BR>
-����́A�T���v���\�t�g��Y�t���܂���ł������A���̕��R�[�h��𑝂₵���̂ŎQ�l�ɂł���Ǝv���܂��B
-TWAIN�ɂ͂��낢��ȃ��[�h��p�����[�^������܂��B<BR>
-�����ł́A��{�I�ȗ��ꂵ���G��Ă��܂��񂪁A<A HREF="http://www.twain.org/download.htm">TWAIN Specification </A>���Q�Ƃ��邽�߂̗\���m���I�͂���
-���Ƃ��ł����Ǝv���܂��B<BR>
-����𑫂�����ɁA�F����̃A�v���P�[�V������TWAIN���T�|�[�g���Ă����܂��傤�I
+今回は、サンプルソフトを添付しませんでしたが、その分コード例を増やしたので参考にできると思います。
+TWAINにはいろいろなモードやパラメータがあります。<BR>
+ここでは、基本的な流れしか触れていませんが、<A HREF="http://www.twain.org/download.htm">TWAIN Specification </A>を参照するための予備知識的はつける
+ことができたと思います。<BR>
+これを足がかりに、皆さんのアプリケーションでTWAINをサポートしていきましょう！
 <BR>
 <HR>
-<P><A HREF="index.htm">[�z�[���֖߂�n</A>
+<P><A HREF="index.htm">[ホームへ戻る］</A>
 <BR>
-�y�����L�^�z<BR>
-2000/06/21�ŁF���J<BR>
-2001/11/02�ŁF��L�C��<BR>
+【改訂記録】<BR>
+2000/06/21版：公開<BR>
+2001/11/02版：誤記修正<BR>
 <HR><FONT SIZE=-1>Copyright (c) 1997-2001, BearBeetle, Allrights reserved.</FONT>
 </BODY>
 </HTML>
