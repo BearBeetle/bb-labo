@@ -1,185 +1,382 @@
 <!DOCTYPE html>
-<HTML>
-<HEAD>
+<html lang="en">
+<head>
    <meta charset="UTF-8">
-   <TITLE>Video Screen</TITLE>
-</HEAD>
-<BODY>
-<A NAME="TOP_TOP"></A>
-<BR>
-<P>
-<CENTER><BLINK><FONT SIZE=+1 COLOR="#3366FF">★Video Screen★</FONT></BLINK></CENTER>
-<HR>
-<H2>Table of Contents</H2>
-<BR>
-<A HREF="#CHAP1">1. Introduction</A><BR>
-    <A HREF="#CHAP1_1">Supported Video Formats</A><BR>
-　　<A HREF="#CHAP1_2">Supported OS</A><BR>
-　　<A HREF="#CHAP1_3">Production & Copyright</A><BR>
-　　<A HREF="#CHAP1_4">Disclaimer</A><BR>
-　　<A HREF="#CHAP1_5">Precautions</A><BR>
-<A HREF="#CHAP2">2. Install / Uninstall</A><BR>
-　　<A HREF="#CHAP2_1">Installation</A><BR>
-　　<A HREF="#CHAP2_2">Uninstallation</A><BR>
-<A HREF="#CHAP3">3. Settings</A><BR>
-<A HREF="#CHAP4">4. Other / Version History</A><BR>
-　　<A HREF="#CHAP4_1">Other</A><BR>
-　　<A HREF="#CHAP4_2">Version History</A><BR>
-<BR><BR>
-<HR>
-<A NAME="CHAP1">
-<H2>1. Introduction</H2>
-<BR>
-<BR>
-"Video Screen" is a screensaver that displays videos. When the screensaver starts, it plays registered videos one after another. Additionally, the display position changes periodically.<BR>
-"Video Screen" is freeware.<BR>
-<BR>
-*Please be sure to read the precautions before use.<BR>
-<BR>
-<A NAME="CHAP1_1">
-<H3>Supported Video Formats</H3><BR>
-Videos playable in "Video Screen" depend on your system environment.<BR>
-Any video format playable in Windows Media Player can be played.<BR>   
-<BR>
-<BR>
-<A NAME="CHAP1_2">
-<H3>Supported OS</H3><BR>
-Windows 11<BR>
-<BR>
-*Compatibility with Windows 10 and earlier is unconfirmed.<BR>
-<A NAME="CHAP1_3">
-<H3>Production & Copyright</H3><BR>
-BearBeetle<BR>
-URL: https://bearbeetle.github.io/bb-labo/<BR>
-<BR>
-<BR> 
-<A NAME="CHAP1_4">
-<H3>Disclaimer</H3><BR>
-・The developer shall not be held liable for any damages or disadvantages resulting from the use of "Video Screen."<BR>
-<BR>
-<A NAME="CHAP1_5">
-<H3>Precautions</H3>
-<UL>
-<LI><FONT COLOR=RED>Settings are not compatible with V2.xx or earlier (settings cannot be carried over).</FONT>
-<LI>Please observe the following regarding redistribution:<BR>
-　　・Do not modify the package or distribute only parts of it.<BR>
-　　・However, distribution in an extracted archive format is permitted.<BR>
-　　・Please consult the developer regarding bundling with other software or hardware.<BR>
-<LI>Suspend and Standby modes are not supported. The system may lock up.<BR>
-It is possible to avoid locking by configuring the settings to stop video playback before standby starts (available since v1.70).<BR>
-</UL>
-<A HREF="#TOP_TOP">[Back to Top]</A><BR>
-<HR>
-<A NAME="CHAP2">
-<H2>2. Install / Uninstall</H2>
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>VideoScreen Manual</title>
+   <style>
+       /* Responsive CSS Design (Same as the Japanese version) */
+       :root {
+           --primary-color: #3366FF;
+           --bg-color: #f8f9fa;
+           --text-color: #333;
+           --caution-color: #dc3545;
+           --accent-bg-color: #e9ecef;
+           --max-content-width: 800px;
+       }
 
-<A NAME="CHAP2_1">
-<H3>Installation</H3>
-1) Copy VS.SCR to any folder.<BR>
-2) Right-click VS.SCR and select "Install."<BR>
-<BR>
-<A NAME="CHAP2_2">
-<H3>Uninstallation</H3>
-Delete VS.SCR from the folder where it was installed (c:\Windows\System32).<BR>
-*If you wish to perform a complete uninstallation, delete everything under the following folder:<BR>
-　C:\Users\XXX\AppData\Local\BearBeetle<BR>
-<BR>
-<A HREF="#TOP_TOP">[Back to Top]</A><BR>
-<HR> 
-<A NAME="CHAP3">
-<H2>3. Settings</H2>
-<BR>
-　[Note]<BR>
-　　*"Video Content" has the same meaning as "Video File."<BR>
-<BR>
-1. Open the Screensaver Settings screen.<BR>
-Right-click on the desktop -> "Personalize" -> "Lock screen" -> (Related settings) "Screen saver"<BR>
-<BR><BR>
-2. Select "Video Screen" in the "Screen saver (S)" dropdown.<BR>
-<BR><BR>
-3. Click "Settings (T)..."<BR>
-A dialog titled "Video Screen" will appear.<BR>
-At this point, nothing is registered in the "Playback Content List."<BR>
-　　　<IMG img/SRC="img/vs_Setting3e.png"><BR>
-<BR><BR>
-4. Click "Add File" or "Add URL" to specify the video files you want to register.<BR>
-　　　　*In "Add File," you can select multiple files at once by holding the Shift or Control key while selecting.<BR>
-　　　　*"Add URL" is used to play video files from the internet.<BR>
-　　However, services that do not specify a direct file, such as YouTube, cannot be played.<BR>
-　　　<IMG img/SRC="img/vs_Setting4e.png"><BR>
-<BR><BR>
-5. To remove an entry from the "Playback Content List,"<BR>
-　　select the item and click "Delete."<BR>
-<BR>
-6. To remove all entries from the "Playback Content List,"<BR>
-　　select an item and click "Delete All."<BR>
-<BR>
-7. Select an item from the "Playback Content List" and click "↑" to move it up one line.<BR>
-　　Click "↓" to move it down one line.<BR>
-<BR>
-8. Check "Random Playback" to play items in a random order.<BR>
-　　　　*The same content may occasionally play twice in a row.<BR>
-<BR>
-9. Check "Resume Playback" to resume from where you left off the next time the screensaver starts.<BR>
-<BR>
-10. Check "Mute" to<BR>
-　　silence the sound only while the video is playing (while the screensaver is active).<BR>
-<BR>
-11. Check "Display Filename" to display the filename at the top of the screen<BR>
-　　during video playback (while the screensaver is active).<BR>
-<BR>
-12. "Display Size" allows you to set the size to 0.5x, 1x, 2x, or 3x the original size.<BR>
-　　Also, if you set "Display Size" to "Custom," you can set the magnification linearly via "Display Size (%)."<BR>
-<BR>
-13. "Change Position Interval" allows you to set the interval for changing the video display position between 1 and 600 seconds.<BR>
-　　　　*Setting it to 0 seconds fixes the video position to the center.<BR>
-<BR>
-14. "Playback Stop Time" allows you to set the interval until video playback ends between 1 and 600 minutes.<BR>
-　　　　*Setting it to 0 minutes means video playback will not end until the screensaver itself terminates.<BR>
-　　　　*If you enable "Suspend" or "Display Power Saving" functions, please ensure<BR>
-　　　　  the settings are configured to stop video display before the power turns off.<BR>
-<BR>
-15. Click "OK" to apply the settings.<BR>
-<BR>
-16. While the screensaver is running, pressing the "N" key on the keyboard<BR>
-　　will immediately move to the next video content. Pressing the "R" key<BR>
-　　will return to the beginning of the current video content. Pressing "S"<BR>
-　　toggles Mute ON and OFF. However, these states are not saved to the settings.<BR>
-　　　*Pressing any other key will exit the screensaver.<BR>
-<BR>
-17. Limiting the Display Range (Advanced Settings)<BR>
-　　　C:\Users\XXX\AppData\Local\BearBeetle\VS2\VS2.INI<BR>
-<TABLE  BORDER=1 WIDTH=500 cellspacing="0" bgcolor="#C0C0E0" >
-<TR><TD>
-SCREEN_WIDTH=<FONT COLOR=BLUE>640</FONT><BR>
-SCREEN_HEIGHT=<FONT COLOR=BLUE>480</FONT><BR>
-</TD></TR>
-</TABLE>
-Enter the desired width/height values in the blue text area (640/480) to limit the range.<BR><BR>
-<A HREF="#TOP_TOP">[Back to Top]</A><BR>
-<HR>
-<A NAME="CHAP4">
-<H2>4. Other / Version History</H2>
-<A NAME="CHAP4_1">
-<H3>Other</H3>
-・"Exceptions" or "Illegal operations" are typically due to issues with display or multimedia drivers. If updating drivers does not resolve the issue, it is recommended to stop using "Video Screen."<BR>
-<BR>
-<BR>
-<A NAME="CHAP4_2">
-<H3>Version History</H3>
-<PRE>
+       * {
+           box-sizing: border-box;
+       }
+
+       body {
+           font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+           line-height: 1.6;
+           color: var(--text-color);
+           background-color: var(--bg-color);
+           margin: 0;
+           padding: 0;
+       }
+
+       .main-container {
+           max-width: var(--max-content-width);
+           margin: 0 auto;
+           padding: 2rem 1rem;
+           background-color: #fff;
+           box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.05);
+       }
+
+       .main-header {
+           text-align: center;
+           margin-bottom: 2rem;
+       }
+
+       .main-header .title-accent {
+           font-size: 1.5rem;
+           font-weight: bold;
+           color: var(--primary-color);
+       }
+
+       .main-header hr {
+           border: 0;
+           border-top: 1px solid #dee2e6;
+           margin: 1.5rem 0;
+       }
+
+       .nav-menu ul {
+           list-style: none;
+           padding: 0;
+           margin: 0;
+       }
+
+       .nav-menu ol {
+           padding-left: 1.5rem;
+       }
+
+       .nav-menu li {
+           margin-bottom: 0.5rem;
+       }
+
+       .nav-menu a {
+           text-decoration: none;
+           color: var(--text-color);
+           transition: color 0.2s;
+       }
+
+       .nav-menu a:hover {
+           color: var(--primary-color);
+       }
+
+       h2, h3 {
+           color: var(--primary-color);
+           margin-top: 2rem;
+           margin-bottom: 1rem;
+           border-bottom: 1px solid #dee2e6;
+           padding-bottom: 0.5rem;
+       }
+
+       h2 {
+           font-size: 1.5rem;
+       }
+
+       h3 {
+           font-size: 1.25rem;
+           border-bottom: 0;
+           margin-top: 1.5rem;
+       }
+
+       img {
+           max-width: 100%;
+           height: auto;
+           display: block;
+           margin: 1rem auto;
+           box-shadow: 0 0.25rem 0.5rem rgba(0,0,0,0.1);
+       }
+
+       ul, ol {
+           padding-left: 1.5rem;
+           margin-bottom: 1rem;
+       }
+
+       ul ul, ul ol, ol ul, ol ol {
+           margin-top: 0.5rem;
+       }
+
+       .caution-text {
+           color: var(--caution-color);
+           font-weight: bold;
+       }
+
+       .config-example-table-wrapper {
+           overflow-x: auto;
+           margin-bottom: 1rem;
+       }
+
+       .config-example-table {
+           width: 100%;
+           border-collapse: collapse;
+           background-color: var(--accent-bg-color);
+           border: 1px solid #dee2e6;
+       }
+
+       .config-example-table td {
+           padding: 1rem;
+           border: 1px solid #dee2e6;
+       }
+
+       .config-example-table .accent-value {
+           color: var(--primary-color);
+           font-weight: bold;
+       }
+
+       pre {
+           white-space: pre-wrap;
+           background-color: #f1f3f5;
+           padding: 1rem;
+           border-radius: 0.25rem;
+           overflow-x: auto;
+           margin-bottom: 1rem;
+           font-size: 0.9rem;
+       }
+
+       .main-footer {
+           text-align: center;
+           margin-top: 3rem;
+           font-size: 0.8rem;
+           border-top: 1px solid #dee2e6;
+           padding-top: 1rem;
+       }
+
+       .back-to-top {
+           display: block;
+           text-align: center;
+           margin-top: 1.5rem;
+           font-size: 0.9rem;
+           color: var(--primary-color);
+           text-decoration: none;
+       }
+
+       .back-to-top:hover {
+           text-decoration: underline;
+       }
+
+       .main-container .config-example-table {
+           max-width: 500px;
+           margin: 1rem 0;
+       }
+   </style>
+</head>
+<body id="top">
+
+<div class="main-container">
+   <div class="main-header">
+       <span class="title-accent">★ Video Screen ★</span>
+       <hr>
+   </div>
+
+   <nav class="nav-menu">
+       <h2>Table of Contents</h2>
+       <ol>
+           <li><a href="#CHAP1">Introduction</a>
+               <ul>
+                   <li><a href="#CHAP1_1">Supported Video Formats</a></li>
+                   <li><a href="#CHAP1_2">Supported OS</a></li>
+                   <li><a href="#CHAP1_3">Production & Copyright</a></li>
+                   <li><a href="#CHAP1_4">Disclaimer</a></li>
+                   <li><a href="#CHAP1_5">Precautions</a></li>
+               </ul>
+           </li>
+           <li><a href="#CHAP2">Installation / Uninstallation</a>
+               <ul>
+                   <li><a href="#CHAP2_1">Installation</a></li>
+                   <li><a href="#CHAP2_2">Uninstallation</a></li>
+               </ul>
+           </li>
+           <li><a href="#CHAP3">Settings</a></li>
+           <li><a href="#CHAP4">Controls During Screensaver Operation</a></li>
+           <li><a href="#CHAP5">Multi-Monitor Support</a></li>
+           <li><a href="#CHAP6">Other / Version History</a>
+               <ul>
+                   <li><a href="#CHAP6_1">Other</a></li>
+                   <li><a href="#CHAP6_2">Version History</a></li>
+               </ul>
+           </li>
+       </ol>
+   </nav>
+
+   <h2 id="CHAP1">1. Introduction</h2>
+   <p>"Video Screen" is a screensaver that displays videos. When the screensaver starts, it plays the registered videos one after another. Additionally, the display position changes periodically.</p>
+   <p>This software is provided as Open Source Software (OSS) under the MIT License. The source code is available on GitHub, allowing for free customization and redistribution.</p>
+   <p>"Video Screen" features the following:</p>
+   <ul>
+       <li><strong>Broad Format Support:</strong> Plays any video format supported by Windows Media Player.</li>
+       <li><strong>Smart Multi-Monitor Support:</strong> Automatically detects your main display accurately, even in complex extended setups. It plays the video solely on the main screen while blacking out secondary monitors.</li>
+       <li><strong>Flexible Playback Options:</strong> Supports Random Playback, Resume Playback, and Mute functions.</li>
+       <li><strong>Burn-in Prevention:</strong> The video position changes periodically. The display size is also fully customizable.</li>
+       <li><strong>Keyboard Controls:</strong> You can control the video playback using the keyboard while the screensaver is running.</li>
+   </ul>
+   <p>* Please be sure to read the <a href="#CHAP1_4">Disclaimer</a> and <a href="#CHAP1_5">Precautions</a> before use.</p>
+
+   <h3 id="CHAP1_1">Supported Video Formats</h3>
+   <p>The videos playable in "Video Screen" depend on your system environment.<br>
+       It can play any video that is playable in Windows Media Player.</p>
+
+   <h3 id="CHAP1_2">Supported OS</h3>
+   <p>Windows 11<br>
+       * Compatibility with Windows 10 and earlier is not confirmed for the latest version.</p>
+
+   <h3 id="CHAP1_3">Production & Copyright</h3>
+   <p>BearBeetle<br>
+       URL: https://bearbeetle.github.io/bb-labo/</p>
+
+   <h3 id="CHAP1_4">Disclaimer</h3>
+   <p>【Disclaimer and License Information】<br>
+       This software is released as open source under the "MIT License."<br>
+       Under the terms of the license, this software is provided "AS IS", without warranty of any kind. The author shall not be held liable for any claim, damages, or other liabilities (including data loss or PC malfunctions) arising from the use of this software. Please use it at your own risk.<br>
+       (* This statement is a simplified summary of the MIT License disclaimer for general users and does not conflict with the official MIT License. For full legal details and terms of use, please check the LICENSE file in the <a href="https://github.com/BearBeetle/VideoScreen">GitHub repository</a>.)</p>
+
+   <h3 id="CHAP1_5">Precautions</h3>
+   <ul>
+       <li class="caution-text">Settings are NOT compatible with version 2.xx and earlier (previous settings cannot be carried over).</li>
+       <li>Suspend and Standby modes are not natively supported and may cause the system to lock up.<br>
+           You can avoid this by setting the "Playback Stop Time" to end video playback before the system goes into standby (available since v1.70).</li>
+   </ul>
+   <a href="#top" class="back-to-top">[Back to Top]</a>
+
+   <h2 id="CHAP2">2. Installation / Uninstallation</h2>
+   <h3 id="CHAP2_1">Installation</h3>
+   <ol>
+       <li>Copy <code>VS.SCR</code> to any folder of your choice.</li>
+       <li>Right-click on <code>VS.SCR</code> and select <strong>"Install"</strong>.</li>
+   </ol>
+   <img src="img/vs_Installe.png" alt="Installation Context Menu (Placeholder)">
+
+   <h3 id="CHAP2_2">Uninstallation</h3>
+   <ol>
+       <li>Delete <code>VS.SCR</code> from the folder where you installed it.<br>
+           * If you want to perform a complete uninstallation, delete the entire folder located at:<br>
+           <code>C:\Users\XXX\AppData\Local\BearBeetle</code></li>
+   </ol>
+   <a href="#top" class="back-to-top">[Back to Top]</a>
+
+   <h2 id="CHAP3">3. Settings</h2>
+   <p>【Note】* "Video Content" means the same as "Video File".</p>
+   <ol>
+       <li>Open the Windows Screen Saver Settings window.<br>
+           * The method varies depending on your Windows version.<br>
+           Example: Right-click on the Desktop &rarr; "Personalize" &rarr; "Lock screen" &rarr; "Screen saver" (under Related settings).<br>
+       </li>
+       <li>Select <strong>"Video Screen"</strong> from the Screen saver dropdown list.<br>
+       </li>
+       <li>Click the <strong>"Settings"</strong> button.<br>
+           A dialog box named "Video Screen" will appear.<br>
+           Initially, nothing is registered in the "PlayList".<br>
+           <img src="img/vs_Setting3e.png" alt="Video Screen Settings Dialog Initial State">
+       </li>
+       <li>Click <strong>"Add File(s)"</strong> or <strong>"Add URL"</strong> to specify the video files you want to register.
+           <ul>
+               <li>When clicking <strong>"Add File(s)"</strong>, you can select multiple files at once by holding down the <code>Shift</code> or <code>Ctrl</code> key.</li>
+               <li><strong>"Add URL"</strong> is used when you want to play a video file hosted on the internet.<br>
+                   Note: Streaming services that do not provide direct media file URLs (like standard YouTube links) cannot be played.</li>
+           </ul>
+           <img src="img/vs_Setting4e.png" alt="File Open Dialog">
+       </li>
+       <li>To remove an item from the "PlayList", select the item and click <strong>"Remove"</strong>.</li>
+       <li>To remove all items from the list, click <strong>"Clear All"</strong>.</li>
+       <li>You can change the playback order by selecting an item and clicking the <strong>"&uarr;"</strong> (Up) or <strong>"&darr;"</strong> (Down) buttons.</li>
+       <li>Check <strong>"Random"</strong> to randomize the playback order.
+           <ul>
+               <li>The same content might occasionally play twice in a row.</li>
+           </ul>
+       </li>
+       <li>Check <strong>"Continue"</strong> to resume the video from where it stopped the last time the screensaver ran.</li>
+       <li>Check <strong>"Mute"</strong> to disable audio while the video is playing.</li>
+       <li>Check <strong>"Show Title"</strong> to show the name of the file at the top of the screen during playback.</li>
+       <li><strong>"Display Size"</strong> allows you to set the video scale (e.g., half size, 1x, 2x, 3x).<br>
+           If you set it to <strong>"Custom Size"</strong>, you can specify the exact scaling percentage.</li>
+       <li><strong>"Nove Interval"</strong> sets how often (in seconds, from 1 to 600) the video jumps to a new location on the screen.
+           <ul>
+               <li>If set to <code>0</code> seconds, the video position is fixed at the center.</li>
+           </ul>
+       </li>
+       <li><strong>"Stop After"</strong> sets the time (in minutes, from 1 to 600) until video playback automatically stops.<br>
+           <ul>
+               <li>If set to <code>0</code> minutes, the video will play endlessly until the screensaver exits.</li>
+               <li>If you use PC power-saving features (like Suspend), please set this timer so the video stops playing <strong>before</strong> the PC goes to sleep.</li>
+           </ul>
+       </li>
+       <li>Click <strong>"OK"</strong> to apply the settings.</li>
+       <li>Advanced Setting: Restricting the display range manually<br>
+           Edit the initialization file: <code>C:\Users\XXX\AppData\Local\BearBeetle\VS2\VS2.INI</code><br>
+           <div class="config-example-table-wrapper">
+               <table class="config-example-table">
+                   <tr>
+                       <td>
+                           SCREEN_WIDTH=<span class="accent-value">640</span><br>
+                           SCREEN_HEIGHT=<span class="accent-value">480</span>
+                       </td>
+                   </td>
+               </table>
+           </div>
+           Enter the desired width and height values (e.g., 640 and 480) in the configuration file.
+       </li>
+   </ol>
+   <a href="#top" class="back-to-top">[Back to Top]</a>
+
+   <h2 id="CHAP4">4. Controls During Screensaver Operation</h2>
+   <ul>
+       <li>Press the <strong>"N"</strong> key to immediately skip to the Next video content.</li>
+       <li>Press the <strong>"R"</strong> key to Restart the currently playing video from the beginning.</li>
+       <li>Press the <strong>"S"</strong> key to toggle the Mute state ON and OFF. (Note: This temporary state will not be saved to your main settings).</li>
+   </ul>
+   <p>* Pressing any other key or moving the mouse will exit the screensaver.</p>
+   <a href="#top" class="back-to-top">[Back to Top]</a>
+
+   <h2 id="CHAP5">5. Multi-Monitor Support</h2>
+   <p>In a multi-monitor (multiple displays) environment, you can set which display will show the video by following these steps:</p>
+   <ol>
+       <li>Right-click on the desktop and select <strong>"Display settings"</strong> to open the system settings.</li>
+       <li>Select the monitor number you want to use for the video (it will be highlighted).</li>
+       <li>Scroll down to the <strong>"Multiple displays"</strong> section and check the box that says <strong>"Make this my main display"</strong>.</li>
+   </ol>
+   <a href="#top" class="back-to-top">[Back to Top]</a>
+
+   <h2 id="CHAP6">6. Other / Version History</h2>
+   <h3 id="CHAP6_1">Other</h3>
+   <ul>
+       <li>The source code is available on the <a href="https://github.com/BearBeetle/VideoScreen">GitHub repository</a>.</li>
+       <li>"Exceptions" or "Illegal Operations" are usually caused by display driver or multimedia driver issues. If updating your drivers does not fix the problem, we recommend discontinuing the use of "Video Screen".</li>
+   </ul>
+
+   <h3 id="CHAP6_2">Version History</h3>
+   <pre>
 V.1.0 (1997/8/28)
-・Initial Release
+- Initial Release
 
 V.3.00 (2026/03/xx)
-・Windows 11 support
-・English language support
+- Windows 11 support
+- Upgraded Video API from MCI to MFPlay (Windows Media Foundation)
+- Perfected Multi-Monitor support
+- Open Sourced under MIT License
+- English language support
+</pre>
+   <a href="#top" class="back-to-top">[Back to Top]</a>
+   <p style="text-align: center;"><a href="index.html">[Back to Home]</a></p>
 
-</PRE>
-<A HREF="#TOP_TOP">[Back to Top]</A><BR>
-<A HREF="index.html">[Back Home]</A><BR>
-<HR>
-<FONT SIZE=-1>Copyright (c) 1997-2026, BearBeetle, All rights reserved.</FONT>
+   <footer class="main-footer">
+       Copyright (c) 1997-2026, BearBeetle, All rights reserved.
+   </footer>
+</div>
 
-</BODY>
-</HTML>
+</body>
+</html>
