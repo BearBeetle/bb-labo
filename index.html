@@ -1,75 +1,262 @@
 <!DOCTYPE html>
-<HTML>
-<HEAD>
+<html lang="ja">
+<head>
    <meta charset="UTF-8">
-   <TITLE>BB Programming Lab.</TITLE>
-</HEAD>
-<BODY BACKGROUND="img/bcg_280.gif">
-<A NAME="TOP_TOP"></A>
-<BR>
-<BR>
-<CENTER><BLINK><FONT COLOR="#3366FF">★ ＢＢ研究所 ★</FONT></BLINK></CENTER>
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>BB Programming Lab.</title>
+   <style>
+       /* モダンなレスポンシブデザインの設定 */
+       :root {
+           --primary-color: #3366FF;
+           --text-color: #333;
+           --bg-table-header: #C0D0C0;
+           --border-color: #ccc;
+       }
 
-<CENTER><IMG SRC="img/logo.gif" HEIGHT=205  WIDTH=446 ></CENTER>
+       body {
+           /* 元の背景画像をそのまま使用 */
+           background-image: url('img/bcg_280.gif');
+           font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+           line-height: 1.6;
+           color: var(--text-color);
+           margin: 0;
+           padding: 1rem;
+       }
 
+       /* コンテンツを中央に配置し、読みやすくするための白枠コンテナ */
+       .container {
+           max-width: 800px;
+           margin: 0 auto;
+           /* 背景画像が少しだけ透ける半透明の白背景（視認性の大幅アップ） */
+           background-color: rgba(255, 255, 255, 0.95);
+           padding: 2rem;
+           border-radius: 8px;
+           box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+       }
 
-<P>　このサイトは、一般的な資料が少ない分野に関する、プログラム技術を中心にした解説目的に1998年～2003年くらいまで更新していました。
-その後、仕事や家庭の事情で、個人の趣味の時間を作れなくなり、15年くらい更新できない状態でした。<BR>
-　ここにきて、少し時間が持てるようになりました。時間的な制約もあり、あまりマニアックなものは難しいですが、今はやりのRaspberry Piを使った電子工作で遊んだりすることはできるようになりましたので、
-まとまった内容があれば掲載していきたいと思います。<BR>
-※過去の記事は残念ながら時代遅れとなってしまったため、削除しました。<A HREF="old_html/index.htm">(過去の記事はこちら）</A> <BR>
+       .site-title {
+           text-align: center;
+           color: var(--primary-color);
+           font-size: 1.5rem;
+           font-weight: bold;
+           margin-bottom: 1rem;
+       }
 
-<CENTER>Since 1998/04/05</CENTER>
-</P>
+       /* 旧<BLINK>タグの代わり（CSSでふんわり点滅を再現） */
+       .blink-text {
+           animation: blinker 2s linear infinite;
+       }
+       @keyframes blinker {
+           50% { opacity: 0.5; }
+       }
 
+       /* 画像のはみ出し防止 */
+       .logo-img {
+           display: block;
+           margin: 0 auto 1.5rem;
+           max-width: 100%;
+           height: auto;
+       }
 
-<P><!--
--------- 目次 --------
--->
-<HR>
-<CENTER><B><FONT COLOR="#3366FF"><FONT SIZE=-1>【目次】</FONT></FONT></B></CENTER>
-<CENTER><TABLE BORDER >
-<TR bgcolor="#C0D0C0"><TD><CENTER>タイトル</CENTER></TD><TD><CENTER>作者</CENTER></TD><TD><CENTER>公開</CENTER></TD><TD><CENTER>改訂</CENTER></TR>
-<TR><TD><A HREF="raspberrypi_1.html">Raspberry Piで8x8 LEDマトリックスを制御(1)／スクロール時計表示</A></TD><TD>BearBeetle</TD><TD>2018/05/13</TD><TD><CENTER>2018/05/30</CENTER></TD></TR>
-<TR><TD><A HREF="raspberrypi_2.html">Raspberry Piで8x8 LEDマトリックスを制御(2)／漢字表示</A></TD><TD>BearBeetle</TD><TD>2018/05/20</TD><TD><CENTER>-</CENTER></TD></TR>
-<TR><TD><A HREF="raspberrypi_3.html">Raspberry Piで秋月電子の8x32 LEDマトリックスを制御(1)</A></TD><TD>BearBeetle</TD><TD>2019/06/02</TD><TD><CENTER>-</CENTER></TD></TR>
-<TR><TD><A HREF="raspberrypi_4.html">Raspberry Piで秋月電子の8x32 LEDマトリックスを制御(2)</A></TD><TD>BearBeetle</TD><TD>2019/06/15</TD><TD><CENTER>-</CENTER></TD></TR>
+       .since-text {
+           text-align: center;
+           font-size: 0.9rem;
+           color: #666;
+           margin-bottom: 2rem;
+       }
 
-</TABLE></CENTER>
+       h2 {
+           color: var(--primary-color);
+           font-size: 1.2rem;
+           text-align: center;
+           margin-top: 2rem;
+           border-bottom: 2px solid var(--primary-color);
+           padding-bottom: 0.5rem;
+       }
 
-【ご注意】
-<UL>
-<LI>質問は受け付けられません。ごめんさい。</LI>
-<LI>これらの文書にはウソが混じっている可能性がありますが、免責させていただきます。</LI>
-<BR>でも、指摘していただけると幸いです。</UL>
-<BR>
-<HR>
-<P><!--
--------- ソフト --------
--->
-自作ソフトも更新が止まっていました。最近更新したものを掲載します。<BR><BR>
+       /* テーブルをスマホで横スクロールさせるためのラッパー */
+       .table-responsive {
+           overflow-x: auto;
+           margin-bottom: 2rem;
+       }
 
-<CENTER>
-<FONT SIZE=-1><TABLE BORDER=2>
+       table {
+           width: 100%;
+           border-collapse: collapse;
+           min-width: 500px; /* スマホで縮みすぎないための最小幅 */
+       }
 
-<TR bgcolor="#C0D0C0"><TD><CENTER>名称</CENTER></TD><TD><CENTER>Ver</CENTER></TD><TD><CENTER>説明</CENTER></TD><TD><CENTER>ダウンロード</CENTER></TD><TD><CENTER>詳細</CENTER></TD><TD><CENTER>更新</CENTER></TD></TR>
+       th, td {
+           border: 1px solid var(--border-color);
+           padding: 0.75rem;
+           font-size: 0.95rem;
+       }
 
-<TR><TD >ヴィデオ・スクリーン</TD><TD>2.00</TD><TD>動画を再生・表示する<BR>スクリーンセーバー</TD><TD>
-<A HREF="obj/Vs200.zip">VS200.zip<BR>(53kB)</FONT></A></TD><TD><A HREF="vs_help.html">説明</A></TD><TD>2018/05/26</TD></TR>
+       th {
+           background-color: var(--bg-table-header);
+           text-align: center;
+           font-weight: bold;
+       }
 
+       td.center {
+           text-align: center;
+       }
 
-</TABLE></FONT>
-</CENTER>
-<BR>
-<HR>
+       a {
+           color: var(--primary-color);
+           text-decoration: none;
+       }
 
-<UL>
-<LI>リンクはご自由に。</LI>
-</UL>
+       a:hover {
+           text-decoration: underline;
+       }
 
-</P>
-<CENTER><IMG SRC="img/img-mail.png"></CENTER>
-<HR><FONT SIZE=-1>Copyright (c) 1997-2019, BearBeetle, Allrights reserved.</FONT>
+       ul {
+           padding-left: 1.5rem;
+       }
 
-</BODY>
-</HTML>
+       hr {
+           border: 0;
+           border-top: 1px solid var(--border-color);
+           margin: 2rem 0;
+       }
+
+       .footer {
+           text-align: center;
+           font-size: 0.8rem;
+           color: #666;
+           margin-top: 2rem;
+       }
+
+       /* スマホ閲覧時向けの微調整 */
+       @media (max-width: 600px) {
+           body {
+               padding: 0; /* スマホでは画面端まで広く使う */
+           }
+           .container {
+               padding: 1.5rem 1rem;
+               border-radius: 0;
+           }
+           th, td {
+               padding: 0.5rem;
+               font-size: 0.85rem;
+           }
+       }
+   </style>
+</head>
+<body id="top">
+
+<div class="container">
+   <div class="site-title blink-text">★ ＢＢ研究所 ★</div>
+   <img src="img/logo.gif" alt="ＢＢ研究所 ロゴ" class="logo-img" width="446" height="205">
+
+   <p>　このサイトは、一般的な資料が少ない分野に関する、プログラム技術を中心にした解説目的に1998年～2003年くらいまで更新していました。
+   その後、仕事や家庭の事情で、個人の趣味の時間を作れなくなり、15年くらい更新できない状態でした。<br>
+   　ここにきて、少し時間が持てるようになりました。時間的な制約もあり、あまりマニアックなものは難しいですが、今はやりのRaspberry Piを使った電子工作で遊んだりすることはできるようになりましたので、
+   まとまった内容があれば掲載していきたいと思います。<br>
+   ※過去の記事は残念ながら時代遅れとなってしまったため、削除しました。<a href="old_html/index.htm">(過去の記事はこちら)</a></p>
+
+   <p class="since-text">Since 1998/04/05</p>
+
+   <hr>
+
+   <h2>【目次】</h2>
+   <div class="table-responsive">
+       <table>
+           <thead>
+               <tr>
+                   <th>タイトル</th>
+                   <th>作者</th>
+                   <th>公開</th>
+                   <th>改訂</th>
+               </tr>
+           </thead>
+           <tbody>
+               <tr>
+                   <td><a href="raspberrypi_1.html">Raspberry Piで8x8 LEDマトリックスを制御(1)／スクロール時計表示</a></td>
+                   <td class="center">BearBeetle</td>
+                   <td class="center">2018/05/13</td>
+                   <td class="center">2018/05/30</td>
+               </tr>
+               <tr>
+                   <td><a href="raspberrypi_2.html">Raspberry Piで8x8 LEDマトリックスを制御(2)／漢字表示</a></td>
+                   <td class="center">BearBeetle</td>
+                   <td class="center">2018/05/20</td>
+                   <td class="center">-</td>
+               </tr>
+               <tr>
+                   <td><a href="raspberrypi_3.html">Raspberry Piで秋月電子の8x32 LEDマトリックスを制御(1)</a></td>
+                   <td class="center">BearBeetle</td>
+                   <td class="center">2019/06/02</td>
+                   <td class="center">-</td>
+               </tr>
+               <tr>
+                   <td><a href="raspberrypi_4.html">Raspberry Piで秋月電子の8x32 LEDマトリックスを制御(2)</a></td>
+                   <td class="center">BearBeetle</td>
+                   <td class="center">2019/06/15</td>
+                   <td class="center">-</td>
+               </tr>
+           </tbody>
+       </table>
+   </div>
+
+   <h3>【ご注意】</h3>
+   <ul>
+       <li>質問は受け付けられません。ごめんなさい。</li>
+       <li>これらの文書にはウソが混じっている可能性がありますが、免責させていただきます。<br>でも、指摘していただけると幸いです。</li>
+   </ul>
+
+   <hr>
+
+   <h2>自作ソフト</h2>
+   <p>自作ソフトも更新が止まっていました。最近更新したものを掲載します。</p>
+
+   <div class="table-responsive">
+       <table>
+           <thead>
+               <tr>
+                   <th>名称</th>
+                   <th>Ver</th>
+                   <th>説明</th>
+                   <th>ダウンロード</th>
+                   <th>詳細</th>
+                   <th>更新</th>
+               </tr>
+           </thead>
+           <tbody>
+               <tr>
+                   <td>ヴィデオ・スクリーン</td>
+                   <td class="center">2.00</td>
+                   <td>動画を再生・表示する<br>スクリーンセーバー</td>
+                   <td class="center"><a href="obj/Vs200.zip">VS200.zip<br>(53kB)</a></td>
+                   <td class="center"><a href="vs_help.html">取扱説明書</a></td>
+                   <td class="center">2018/05/26</td>
+               </tr>
+               <tr>
+                   <td>ヴィデオ・スクリーン</td>
+                   <td class="center">3.00</td>
+                   <td>動画を再生・表示する<br>スクリーンセーバー</td>
+                   <td class="center"><a href="obj/Vs300.zip">VS300.zip<br>(88kB)</a></td>
+                   <td class="center">
+                       <a href="vs_help_j.html">取扱説明書(🇯🇵)</a><br>
+                       <a href="vs_help_e.html">Manual(🇺🇸)</a>
+                   </td>
+                   <td class="center">2026/03/21</td>
+               </tr>
+           </tbody>
+       </table>
+   </div>
+
+   <hr>
+
+   <ul>
+       <li>リンクはご自由に。</li>
+   </ul>
+
+   <div class="footer">
+       Copyright &copy; 1997-2026, BearBeetle, All rights reserved.
+   </div>
+</div>
+
+</body>
+</html>
