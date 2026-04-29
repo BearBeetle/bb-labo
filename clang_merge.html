@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>複数ファイルから構成されるプログラムコードのAI解析</title>
+   <style>
+       /* モダンなレスポンシブデザインの設定（index.htmlと統一） */
+       :root {
+           --primary-color: #3366FF;
+           --text-color: #333;
+           --bg-table-header: #C0C0E0;
+           --border-color: #ccc;
+           --bg-code: #f4f4f4;
+       }
+
+       body {
+           background-image: url('img/bcg_280.gif');
+           font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+           line-height: 1.6;
+           color: var(--text-color);
+           margin: 0;
+           padding: 1rem;
+       }
+
+       /* コンテンツを読みやすくするための白枠コンテナ */
+       .container {
+           max-width: 800px;
+           margin: 0 auto;
+           background-color: rgba(255, 255, 255, 0.95);
+           padding: 2rem;
+           border-radius: 8px;
+           box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+       }
+
+       h2, h3, h4 {
+           color: var(--primary-color);
+           margin-top: 1.5rem;
+           margin-bottom: 0.5rem;
+       }
+
+       h3 {
+           border-bottom: 2px solid var(--primary-color);
+           padding-bottom: 0.3rem;
+       }
+
+       /* タイトル装飾 */
+       .site-title {
+           text-align: center;
+           color: var(--primary-color);
+           font-size: 1.3rem;
+           font-weight: bold;
+           margin-bottom: 1rem;
+       }
+
+       .blink-text {
+           animation: blinker 2s linear infinite;
+       }
+       @keyframes blinker {
+           50% { opacity: 0.5; }
+       }
+
+       /* 小さな注釈テキスト */
+       .small-text {
+           font-size: 0.85rem;
+           color: #555;
+           display: block;
+           margin-top: 0.5rem;
+           margin-bottom: 1rem;
+       }
+
+       /* 画像のはみ出し防止 */
+       img {
+           max-width: 100%;
+           height: auto;
+           display: block;
+           margin: 0.5rem auto;
+       }
+
+       .image-caption {
+           text-align: center;
+           font-size: 0.9rem;
+           margin-bottom: 1.5rem;
+       }
+
+
+       /* テーブルのレスポンシブ化 */
+       .table-responsive {
+           overflow-x: auto;
+           margin-bottom: 1.5rem;
+       }
+
+       table {
+           width: 100%;
+           border-collapse: collapse;
+           min-width: 400px;
+       }
+
+       th, td {
+           border: 1px solid var(--border-color);
+           padding: 0.5rem;
+           font-size: 0.95rem;
+       }
+
+       th, td:first-child {
+           background-color: var(--bg-table-header);
+       }
+
+       /* プログラムコードやコマンドの表示枠 */
+       .code-block {
+           background-color: var(--bg-code);
+           border: 1px solid var(--border-color);
+           padding: 1rem;
+           border-radius: 4px;
+           overflow-x: auto;
+           font-family: Consolas, Monaco, "Courier New", Courier, monospace;
+           margin-bottom: 1.5rem;
+           white-space: pre;
+       }
+
+       a {
+           color: var(--primary-color);
+           text-decoration: none;
+       }
+
+       a:hover {
+           text-decoration: underline;
+       }
+
+       hr {
+           border: 0;
+           border-top: 1px solid var(--border-color);
+           margin: 2rem 0;
+       }
+
+       .footer {
+           text-align: center;
+           font-size: 0.8rem;
+           color: #666;
+           margin-top: 2rem;
+       }
+
+       @media (max-width: 600px) {
+           body {
+               padding: 0;
+           }
+           .container {
+               padding: 1.5rem 1rem;
+               border-radius: 0;
+           }
+       }
+   </style>
+</head>
+<body id="top">
+
+<div class="container">
+   <div class="site-title blink-text">★ 複数ファイルから構成されるプログラムコードのAI解析 ★</div>
+   <hr>
+
+   <h3>【１】はじめに</h3>
+       <p>
+       ChatGPT登場後の生成AIの発展により、簡単なプロンプト入力により既存プログラムの解析してリファクタリングや資料作成などが可能になってきました。<BR>
+       とはいえChatGPT、Copilot、Geminiなど汎用の生成AIの場合、添付できるファイルに上限(20など)があるため、ある程度以上の規模のプログラムでは簡単には解析を行うことができません。<BR>
+       この場合、プログラム専用のAIを使用する方法がありますが有償であり手軽には使用できません。<BR>
+       汎用の生成AIを使用する場合は、複数のプロンプトで分割して入力するか、複数のファイルを１つのファイルにマージするなどの工夫が入ります。<BR>
+       今回、複数のファイルのマージを自動的に行うプログラム(Python)を作りましたので紹介致します。<BR>
+     </p>
+
+   <h3>【２】マージの方法</h3>
+   <p>
+       生成AIへのファイル添付は、例えば、a.c, b.c, c.cといった複数のファイルをマージするときに、
+       以下のように、ファイル名をヘッダにつけると、それぞれのソースコードと認識してくれます。<BR>
+<div class="code-block">===== a.c =====
+#include <stdio.h>
+...
+int main(int argc, void **argv)
+{
+...
+}
+
+===== b.c =====
+#include <stdio.h>
+...
+int func_bbb(int arg1, int arg2)
+{
+...
+}
+...
+
+===== c.c =====
+#include <stdio.h>
+...
+int func_ccc(int arg1, int arg2)
+{
+...
+}
+...</div>
+      合わせて、ファイル数をインプットして下さい。<br>
+      また、ソースコードが複数のディレクトリに分けて格納されている場合は、以下のようにツリー構造を保存したtree.txtを作成して、合わせて生成AIに添付すると各ソースファイルのディレクトリ構造を生成AIが理解します。
+      <div class="code-block">tree /f > tree.txt</div>
+       
+   </p>
+   <h3>【３】マージプログラム</h3>
+   <p>
+       マージプログラムはCopilotで作成したものをベースに手動でカスタマイズしました。<br>
+       対象とするファイル拡張子はC/C++を指定していますが、同様の方法でPythonやC#等他の言語ファイルも指定可能です。<br>
+   <div class="code-block">import os
+INPUT_ENCODING = "utf-8" # UTF-8でエンコードされたファイル
+# INPUT_ENCODING = "CP932"  # WindowsのShift_JIS互換でエンコードされたファイル
+# INPUT_ENCODING = "utf-16"  # UTF-16でエンコードされたファイル
+# INPUT_ENCODING = "euc-jp"  # EUC-JPでエンコードされたファイル
+
+def collect_c_and_h_files(input_path, output_filename):
+    file_count = 0
+    # 出力ファイル
+    with open(output_filename, "w", encoding="utf-8") as out_file:
+        # 指定パス(input_path)以下の *.cpp, *.c, *.h を再帰的に検索
+        for root, dirs, files in os.walk(input_path):
+            for file_name in files:
+                if file_name.endswith((".cpp", ".c", ".h")):
+                    full_path = os.path.join(root, file_name)
+                    # ファイル名を指定形式で出力
+                    out_file.write(f"===== {file_name} =====\n")
+                    # ファイルの中身を INPUT_ENCODING で読み込んで出力
+                    try:
+                        with open(full_path, "r", encoding=INPUT_ENCODING) as src_file:
+                            out_file.write(src_file.read())
+                    except UnicodeDecodeError:
+                        out_file.write(
+                            f"[WARN] {INPUT_ENCODING}で読み込めませんでした\n"
+                        )
+                    # ファイル間の区切り
+                    out_file.write("\n\n")
+                    # 処理したファイル数をカウント
+                    file_count += 1
+    print(f"{file_count}個のファイルが処理されました。")
+
+if __name__ == "__main__":
+    #1)入力(1)
+    input_path = input("検索するディレクトリのパスを入力してください:").strip()
+    #2)入力(2)
+    output_filename = input("出力ファイル名を入力してください:").strip()
+    
+    collect_c_and_h_files(input_path, output_filename)
+    print("完了しました。") </div>
+   </p>
+   <h3>【４】実行例</h3>
+   <p>
+       以下の例は、"C:\_ito\SRC\DS2\DS2"以下のディレクトリにある*.cpp/*.c/*.hをファイルを検索／マージして、"c:\_ito\ds2_src.txt"に保存します。<br>
+   <div class="code-block">検索するディレクトリのパスを入力してください:C:\_ito\SRC\DS2\DS2
+出力ファイル名を入力してください:C:\_ito\ds2_src.txt
+23個のファイルが処理されました。
+完了しました。
+   </div>
+   </p>
+
+   <h3>【５】補足</h3>
+   <p>
+   <li>ファイル名だけ出していますが、パスを含めたい場合は<br>
+   out_filoe.write(f"===== {full_path} =====\n")<br>
+   に変更できます。
+   </li>
+   <li>今回のソースコードの文字はUTF-8に設定しています。文字コードはINPUT_ENCODINGで指定できますので、必要に応じてコメント(#)を外して下さい。<br>
+   </li>
+   <li>作成したファイルに、"[WARN] XXXXで読み込めませんでした"という文字列が含まれる場合は、文字コード設定を誤っています</li>
+   <li>出力ファイルはutf-8設定にしています。生成AIはUTF-8が判断できるためです。<br>
+   </li>
+   
+   </p>
+
+   <p>
+   <hr>
+       【改訂記録】<br>
+       2026/04/29版：公開<br>
+   </p>
+   
+   <p style="text-align: center;"><a href="index.html">[ホームへ戻る］</a></p>
+
+   <hr>
+   <div class="footer">
+       Copyright &copy; 1997-2026, BearBeetle, All rights reserved.
+   </div>
+</div>
+
+</body>
+</html>
