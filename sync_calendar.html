@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>【Python】OutlookスケジュールをGoogleカレンダーに自動同期</title>
+   <style>
+       /* モダンなレスポンシブデザインの設定 */
+       :root {
+           --primary-color: #3366FF;
+           --text-color: #333;
+           --bg-table-header: #C0C0E0;
+           --border-color: #ccc;
+           --bg-code: #f4f4f4;
+       }
+
+       body {
+           background-image: url('img/bcg_280.gif');
+           font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+           line-height: 1.6;
+           color: var(--text-color);
+           margin: 0;
+           padding: 1rem;
+       }
+
+       .container {
+           max-width: 800px;
+           margin: 0 auto;
+           background-color: rgba(255, 255, 255, 0.95);
+           padding: 2rem;
+           border-radius: 8px;
+           box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+       }
+
+       h2, h3, h4 {
+           color: var(--primary-color);
+           margin-top: 1.5rem;
+           margin-bottom: 0.5rem;
+       }
+
+       h3 {
+           border-bottom: 2px solid var(--primary-color);
+           padding-bottom: 0.3rem;
+       }
+
+       .site-title {
+           text-align: center;
+           color: var(--primary-color);
+           font-size: 1.3rem;
+           font-weight: bold;
+           margin-bottom: 1rem;
+       }
+
+       .blink-text {
+           animation: blinker 2s linear infinite;
+       }
+       @keyframes blinker {
+           50% { opacity: 0.5; }
+       }
+       /* 小さな注釈テキスト */
+       .small-text {
+           font-size: 0.85rem;
+           color: #555;
+           display: block;
+           margin-top: 0.5rem;
+           margin-bottom: 1rem;
+       }
+
+       /* 画像のはみ出し防止 */
+       img {
+           max-width: 100%;
+           height: auto;
+           display: block;
+           margin: 0.5rem auto;
+       }
+
+       .image-caption {
+           text-align: center;
+           font-size: 0.9rem;
+           margin-bottom: 1.5rem;
+       }
+
+
+       /* テーブルのレスポンシブ化 */
+       .table-responsive {
+           overflow-x: auto;
+           margin-bottom: 1.5rem;
+       }
+
+       table {
+           width: 100%;
+           border-collapse: collapse;
+           min-width: 400px;
+       }
+
+       th, td {
+           border: 1px solid var(--border-color);
+           padding: 0.5rem;
+           font-size: 0.95rem;
+       }
+
+       th {
+           background-color: var(--bg-table-header);
+       }
+
+       /* ソースコード表示枠の修正：高さを制限し、スクロールを有効化 */
+       .code-block {
+           background-color: var(--bg-code);
+           border: 1px solid var(--border-color);
+           padding: 1rem;
+           border-radius: 4px;
+           overflow-x: auto;
+           overflow-y: auto;          /* 縦スクロールを有効化 */
+           max-height: 400px;         /* 表示範囲を最大400pxに制限 */
+           font-family: Consolas, Monaco, "Courier New", Courier, monospace;
+           margin-bottom: 1.5rem;
+           white-space: pre;
+           font-size: 0.9rem;
+       }
+
+       a {
+           color: var(--primary-color);
+           text-decoration: none;
+       }
+
+       a:hover {
+           text-decoration: underline;
+       }
+
+       hr {
+           border: 0;
+           border-top: 1px solid var(--border-color);
+           margin: 2rem 0;
+       }
+
+       .footer {
+           text-align: center;
+           font-size: 0.8rem;
+           color: #666;
+           margin-top: 2rem;
+       }
+
+       @media (max-width: 600px) {
+           body { padding: 0; }
+           .container { padding: 1.5rem 1rem; border-radius: 0; }
+           .code-block { max-height: 300px; } /* スマホでは高さをさらに少し抑える */
+       }
+   </style>
+</head>
+<body id="top">
+
+<div class="container">
+    <div class="site-title blink-text">★ 【Python】OutlookスケジュールをGoogleカレンダーに自動同期 ★</div>
+    <hr>
+
+    <h3>【１】はじめに</h3>
+    <p>仕事ではWindows版のOutlookを使い、プライベートや移動中にはスマホからGoogleカレンダーを確認するという使い分けをしている方は多いと思います。しかし、手動で両方の予定を更新するのは非常に手間がかかります。<br>
+    今回はPythonを使って、Windows版Outlookの予定をGoogleカレンダーへ自動的に同期するツール（sync_calendar.py）を作成しましたので紹介します。
+    なお、世の中には、OGCS/OneCal/Zapier /Makeなど種々の優れたツールがありますが、逆に機能が多すぎて使いにくい側面もあります。
+    本ツールは、シンプルで軽いプログラムなので、用途に応じてカスタムして使う分には結構便利だと思います。</p>
+
+    <h3>【２】動作環境</h3>
+    <p>本ツールは、以下の環境で動作を確認しています。</p>
+    <ul>
+        <li>OS: Windows 10 / 11</li>
+        <li>Outlook: Windows版（デスクトップアプリ）</li>
+        <li>Python 3.x</li>
+    </ul>
+
+    <h3>【３】準備（ライブラリのインストール）</h3>
+    <p>Outlookとの通信およびGoogle APIの使用のために、以下のライブラリが必要です。コマンドプロンプトからインストールしてください。</p>
+    <div class="code-block">pip install pywin32 google-api-python-client google-auth-httplib2 google-auth-oauthlib</div>
+
+    <h3>【４】ソースコード</h3>
+    <p>以下が同期ツールのメインコードです。Google Cloudで取得する「credentials.json」と同じフォルダにファイル名「sync_calendar.py」で保存してください。</p>
+    <div class="code-block">import win32com.client
+from datetime import datetime, timedelta
+import json
+import os
+
+from google_auth_oauthlib.flow import InstalledAppFlow
+from googleapiclient.discovery import build
+from google.oauth2.credentials import Credentials
+
+# ======================
+# 設定
+# ======================
+
+SCOPES = ['https://www.googleapis.com/auth/calendar']
+STATE_FILE = "synced_events.json"
+
+# ======================
+# Outlook予定取得
+# ======================
+
+def get_outlook_events():
+    outlook = win32com.client.Dispatch("Outlook.Application")
+    namespace = outlook.GetNamespace("MAPI")
+
+    calendar = namespace.GetDefaultFolder(9)
+
+    items = calendar.Items
+    items.IncludeRecurrences = True
+    items.Sort("[Start]")
+
+    start = datetime.now()
+    end = start + timedelta(days=30)
+
+    restriction = f"[Start] >= '{start.strftime('%m/%d/%Y %H:%M %p')}' AND [End] <= '{end.strftime('%m/%d/%Y %H:%M %p')}'"
+    restricted_items = items.Restrict(restriction)
+
+    events = {}
+
+    for item in restricted_items:
+        try:
+            events[item.EntryID] = {
+                "title": item.Subject,
+                "start": item.Start.strftime("%Y-%m-%dT%H:%M:%S"),
+                "end": item.End.strftime("%Y-%m-%dT%H:%M:%S"),
+                "location": item.Location,
+                "updated": str(item.LastModificationTime)
+            }
+        except:
+            continue
+
+    return events
+
+# ======================
+# Google認証
+# ======================
+
+def get_google_service():
+    creds = None
+
+    if os.path.exists("token.json"):
+        creds = Credentials.from_authorized_user_file("token.json", SCOPES)
+
+    if not creds or not creds.valid:
+        flow = InstalledAppFlow.from_client_secrets_file("credentials.json", SCOPES)
+        creds = flow.run_local_server(port=0)
+
+        with open("token.json", "w") as f:
+            f.write(creds.to_json())
+
+    return build("calendar", "v3", credentials=creds)
+
+# ======================
+# Google操作
+# ======================
+
+def add_event(service, oid, e):
+    body = {
+        "summary": e["title"],
+        "location": e["location"],
+        "start": {
+            "dateTime": e["start"],
+            "timeZone": "Asia/Tokyo"
+        },
+        "end": {
+            "dateTime": e["end"],
+            "timeZone": "Asia/Tokyo"
+        },
+        "description": f"Outlook連携\nOID:{oid}",
+        # "通知"を無しに設定
+        "reminders": {
+            "useDefault": False
+        }
+    }
+
+    created = service.events().insert(calendarId='primary', body=body).execute()
+    return created["id"]
+
+def update_event(service, gid, oid, e):
+    body = {
+        "summary": e["title"],
+        "location": e["location"],
+        "start": {
+            "dateTime": e["start"],
+            "timeZone": "Asia/Tokyo"
+        },
+        "end": {
+            "dateTime": e["end"],
+            "timeZone": "Asia/Tokyo"
+        },
+        "description": f"Outlook連携\nOID:{oid}"
+    }
+
+    service.events().update(calendarId='primary', eventId=gid, body=body).execute()
+
+def delete_event(service, gid):
+    service.events().delete(calendarId='primary', eventId=gid).execute()
+
+# ======================
+# 状態管理
+# ======================
+
+def load_state():
+    if os.path.exists(STATE_FILE):
+        with open(STATE_FILE, "r") as f:
+            return json.load(f)
+    return {}
+
+def save_state(state):
+    with open(STATE_FILE, "w") as f:
+        json.dump(state, f, indent=2)
+
+# ======================
+# メイン
+# ======================
+
+def main():
+    print("==== 同期開始 ====")
+
+    prev_state = load_state()
+    outlook_events = get_outlook_events()
+    service = get_google_service()
+
+    new_state = {}
+
+    add_count = 0
+    update_count = 0
+    delete_count = 0
+
+    # ===== ① 追加・更新 =====
+    for oid, e in outlook_events.items():
+        if oid not in prev_state:
+            gid = add_event(service, oid, e)
+            add_count += 1
+
+        else:
+            gid = prev_state[oid]["google_id"]
+
+            if prev_state[oid]["updated"] != e["updated"]:
+                update_event(service, gid, oid, e)
+                update_count += 1
+
+        new_state[oid] = {
+            "google_id": gid,
+            "updated": e["updated"]
+        }
+
+    # ===== ② 削除検知 =====
+    for oid in prev_state:
+        if oid not in outlook_events:
+            gid = prev_state[oid]["google_id"]
+            try:
+                delete_event(service, gid)
+                delete_count += 1
+            except:
+                pass
+
+    save_state(new_state)
+
+    print(f"追加: {add_count}件")
+    print(f"更新: {update_count}件")
+    print(f"削除: {delete_count}件")
+    print("==== 完了 ====")
+
+
+if __name__ == "__main__":
+    main()</div>
+
+    <h3>【５】制限事項</h3>
+    <p>本コードはシンプルな同期を実現するためのサンプルです。実運用にあたっては、以下の点にご注意ください。</p>
+    <ul>
+        <li><strong>単一PC専用</strong> 同じOutlookやGoogle Clendarに対して複数のPCから本ツールを実行すると矛盾が発生します。</li>
+    </ul>
+
+    <h3>【６】Google Cloudでの準備</h3>
+    <p>Google Calendar APIを使用するには、Google Cloud Consoleでの設定が必要です。</p>
+    
+    <h4>1. プロジェクトの作成とAPIの有効化</h4>
+    <ol>
+        <li><a href="https://console.cloud.google.com/">Google Cloud Console</a>にアクセスし、新しいプロジェクトを作成します。</li>
+        <li>「APIとサービス」＞「ライブラリ」から「Google Calendar API」を検索し、「有効にする」をクリックします。</li>
+    </ol>
+
+    <h4>2. OAuth 同意画面の設定</h4>
+    <ol>
+        <li>「APIとサービス」＞「OAuth 同意画面」を選択します。</li>
+        <li>「User Type」で「外部」を選択し、「作成」をクリックします。</li>
+        <li>アプリ名（例：sync_calendar）とサポートメール、デベロッパーの連絡先を入力し、「保存して次へ」をクリックします。</li>
+        <li>「スコープを追加または削除」をクリックし、`.../auth/calendar` を選択して追加します。</li>
+    </ol>
+
+    <h4>3. テストユーザーの追加</h4>
+    <ol>
+        <li>「テストユーザー」の項目で「+ ADD USERS」をクリックします。</li>
+        <li>自分のGoogleメールアドレスを入力し、「追加」をクリックします。</li>
+        <li>概要画面が表示されるので、一番下の「ダッシュボードに戻る」をクリックします。</li>
+    </ol>
+
+    <h4>4. 認証情報の作成とJSONファイルのダウンロード</h4>
+    <ol>
+        <li>左側のメニューから「APIとサービス」＞「認証情報」を選択します。</li>
+        <li>画面上部の「+ 認証情報を作成」をクリックし、「OAuth クライアント ID」を選択します。</li>
+        <li>「アプリケーションの種類」から「デスクトップ アプリ」を選択し、任意の名前を入力して「作成」をクリックします。</li>
+        <li>ポップアップ画面にある「JSON をダウンロード」をクリックして、ファイルを保存します。</li>
+        <li>ダウンロードしたファイルを「credentials.json」にリネームして、スクリプトと同じフォルダに保存します。</li>
+    </ol>
+
+    <h3>【７】実行</h3>
+    <p>予めOutlookを起動したあと、コンソールから以下のように入力して下さい。</p>
+    <div class="code-block">python sync_calendar.py</div>
+    <p>初回実行時はブラウザが開き、Googleアカウントへのログインと権限の許可が求められます。許可すると `token.json` が生成され、次回からは自動で実行されます。</p>
+
+    <h3>【８】技術的解説</h3>
+    <p>本ツールの機能を以下に列挙します。</p>
+    <ul>
+        <li>ローカルPCで動作するOutlookのカレンダーから予定を取得しGoogle Calendarに保存する</li>
+        <li>同期する期間は実行日～１か月</li>
+        <li>複数回実行しても重複した項目のコピーを防止する（重複防止）</li>
+        <li>更新日時で差分更新する（Outlookで削除したものはGoogle Calendar側も同期して削除する）</li>
+        <li>Google Calendar側で追加した予定には影響なし（削除しない、Outlook側にコピーしない）</li>
+        <li>Google Calendar側の通知(reminder)設定は'無し'</li>
+    </ul>
+    <p>
+        本ツールは、Outlook及び、Google Calendarの操作を行います。Outlookの操作はwin32com Libraryを使用します。<br>
+        win32comは、Pythonを使用してWindowsアプリケーション（特にMicrosoft Officeアプリケーション）を操作するためのライブラリです。
+        Excelの操作はCOM(Component Object Model)というWindowsの仕組みを使用しますが、Pythonプログラムからこれを行うライブラリがwin32comになります。<br>
+        <div class="code-block">本ツール ➔ win32com ➔ COM ➔ Outlookアプリ</div>
+        具体的には以下の処理がoutlookのAPIになります。
+    </p>
+<div class="code-block">import win32com.client
+…
+outlook = win32com.client.Dispatch("Outlook.Application")
+…
+</div>
+    <p>
+        一方、Google Calendarの方は、Google API Client Libraryを使用しています。Google Calendarは、REST API経由でアクセスしますがGoogle API Client Libraryがこの間を取り持ちます。
+        <div class="code-block">本ツール ➔ Google API Client Library ➔ Google Calendar REST API</div>
+        本ツールからカレンダの操作するにはGoogle API Client Libraryの以下のAPIを使用します。
+    </p>
+    <div class="table-responsive">
+        <table>
+            <thead>
+                <tr> <th>操作</th> <th>API</th> </tr>
+            </thead>
+            <tbody>
+                <tr> <td>予定追加</td> <td>events.insert</td> </tr>
+                <tr> <td>予定更新</td> <td>events.update</td> </tr>
+                <tr> <td>予定削除</td> <td>events.delete</td> </tr>
+                <tr> <td>認証</td> <td>OAuth 2.0</td> </tr>
+            </tbody>
+        </table>
+    </div>
+    <p>
+        プログラムとデータの配置するフォルダ構成は以下のようになります。「c:\sync」は、別のディレクトリでもかまいません。
+        <div class="code-block">       C:\sync\
+            ├ sync_calendar.py
+            ├ credentials.json   ← Google Calendarから取得
+            ├ token.json         ← 自動生成
+            └ synced_events.json ← 自動生成 </div>
+        <strong>credentials.json</strong>は、本ツールがGoogleにアクセスするためのアプリを証明するファイルです。
+        事前に、Google Cloud Consoleへアクセスして取得します（手順は【６】参照）。<br>
+        ファイルには以下の項目が含まれています。
+        <div class="table-responsive">
+        <table>
+            <thead>
+                <tr> <th>項目</th> <th>説明</th> </tr>
+            </thead>
+            <tbody>
+                <tr> <td>client_id</td> <td>アプリのID</td> </tr>
+                <tr> <td>client_secret</td> <td>アプリのパスワード</td> </tr>
+                <tr> <td>project_id</td> <td>Google Cloudのプロジェクト</td> </tr>
+                <tr> <td>auth_uri</td> <td>ログイン先</td> </tr>
+                <tr> <td>token_uri</td> <td>トークン取得先</td> </tr>
+            </tbody>
+        </table>
+        <br>
+        初回実行時に以下のコードで、　(1)Googleに接続、(2)ログイン画面を出す、(3)権限を要求する　が行われます。
+        <div class="code-block">flow = InstalledAppFlow.from_client_secrets_file("credentials.json", SCOPES)</div>
+        <strong>token.json</strong>は、Googleにログインした状態を保存するファイルであり、Google Calendar REST APIを使えるようにする認証情報です。
+        初回実行時にブラウザが起動して認証、ログイン作業を行いますが、このタイミングでtoken.jsonが作成され、2回目以降の起動では認証、ログインが不要になります。<br>
+        ＜注意事項＞
+        <ul>
+            <li>削除したら、次回次回起動時に、ブラウザ開かれ再ログインになる</li>
+            <li>他PCにコピーした場合はそのまま使用可能（同じGoogleアカウントならOK）<br>このため他人に渡すと危険</li>
+        </ul>
+        ファイルには以下の項目が含まれています。
+        <div class="table-responsive">
+        <table>
+            <thead>
+                <tr> <th>項目</th> <th>意味</th> </tr>
+            </thead>
+            <tbody>
+                <tr> <td>access_token</td> <td>APIを実行するための鍵</td> </tr>
+                <tr> <td>refresh_token</td> <td>自動で再ログインするための鍵</td> </tr>
+                <tr> <td>expiry</td> <td>有効期限</td> </tr>
+            </tbody>
+        </table>
+        </div>
+        <strong>synced_events.json</strong>は、OutlookとGoogleの対応関係を覚えておくファイルです。以下がファイルの中身(例)です。
+        予定の数だけエントリが作成されます。<br>
+<div class="code-block">{
+  "00000000C1A8C1…504F0000": {
+    "google_id": "92dutlq9ot91jodtccackikvbs",
+    "updated": "2026-05-11 13:29:34.788000+00:00"
+  },
+  "00000000C1A8C1…EB290000": {
+    "google_id": "9fsh2s0op9rfrjltj12tp7dqic",
+    "updated": "2026-05-12 07:52:22.467000+00:00"
+  },
+  …
+}</div>
+        各エントリは以下の項目で構成されています。
+        <div class="table-responsive">
+        <table>
+            <thead>
+                <tr> <th>項目</th> <th>意味</th> </tr>
+            </thead>
+            <tbody>
+                <tr> <td>Outlook ID</td> <td>Outlookの予定の識別子</td> </tr>
+                <tr> <td>google_id</td> <td>Googleカレンダー上のID</td> </tr>
+                <tr> <td>updated</td> <td>最終更新日時</td> </tr>
+            </tbody>
+        </table>
+        </div>
+        synced_events.jsonの上記エントリ情報により以下を実現しています。
+        <ul>
+            <li>重複防止 (同じOutlook予定を何度も作らない)</li>
+            <li>更新検知 (Outlookの予定が変更されたか？)</li>
+            <li>削除検知 (Outlookから消えたか？)</li>
+        </ul>
+        </p>
+    </p>
+    <hr>
+    <p>
+    【改訂記録】<br>
+        2026/05/16版：公開<br>
+    </p>
+    <p style="text-align: center;"><a href="index.html">[ホームへ戻る］</a></p>
+
+    <div class="footer">
+        Copyright &copy; 1997-2026, BearBeetle, All rights reserved.
+    </div>
+</div>
+
+</body>
+</html>
