@@ -203,7 +203,8 @@ def get_outlook_events():
     items.IncludeRecurrences = True
     items.Sort("[Start]")
 
-    start = datetime.now()
+    # v1.1
+    start = datetime.now() - timedelta(days=2)
     end = start + timedelta(days=30)
 
     restriction = f"[Start] >= '{start.strftime('%m/%d/%Y %H:%M %p')}' AND [End] <= '{end.strftime('%m/%d/%Y %H:%M %p')}'"
@@ -235,7 +236,10 @@ def get_google_service():
     if os.path.exists("token.json"):
         creds = Credentials.from_authorized_user_file("token.json", SCOPES)
 
-    if not creds or not creds.valid:
+    # v1.1
+    if creds and creds.expired and creds.refresh_token:
+        creds.refresh(Request())
+    elif not creds or not creds.valid:
         flow = InstalledAppFlow.from_client_secrets_file("credentials.json", SCOPES)
         creds = flow.run_local_server(port=0)
 
@@ -363,7 +367,7 @@ if __name__ == "__main__":
     <h3>【５】制限事項</h3>
     <p>本コードはシンプルな同期を実現するためのサンプルです。実運用にあたっては、以下の点にご注意ください。</p>
     <ul>
-        <li><strong>単一PC専用</strong> 同じOutlookやGoogle Clendarに対して複数のPCから本ツールを実行すると矛盾が発生します。</li>
+        <li><strong>単一PC専用</strong> 同じOutlookやGoogle Calendarに対して複数のPCから本ツールを実行すると矛盾が発生します。</li>
     </ul>
 
     <h3>【６】Google Cloudでの準備</h3>
@@ -412,10 +416,10 @@ if __name__ == "__main__":
         <li>複数回実行しても重複した項目のコピーを防止する（重複防止）</li>
         <li>更新日時で差分更新する（Outlookで削除したものはGoogle Calendar側も同期して削除する）</li>
         <li>Google Calendar側で追加した予定には影響なし（削除しない、Outlook側にコピーしない）</li>
-        <li>Google Calendar側の通知(reminder)設定は'無し'</li>
+        <li>Google Calendar側の通知（reminder）は「なし」に設定</li>
     </ul>
     <p>
-        本ツールは、Outlook及び、Google Calendarの操作を行います。Outlookの操作はwin32com Libraryを使用します。<br>
+       本ツールは、Outlook および Google Calendar の操作を行います。Outlookの操作はwin32com Libraryを使用します。<br>
         win32comは、Pythonを使用してWindowsアプリケーション（特にMicrosoft Officeアプリケーション）を操作するためのライブラリです。
         Excelの操作はCOM(Component Object Model)というWindowsの仕組みを使用しますが、Pythonプログラムからこれを行うライブラリがwin32comになります。<br>
         <div class="code-block">本ツール ➔ win32com ➔ COM ➔ Outlookアプリ</div>
@@ -429,7 +433,7 @@ outlook = win32com.client.Dispatch("Outlook.Application")
     <p>
         一方、Google Calendarの方は、Google API Client Libraryを使用しています。Google Calendarは、REST API経由でアクセスしますがGoogle API Client Libraryがこの間を取り持ちます。
         <div class="code-block">本ツール ➔ Google API Client Library ➔ Google Calendar REST API</div>
-        本ツールからカレンダの操作するにはGoogle API Client Libraryの以下のAPIを使用します。
+        本ツールからカレンダーを操作するにはGoogle API Client Libraryの以下のAPIを使用します。
     </p>
     <div class="table-responsive">
         <table>
@@ -445,7 +449,7 @@ outlook = win32com.client.Dispatch("Outlook.Application")
         </table>
     </div>
     <p>
-        プログラムとデータの配置するフォルダ構成は以下のようになります。「c:\sync」は、別のディレクトリでもかまいません。
+        プログラムとデータを配置するフォルダ構成は以下のようになります。「c:\sync」は、別のディレクトリでもかまいません。
         <div class="code-block">       C:\sync\
             ├ sync_calendar.py
             ├ credentials.json   ← Google Calendarから取得
@@ -474,7 +478,7 @@ outlook = win32com.client.Dispatch("Outlook.Application")
         初回実行時にブラウザが起動して認証、ログイン作業を行いますが、このタイミングでtoken.jsonが作成され、2回目以降の起動では認証、ログインが不要になります。<br>
         ＜注意事項＞
         <ul>
-            <li>削除したら、次回次回起動時に、ブラウザ開かれ再ログインになる</li>
+            <li>削除したら、次回起動時に、ブラウザが開かれ再ログインになります</li>
             <li>他PCにコピーした場合はそのまま使用可能（同じGoogleアカウントならOK）<br>このため他人に渡すと危険</li>
         </ul>
         ファイルには以下の項目が含まれています。
@@ -528,6 +532,12 @@ outlook = win32com.client.Dispatch("Outlook.Application")
     <p>
     【改訂記録】<br>
         2026/05/16版：公開<br>
+        2026/05/18版：誤記修正及び、下記のバグ修正
+        <ul>
+        <li>過去予定がGoogleカレンダーから消える</li>
+        <li>時間を開けるとGoogleログイン画面が出る<br>
+            ※修正箇所は"# v1.1"とコメントされている箇所</li>
+        </ul>
     </p>
     <p style="text-align: center;"><a href="index.html">[ホームへ戻る］</a></p>
 
