@@ -181,6 +181,7 @@ import os
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 from google.oauth2.credentials import Credentials
+from google.auth.transport.requests import Request
 
 # ======================
 # 設定
@@ -203,25 +204,36 @@ def get_outlook_events():
     items.IncludeRecurrences = True
     items.Sort("[Start]")
 
-    # v1.1
+    # V1.1 old:start = datetime_now()
     start = datetime.now() - timedelta(days=2)
     end = start + timedelta(days=30)
-
-    restriction = f"[Start] >= '{start.strftime('%m/%d/%Y %H:%M %p')}' AND [End] <= '{end.strftime('%m/%d/%Y %H:%M %p')}'"
+    # V1.2 
+    start_str = start.strftime("%m/%d/%Y")
+    end_str = end.strftime("%m/%d/%Y")
+    restriction = f"[Start] >= '{start_str}' AND [Start] <= '{end_str}'"
     restricted_items = items.Restrict(restriction)
 
     events = {}
 
     for item in restricted_items:
         try:
-            events[item.EntryID] = {
-                "title": item.Subject,
-                "start": item.Start.strftime("%Y-%m-%dT%H:%M:%S"),
-                "end": item.End.strftime("%Y-%m-%dT%H:%M:%S"),
-                "location": item.Location,
+            # v1.2
+            start_val = item.Start
+            end_val = item.End
+            if not start_val or not end_val:
+                continue
+            key = item.EntryID + start_val.strftime("%Y-%m-%dT%H:%M:%S")
+
+            events[key] = {
+                "title": item.Subject or "",
+                "start": start_val.strftime("%Y-%m-%dT%H:%M:%S"),
+                "end": end_val.strftime("%Y-%m-%dT%H:%M:%S"),
+                "location": item.Location or "",
                 "updated": str(item.LastModificationTime)
             }
-        except:
+        except Exception as e:
+            # v1.2
+            print("エラー:", e)
             continue
 
     return events
@@ -235,16 +247,14 @@ def get_google_service():
 
     if os.path.exists("token.json"):
         creds = Credentials.from_authorized_user_file("token.json", SCOPES)
-
     # v1.1
     if creds and creds.expired and creds.refresh_token:
-        creds.refresh(Request())
+        creds.refresh(Request()) # V1.1（自動更新）
     elif not creds or not creds.valid:
         flow = InstalledAppFlow.from_client_secrets_file("credentials.json", SCOPES)
         creds = flow.run_local_server(port=0)
-
-        with open("token.json", "w") as f:
-            f.write(creds.to_json())
+    with open("token.json", "w") as f:
+        f.write(creds.to_json())
 
     return build("calendar", "v3", credentials=creds)
 
@@ -286,7 +296,11 @@ def update_event(service, gid, oid, e):
             "dateTime": e["end"],
             "timeZone": "Asia/Tokyo"
         },
-        "description": f"Outlook連携\nOID:{oid}"
+        "description": f"Outlook連携\nOID:{oid}",
+        # v1.2
+        "reminders": {
+            "useDefault": False
+        }
     }
 
     service.events().update(calendarId='primary', eventId=gid, body=body).execute()
@@ -532,11 +546,27 @@ outlook = win32com.client.Dispatch("Outlook.Application")
     <p>
     【改訂記録】<br>
         2026/05/16版：公開<br>
-        2026/05/18版：誤記修正及び、下記のバグ修正
+        2026/05/18版：
         <ul>
-        <li>過去予定がGoogleカレンダーから消える</li>
-        <li>時間を開けるとGoogleログイン画面が出る<br>
-            ※修正箇所は"# v1.1"とコメントされている箇所</li>
+            <li>誤記修正及び、下記のバグ修正</li>
+            <ol>
+                <li>過去予定がGoogleカレンダーから消える</li>
+                <li>時間を開けるとGoogleログイン画面が出る<br>
+                ※修正箇所は"# v1.1"とコメントされている箇所</li>
+            </ol>
+        </ul>
+        2026/05/22版：
+        <ul>
+            <li>以下のバグの修正<br>
+                Outlookで「繰り返し」で設定されている予定のうちの１つの予定だけ、<br>
+                日時を変更した場合、Googleカレンダー側に反映できない事象の対応<br>
+                ※修正箇所は"# v1.2"とコメントされている箇所</li>
+            <li>注意事項<br>
+                変更後のsync_calendar.pyを実行前に以下を実施して下さい。</li>
+                <ol>
+                    <li>Googleカレンダー側で、descriptionに「Outlook連携」と書かれている予定を全部削除</li>
+                    <li>synced_events.json を削除</li>
+                </ol>
         </ul>
     </p>
     <p style="text-align: center;"><a href="index.html">[ホームへ戻る］</a></p>
