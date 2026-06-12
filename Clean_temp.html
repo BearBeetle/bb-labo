@@ -1,0 +1,298 @@
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>【PowerShell】アプリの不要ファイル(tmp/log)削除スクリプト</title>
+   <style>
+       /* モダンなレスポンシブデザインの設定 */
+       :root {
+           --primary-color: #3366FF;
+           --text-color: #333;
+           --bg-table-header: #C0C0E0;
+           --border-color: #ccc;
+           --bg-code: #f4f4f4;
+       }
+
+       body {
+           background-image: url('img/bcg_280.gif');
+           font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+           line-height: 1.6;
+           color: var(--text-color);
+           margin: 0;
+           padding: 1rem;
+       }
+
+       .container {
+           max-width: 800px;
+           margin: 0 auto;
+           background-color: rgba(255, 255, 255, 0.95);
+           padding: 2rem;
+           border-radius: 8px;
+           box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+       }
+
+       h2, h3, h4 {
+           color: var(--primary-color);
+           margin-top: 1.5rem;
+           margin-bottom: 0.5rem;
+       }
+
+       h3 {
+           border-bottom: 2px solid var(--primary-color);
+           padding-bottom: 0.3rem;
+       }
+
+       .site-title {
+           text-align: center;
+           color: var(--primary-color);
+           font-size: 1.3rem;
+           font-weight: bold;
+           margin-bottom: 1rem;
+       }
+
+       .blink-text {
+           animation: blinker 2s linear infinite;
+       }
+       @keyframes blinker {
+           50% { opacity: 0.5; }
+       }
+       /* 小さな注釈テキスト */
+       .small-text {
+           font-size: 0.85rem;
+           color: #555;
+           display: block;
+           margin-top: 0.5rem;
+           margin-bottom: 1rem;
+       }
+
+       /* 画像のはみ出し防止 */
+       img {
+           max-width: 100%;
+           height: auto;
+           display: block;
+           margin: 0.5rem auto;
+       }
+
+       .image-caption {
+           text-align: center;
+           font-size: 0.9rem;
+           margin-bottom: 1.5rem;
+       }
+
+
+       /* テーブルのレスポンシブ化 */
+       .table-responsive {
+           overflow-x: auto;
+           margin-bottom: 1.5rem;
+       }
+
+       table {
+           width: 100%;
+           border-collapse: collapse;
+           min-width: 400px;
+       }
+
+       th, td {
+           border: 1px solid var(--border-color);
+           padding: 0.5rem;
+           font-size: 0.95rem;
+       }
+
+       th {
+           background-color: var(--bg-table-header);
+       }
+
+       /* ソースコード表示枠の修正：高さを制限し、スクロールを有効化 */
+       .code-block {
+           background-color: var(--bg-code);
+           border: 1px solid var(--border-color);
+           padding: 1rem;
+           border-radius: 4px;
+           overflow-x: auto;
+           overflow-y: auto;          /* 縦スクロールを有効化 */
+           max-height: 400px;         /* 表示範囲を最大400pxに制限 */
+           font-family: Consolas, Monaco, "Courier New", Courier, monospace;
+           margin-bottom: 1.5rem;
+           white-space: pre;
+           font-size: 0.9rem;
+       }
+
+       a {
+           color: var(--primary-color);
+           text-decoration: none;
+       }
+
+       a:hover {
+           text-decoration: underline;
+       }
+
+       hr {
+           border: 0;
+           border-top: 1px solid var(--border-color);
+           margin: 2rem 0;
+       }
+
+       .footer {
+           text-align: center;
+           font-size: 0.8rem;
+           color: #666;
+           margin-top: 2rem;
+       }
+
+       @media (max-width: 600px) {
+           body { padding: 0; }
+           .container { padding: 1.5rem 1rem; border-radius: 0; }
+           .code-block { max-height: 300px; } /* スマホでは高さをさらに少し抑える */
+       }
+   </style>
+</head>
+<body id="top">
+
+<div class="container">
+    <div class="site-title blink-text">★ 【PowerShell】アプリの不要ファイル(tmp/log)削除スクリプト ★</div>
+    <hr>
+
+    <h3>【１】はじめに</h3>
+    <p>PCを使用していると一時ファイルが蓄積して知らない間にDiskの容量を圧迫しているケースがあると思います。<br>
+    この様なケースに対応するためにWindowsにはcleanmgrという不要ファイルを管理／削除するツールがあります。
+    また、Windows11になって、「設定」→「システム」→「ストレージ」で不要ファイルの管理／削除が行えるようになりました。
+    これにより、不要ファイルによるDisk領域の圧迫を解消することができます。<br>
+    しかしながら、cleanmgrなどのシステム標準機能は、主に「Windows OSそのものが管理する一時ファイル」や「古いシステムアップデート」を対象としています。
+    このため、各アプリケーションが個別に生成したテンポラリファイルやログファイルについてはケアしてません。<br>
+
+    そこで、ユーザー領域（LOCALAPPDATA 配下）にあるアプリケーション固有の不要なファイルを削除するPowerShellスクリプトを作成しましたのでご紹介致します。<br>
+    システム標準機能では、ユーザー領域（LOCALAPPDATA配下など）にあるアプリケーション固有の不要なファイルを完全には掃除しきれないことが多いため、
+    このスクリプトは「かゆいところに手が届く」補完的な役割を果たします。<br>
+    ちなみに、<strong>私が自分のPCで、初めて本スクリプトを実行したときは、7GBもの不要データの削減ができました!</strong>
+    </p>
+
+    <h3>【２】動作環境</h3>
+    <p>本スクリプトは、以下の環境で動作を確認しています。</p>
+    <ul>
+        <li>OS: Windows 11</li>
+    </ul>
+
+    <h3>【３】機能</h3>
+    <p>本スクリプトは、以下の機能を有しています。</p>
+    <ul>
+        <li>ユーザー領域（LOCALAPPDATA配下）にあるアプリケーション固有の不要なファイル（テンポラリやログ）を削除します。</li>
+        <li>アプリが使用中のファイルはスキップします。</li>
+    </ul>
+
+    <h3>【４】ソースコード</h3>
+    <p>適当なフォルダに、ファイル名「Clean_temp.ps1」で保存してください。</p>
+    <div class="code-block">Write-Host "=== Clean Temp & Log Start ==="
+
+# Temp削除
+Remove-Item "$env:LOCALAPPDATA\Temp\*" -Recurse -Force -ErrorAction SilentlyContinue
+
+# log削除（7日以上前だけにする）
+Get-ChildItem "$env:LOCALAPPDATA" -Recurse -Include *.log |
+ Where-Object { $_.LastWriteTime -lt (Get-Date).AddDays(-7) } |
+ Remove-Item -Force -ErrorAction SilentlyContinue
+
+# tmp削除
+Get-ChildItem "$env:LOCALAPPDATA" -Recurse -Include *.tmp |
+ Remove-Item -Force -ErrorAction SilentlyContinue
+
+Write-Host "=== Completed ==="</div>
+
+    <h3>【５】注意事項</h3>
+    <p>また実運用にあたっては、以下の点にご注意ください。</p>
+    <ul>
+        <li>Outlook/Teams/Edgeなどのアプリはなるべく停止させて下さい。<br>
+            使用中のテンポラリファイルは削除しません。</li>
+        <li>問題発生PCには使用しないで下さい<br>
+            ログファイルを削除するため障害調査のためのログ解析ができなくなります</li>
+    </ul>
+
+    <h3>【６】実行</h3>
+    <p>PowerShellスクリプトは、以下の手順で実行できます。</p>
+    <ol>
+        <li>「スタート」→「PowerShell」検索</li>
+        <li>右クリック → 管理者として実行</li>
+        <li>cleanup_temp.ps1が存在するフォルダへ移動(例："C:\Scripts")：<br>
+           <div class="code-block">cd C:\Scripts</div></li>
+        <li>cleanup_temp.ps1を実行する：<br>
+           <div class="code-block">.\cleanup_temp.ps1</div></li>
+    </ol>
+    <h4>補足１．エラーについて</h4>
+    <p>「スクリプトの実行が無効」などのエラーが出た場合は、以下を実行して下さい。</p>
+    <ol>
+        <li>まず以下のコマンドを１回だけ実行。
+            <div class="code-block">Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass</div></li>
+        <li>その後、もう一度以下を実行。
+            <div class="code-block">.\cleanup_temp.ps1</div></li>
+    </ol>
+    </p>
+    <h4>補足２．自動実行について</h4>
+    <p>自動実行はWindows11の場合タイムスケジューラから設定できます</p>
+    <ol>
+        <li>タイムスケジューラ起動</li>
+        <ol>
+            <li>スタートメニューを右クリックして、「コンピュータの管理」をクリック<br>
+            <img src="img/Clean_temp1.png"></li>
+            <li>「タイムスケジューラ」を選択。
+            <li>「操作(A)」→「タスクの作成(R)...」を選択
+            <img src="img/Clean_temp2.png"></li>
+        </ol>
+        <li>「全体」タブの「名前(M)」にタイトル入力(「_Clean_Temp」など)</li>
+        <li>「トリガー」タブの「新規(N)」をクリックして、運用に合わせてトリガー条件を設定する</li>
+        <li>「操作」タブの「新規(N)」をクリックして、以下を実施する<br>
+        <ol>
+            <li>プログラム/スクリプト(P)」に以下のように入力<br>
+             ※フルパス（例：「C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe」）でも良い
+             <div class="code-block">powershell.exe</div> </li>
+            <li>「引数の追加(オプション)(A)」に以下のように入力
+             <div class="code-block">-ExecutionPolicy Bypass -File "C:\Scripts\cleanup_temp.ps1"</div></li>
+            <li>「開始(オプション)(T)」に以下のように入力
+             <div class="code-block">C:\Scripts\</div></li>
+        </ol>
+    </ol>
+    </p>
+
+    <h3>【７】技術的解説</h3>
+    <p>本スクリプトは、ユーザーの環境（LOCALAPPDATA）に蓄積される一時ファイルや古いログを整理するためのものです。<br>
+       以下各行の説明を記載します。</p>
+        <div class="table-responsive">
+        <table>
+            <thead>
+                <tr> <th>行番号</th> <th>実行コード</th> <th>解説</th> </tr>
+            </thead>
+            <tbody>
+                <tr> <td>1</td> <td> Write-Host "=== Clean Temp & Log Start ===" </td> <td> コンソール画面に、クリーンアップ作業を開始する旨のメッセージを表示。</td> </tr>
+                <tr> <td>3-4</td> <td># Temp削除<br>Remove-Item "$env:LOCALAPPDATA\Temp\*" -Recurse -Force -ErrorAction SilentlyContinue</td> <td>ユーザーの一時フォルダ内のすべてのファイルを強制的に再帰削除。削除できないファイル（使用中のもの等）があってもエラーを出さずに処理を続行。</td></tr>
+                <tr> <td>6-9</td> <td># log削除（7日以上前だけにする）<br>Get-ChildItem ...</td> <td>更新日時が7日以上経過したログファイルの削除。</td></tr>
+                <tr> <td>11-13</td> <td># tmp削除<br>Get-ChildItem ...</td> <td>拡張子が「.tmp」ファイルの削除。</td></tr>
+                <tr> <td>15</td> <td> Write-Host "=== Completed ===" </td> <td> コンソール画面に、すべての作業が完了したことを知らせるメッセージを表示。</td> </tr>
+            </tbody>
+        </table>
+        </div>
+        <br>
+        <h4>ポイント</h4>
+        <ul>
+            <li><strong>安全性の確保:</strong>4行目の Remove-Item "$env:LOCALAPPDATA\Temp\*" は、
+                フォルダそのものではなく、その中身を削除する意図で書かれています。
+                もし意図せずフォルダごと削除したくない場合は、現在の記述（ワイルドカード指定）で正しく動作します。</li>
+            <li><strong>ログ削除の範囲:</strong>7行目で Get-ChildItem に -Recurse を指定しているため、
+                LOCALAPPDATA 直下だけでなく、その中にあるサブフォルダ内のログも全て探索します。これは非常に強力ですが、
+                もし特定アプリの重要なログまで消えてしまう場合は、
+                $env:LOCALAPPDATA の箇所を "$env:LOCALAPPDATA\SomeApp\Logs" のように具体的に指定することで、
+                より安全な運用が可能になります。</li>
+        </ul>
+    <hr>
+    <p>
+    【改訂記録】<br>
+        2026/06/13版：公開<br>
+    </p>
+    <p style="text-align: center;"><a href="index.html">[ホームへ戻る］</a></p>
+
+    <div class="footer">
+        Copyright &copy; 1997-2026, BearBeetle, All rights reserved.
+    </div>
+</div>
+
+</body>
+</html>
